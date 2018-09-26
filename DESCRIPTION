@@ -7,7 +7,7 @@ Authors@R: c(
   person("Jacek", "Urbanek", role = c("aut"))
   )
 Maintainer: Marta Karas <marta.karass@gmail.com>
-Description: More about what it does (maybe more than one line)
+Description: More about what it does (maybe more than one line).
     Use four spaces when indenting paragraphs within the Description.
 License: GPL-3
 Encoding: UTF-8
