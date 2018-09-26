@@ -13,3 +13,6 @@ r:
   - 3.4
   - release
   - devel
+
+after_success:
+  - Rscript -e 'covr::codecov(ype = "all")'
