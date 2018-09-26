@@ -1,0 +1,15 @@
+Package: adept
+Type: Package
+Title: Adaptive Empirical Pattern Transformation 
+Version: 0.1.0
+Authors@R: c(
+  person("Marta", "Karas", email = "mkaras2@jhu.edu", role = c("aut", "cre")),
+  person("Jacek", "Urbanek", role = c("aut"))
+  )
+Maintainer: Marta Karas <marta.karass@gmail.com>
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
