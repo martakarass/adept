@@ -1,5 +1,5 @@
 
-[![Travis build status](https://travis-ci.com/martakarass/adept.svg?branch=master)](https://travis-ci.com/martakarass/adept)
+[![Travis build status](https://travis-ci.com/martakarass/adept.svg?branch=master)](https://travis-ci.com/martakarass/adept) [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/martakarass/adept?branch=master&svg=true)](https://ci.appveyor.com/project/martakarass/adept)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 adept
