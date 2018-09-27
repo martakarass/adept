@@ -18,8 +18,12 @@ BugReports: https://github.com/martakarass/adept/issues
 Suggests: 
     knitr,
     rmarkdown,
-    covr
+    covr,
+    testthat
 VignetteBuilder: knitr
 Imports: 
     tibble,
-    dplyr
+    dplyr,
+    convo
+Remotes: 
+  martakarass/convo

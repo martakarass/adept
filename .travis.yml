@@ -15,4 +15,4 @@ r:
   - devel
 
 after_success:
-  - Rscript -e 'covr::codecov(ype = "all")'
+  - Rscript -e 'covr::codecov(type = "all")'
