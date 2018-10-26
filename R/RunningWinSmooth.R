@@ -68,3 +68,58 @@ RunningWinSmooth <- function(x, W){
              x.out.tail)
   return(x.out)
 }
+
+
+
+
+
+
+#' Wrapper function for \code{RunningWinSmooth}
+#'
+#' Wrapper function for \code{RunningWinSmooth}. Replaces \code{NA} values with
+#' which appear in head and tail of smoothed signal as a result of MA not defined
+#' for first and last \code{k} elements of a signal. The \code{NA} values are replaced
+#' with sample means of subsequent/procceeding non-\code{NA} values that appear
+#' in smoothed signal.
+#'
+#'
+#' @param x Numeric vector to be smoothed.
+#' @param W.vl Vector length of MA window.
+#' @param NA.repl.surce.k Scalar for number of subsequent/procceeding non-\code{NA} values that appear
+#' in smoothed signal and are used to provide sample mean replacement for \code{NA} values.
+#'
+#' @return Smoothed signal with  \code{NA} values replaced with sample means of
+#' subsequent/procceeding non-\code{NA} values that appear
+#' in smoothed signal.
+#'
+#' @examples
+#' set.seed(20191021)
+#' x <- sin(seq(0, 2 * pi, length.out = 1000)) + rnorm(1000, sd = 0.2)
+#' x.smoothed <- get.x.smoothed(x, 20)
+#' plot(x, type = "l", col = "grey")
+#' lines(x.smoothed, col = "blue")
+#'
+#' @export
+#'
+get.x.smoothed <- function(x, W.vl, NA.repl.surce.k = 4){
+
+  x.smoothed <- RunningWinSmooth(x = x, W = W.vl)
+  ## Replace NA's in head/tail of smoothed signal with some neutral average flat line
+  ## Vector length of replacement NA's area
+
+  NA.vl <- floor((W.vl + (W.vl %% 2) - 1)/2)
+  ## Replace NAs in vector's head
+  repl.head.idx        <- 1:NA.vl
+  repl.head.source.idx <- 1:(NA.repl.surce.k * NA.vl)
+  x.smoothed[repl.head.idx] <- mean(x.smoothed[repl.head.source.idx], na.rm = TRUE)
+
+  ## Replace NAs in vector's tail
+  repl.tail.idx        <- length(x.smoothed) - ((NA.vl - 1):0)
+  repl.tail.source.idx <- length(x.smoothed) - ((NA.repl.surce.k * NA.vl - 1):0)
+  x.smoothed[repl.tail.idx] <- mean(x.smoothed[repl.tail.source.idx], na.rm = TRUE)
+
+  return(x.smoothed)
+
+}
+
+

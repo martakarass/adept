@@ -37,3 +37,28 @@ test_that("Smoothing of f(x) = sin(x) + noise, for long signal f(x)", {
 
   expect_equal(mean(x.smoothed, na.rm = TRUE), 0.000299133646333034)
 })
+
+
+test_that("Test get.x.smoothed, a wrapper for RunningWinSmooth", {
+
+  set.seed(20191021)
+  x <- sin(seq(0, 2 * pi, length.out = 1000)) + rnorm(1000, sd = 0.2)
+  x.smoothed  <- get.x.smoothed(x, 20)
+  x.smoothed2 <- RunningWinSmooth(x, W = 20)
+  x.smoothed2.na <- which(!is.na(x.smoothed2))
+
+  expect_true(all(x.smoothed[x.smoothed2.na] == x.smoothed2[x.smoothed2.na]))
+  expect_false(any(is.na(x.smoothed)))
+  expect_equal(mean(x.smoothed), 0.00452722326391469)
+
+
+  set.seed(20191021)
+  x <- sin(seq(0, 2 * pi, length.out = 10000)) + rnorm(10000, sd = 0.2)
+  x.smoothed  <- get.x.smoothed(x, 99)
+  x.smoothed2 <- RunningWinSmooth(x, W = 99)
+  x.smoothed2.na <- which(!is.na(x.smoothed2))
+
+  expect_true(all(x.smoothed[x.smoothed2.na] == x.smoothed2[x.smoothed2.na]))
+  expect_false(any(is.na(x.smoothed)))
+  expect_equal(mean(x.smoothed), 0.001819928)
+})
