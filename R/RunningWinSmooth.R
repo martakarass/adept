@@ -7,12 +7,15 @@
 #' The tails of the output vector where the moving window is undefined are filled with \code{NA}.
 #'
 #' @param x A numeric vector.
-#' @param W A width of a moving window given in number of indices. Must be \eqn{\geq 3} and
-#' an odd number (see Details).
+#' @param W A width of a moving window given in time (seconds).
+#' @param x.fs Frequency of \code{x} expressed in number of observations collected
+#' per second. Defaults to \code{1}.
 #'
 #' @details
-#' If \code{W} is  \eqn{< 3} then an error is thrown. If \code{W} is an even number, then the
-#' value \code{W-1} is silently used as a width of a moving window instead.
+#' Frequency of \code{x} and a width of a moving window given in time (seconds) determines
+#' \code{W.vl = W * x.fs}, a width of a moving window given in vector length.
+#' If \code{W.vl} is  \eqn{W.vl < 3} then an error is thrown. If \code{W.vl} is an even number, then the
+#' value \code{W.vl-1} is silently used as a width of a moving window instead.
 #'
 #' Implementation uses convolution computed via Fast Fourier Transform,
 #' which is expected to reduce computational time, especially
@@ -44,22 +47,23 @@
 #' points(RunningWinSmooth(x, W), col = "red")
 #' }
 #'
-RunningWinSmooth <- function(x, W){
+RunningWinSmooth <- function(x, W, x.fs = 1){
 
-  if (W < 3) stop("W must be not smaller than 3 vector indices. Define wider averaging window length")
+  W.vl <- round(W * x.fs)
+  if (W.vl < 3) stop("W must be not smaller than 3 vector indices. Define wider averaging window length")
 
   ## Replace W with closest odd integer no larger than W
-  W <-  W + (W %% 2) - 1
+  W.vl <-  W.vl + (W.vl %% 2) - 1
 
   ## Comoute moving average via convolution of signal and a fixed value vector
   N <- length(x)
-  win <- rep(1/W, W)
-  win <- append(win, rep(0, N - W))
+  win <- rep(1/W.vl, W.vl)
+  win <- append(win, rep(0, N - W.vl))
   x.out0 <- convolve(x, win)
   x.out0 <- x.out0[1:N]
 
   ## Redefine head and tail of a signal
-  W.wing <- floor(W/2)
+  W.wing <- floor(W.vl/2)
   x.out.head <- rep(NA, W.wing)
   x.out.tail <- rep(NA, W.wing)
 
@@ -84,7 +88,9 @@ RunningWinSmooth <- function(x, W){
 #'
 #'
 #' @param x Numeric vector to be smoothed.
-#' @param W.vl Vector length of MA window.
+#' @param W A width of a moving window given in time (seconds).
+#' @param x.fs Frequency of \code{x} expressed in number of observations collected
+#' per second. Defaults to \code{1}.
 #' @param NA.repl.surce.k Scalar for number of subsequent/procceeding non-\code{NA} values that appear
 #' in smoothed signal and are used to provide sample mean replacement for \code{NA} values.
 #'
@@ -101,8 +107,9 @@ RunningWinSmooth <- function(x, W){
 #'
 #' @export
 #'
-get.x.smoothed <- function(x, W.vl, NA.repl.surce.k = 4){
+get.x.smoothed <- function(x, W, x.fs = 1, NA.repl.surce.k = 4){
 
+  W.vl <- W * x.fs
   x.smoothed <- RunningWinSmooth(x = x, W = W.vl)
   ## Replace NA's in head/tail of smoothed signal with some neutral average flat line
   ## Vector length of replacement NA's area

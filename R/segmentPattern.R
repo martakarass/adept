@@ -55,7 +55,6 @@ segmentPattern <- function(x,
   ## Define grid of template vector lengths (corresponding to pattern durations)
   template.vl <- pattern.dur.seq * x.fs
   template.vl <- sort(unique(round(template.vl)))
-
   ## Rescale templates
   if (!is.list(template)) template <- list(template)
   template.scaled <- scaleTemplate(template, template.vl)
@@ -65,8 +64,8 @@ segmentPattern <- function(x,
   ## Smooth x signal for ADEPT similarity matrix computation
 
   if (!is.null(x.adept.ma.W)){
-    W.vl       <- x.adept.ma.W * x.fs
-    x.smoothed <- get.x.smoothed(x, W.vl)
+    # W.vl       <- x.adept.ma.W * x.fs
+    x.smoothed <- get.x.smoothed(x, W = x.adept.ma.W, x.fs = x.fs)
   } else {
     x.smoothed <- x
   }
@@ -79,8 +78,8 @@ segmentPattern <- function(x,
 
     ## Signal smoothing for fine tunning
     if (!is.null(finetune.maxima.ma.W) && finetune.maxima.ma.W > 0){
-      W.vl              <- finetune.maxima.ma.W * x.fs
-      finetune.maxima.x <- get.x.smoothed(x, W.vl)
+      # W.vl              <- finetune.maxima.ma.W * x.fs
+      finetune.maxima.x <- get.x.smoothed(x, W = finetune.maxima.ma.W, x.fs = x.fs)
     } else {
       finetune.maxima.x <- x
     }
