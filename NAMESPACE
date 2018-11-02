@@ -3,6 +3,7 @@
 export(RunningWinSmooth)
 export(adeptSimilarity)
 export(get.x.smoothed)
+export(maxAndTune)
 export(segmentPattern)
 import(parallel)
 import(runstats)

@@ -31,10 +31,7 @@
 segmentPattern <- function(x,
                            x.fs,
                            template,
-                           # pattern.dur.min = NULL,
-                           # pattern.dur.max  = NULL,
-                           # pattern.dur.step = NULL,
-                           pattern.dur.seq = NULL,
+                           pattern.dur.seq,
                            similarity.measure = "cov",
                            similarity.measure.thresh = 0.0,
                            x.adept.ma.W = NULL,
@@ -42,19 +39,18 @@ segmentPattern <- function(x,
                            finetune.maxima.ma.W = NULL,
                            finetune.maxima.nbh.W = NULL,
                            run.parallel = FALSE,
-                           run.parallel.ncores = NULL){
+                           run.parallel.ncores = NULL,
+                           x.cut = TRUE,
+                           x.cut.vl = 6000){
 
   ## ---------------------------------------------------------------------------
   ## Compute collection of rescaled template(s)
 
-  # ## Define grid of pattern durations, expressed in time [sec]
-  # if (is.null(pattern.dur.seq)){
-  #   pattern.dur.seq <- seq(pattern.dur.min, pattern.dur.max, by = pattern.dur.step)
-  # }
-
   ## Define grid of template vector lengths (corresponding to pattern durations)
   template.vl <- pattern.dur.seq * x.fs
   template.vl <- sort(unique(round(template.vl)))
+  template.vl.max <- max(template.vl)
+  template.vl.min <- min(template.vl)
   ## Rescale templates
   if (!is.list(template)) template <- list(template)
   template.scaled <- scaleTemplate(template, template.vl)
@@ -90,43 +86,109 @@ segmentPattern <- function(x,
   }
 
 
+  ## ---------------------------------------------------------------------------
+  ## ---------------------------------------------------------------------------
+  ## ---------------------------------------------------------------------------
+  ## PER-SEGMENT COMPUTATION
 
-  ###############################################
-  ###   THIS BELOW MAY be x SUBSET-SPECIFIC   ###
-  ###############################################
+  ## If no signal cutting to parts is allowed
+  if (!x.cut) x.cut.vl <- length(x)
 
+  x.cut.seq <- seq(1, to = length(x), by = x.cut.vl)
+  x.cut.margin <- template.vl.max - 1
+
+  if (run.parallel){
+
+    ## -------------------------------------------------------------------------
+    ## PARALLEL COMPUTATION
+
+    ## Define number of cores
+    if (is.null(run.parallel.ncores)) run.parallel.ncores <- detectCores() - 1
+    cl <- makeCluster(run.parallel.ncores)
+    ## Export objects to cluster
+    clusterExport(cl,
+                  c("x.smoothed", "template.scaled", "similarity.measure",
+                    "adeptSimilarity", "maxAndTune", "finetune_maxima",
+                    "x", "template.vl", "similarity.measure.thresh",
+                    "finetune", "finetune.maxima.x", "finetune.maxima.nbh.vl",
+                    "x.cut.vl", "x.cut.margin"),
+                  envir = environment())
+
+    ## Run ADEPT procedure on each part of x separately
+    out.list <- parLapply(cl, x.cut.seq, function(i){
+      ## Define current x part indices
+      #   ## >>> TESTING x.cut.margin <<<
+      idx.i <- i : min((i + x.cut.vl + x.cut.margin), length(x))
+      ## If we cannot fit the longest pattern, return NULL
+      if (length(idx.i) <= max(template.vl)) return(NULL)
+      ## Compute similarity matrix
+      similarity.mat.i <- adeptSimilarity(x.smoothed[idx.i],
+                                          template.scaled,
+                                          similarity.measure)
+      ## Run max and tine procedure
+      out.df.i <- maxAndTune(x[idx.i],
+                             template.vl,
+                             similarity.mat.i,
+                             similarity.measure.thresh,
+                             finetune,
+                             finetune.maxima.x[idx.i],
+                             finetune.maxima.nbh.vl)
+      ## Shift \tau parameter according to which part of signal x we are currently working with
+      out.df.i$tau_i <- out.df.i$tau_i + i - 1
+      return(out.df.i)
+    })
+    stopCluster(cl)
+
+  } else {
+
+    ## -------------------------------------------------------------------------
+    ## NON-PARALLEL COMPUTATION
+
+    ## Run ADEPT procedure on each part of x separately
+    out.list <- lapply(x.cut.seq, function(i){
+      ## Define current x part indices
+      #   ## >>> TESTING x.cut.margin <<<
+      idx.i <- i : min((i + x.cut.vl + x.cut.margin), length(x))
+      ## If we cannot fit the longest pattern, return NULL
+      if (length(idx.i) <= max(template.vl)) return(NULL)
+      ## Compute similarity matrix
+      similarity.mat.i <- adeptSimilarity(x.smoothed[idx.i],
+                                          template.scaled,
+                                          similarity.measure)
+      ## Run max and tine procedure
+      out.df.i <- maxAndTune(x[idx.i],
+                             template.vl,
+                             similarity.mat.i,
+                             similarity.measure.thresh,
+                             finetune,
+                             finetune.maxima.x[idx.i],
+                             finetune.maxima.nbh.vl)
+      ## Shift \tau parameter according to which part of signal x we are currently working with
+      out.df.i$tau_i <- out.df.i$tau_i + i - 1
+      return(out.df.i)
+    })
+
+  }
 
   ## ---------------------------------------------------------------------------
-  ## ADEPT: covariance matrix computation
+  ## Clear up after possibly multiple stride occurences
+  out.df <- do.call("rbind", out.list)
 
-  ## Compute similarity matrix
-  similarity.mat <- adeptSimilarity(x.smoothed,
-                                    template.scaled,
-                                    similarity.measure,
-                                    run.parallel,
-                                    run.parallel.ncores)
+  k <- floor((template.vl.max-1)/template.vl.min)
+  if (k > 0){
+    for (i in 1:k){
+      out.df <-
+        out.df %>%
+        arrange(tau_i) %>%
+        mutate(tau_i_diff = lag(tau_i + T_i - 1) - tau_i) %>%
+        filter(tau_i_diff <= 0 | is.na(tau_i_diff))
+    }
+    out.df <-
+      out.df %>%
+      select(-tau_i_diff)
+  }
 
-  ## Sanity check
-  if (!(ncol(similarity.mat) == length(x))) stop("!(ncol(similarity.mat) == length(x))")
-  if (!(nrow(similarity.mat) == length(template.vl))) stop("!(nrow(similarity.mat) == length(template.vl))")
-
-  ## ---------------------------------------------------------------------------
-  ## ADEPT: maximization tuning algorithm
-
-  out.df <- maxAndTune(x,
-                       template.vl,
-                       similarity.mat,
-                       similarity.measure.thresh,
-                       finetune,
-                       finetune.maxima.x,
-                       finetune.maxima.nbh.vl)
-
-
-  ## ---------------------------------------------------------------------------
-  ## return the result
-  out.df <- out.df[order(out.df$tau_i), ]
   return(out.df)
-
 }
 
 

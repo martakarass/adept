@@ -75,6 +75,20 @@ finetune_maxima <- function(s.TMP,
 
 
 ## THIS IS (x, similarity.mat) SUBINDICES SPECIFIC
+#' Title
+#'
+#' @param x
+#' @param template.vl
+#' @param similarity.mat
+#' @param similarity.measure.thresh
+#' @param finetune
+#' @param finetune.maxima.x
+#' @param finetune.maxima.nbh.vl
+#'
+#' @return
+#' @export
+#'
+#' @examples
 maxAndTune <- function(x,
                        template.vl,
                        similarity.mat,
