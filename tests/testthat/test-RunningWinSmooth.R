@@ -62,3 +62,5 @@ test_that("Test get.x.smoothed, a wrapper for RunningWinSmooth", {
   expect_false(any(is.na(x.smoothed)))
   expect_equal(mean(x.smoothed), 0.001819928)
 })
+
+

@@ -4,7 +4,8 @@
 \alias{get.x.smoothed}
 \title{Wrapper function for \code{RunningWinSmooth}}
 \usage{
-get.x.smoothed(x, W, x.fs = 1, NA.repl.surce.k = 4)
+get.x.smoothed(x, W, x.fs = 1, NA.repl.source.k = 4, x.cut.vl = 100 *
+  60 * 60 * 24)
 }
 \arguments{
 \item{x}{Numeric vector to be smoothed.}
@@ -14,7 +15,7 @@ get.x.smoothed(x, W, x.fs = 1, NA.repl.surce.k = 4)
 \item{x.fs}{Frequency of \code{x} expressed in number of observations collected
 per second. Defaults to \code{1}.}
 
-\item{NA.repl.surce.k}{Scalar for number of subsequent/procceeding non-\code{NA} values that appear
+\item{NA.repl.source.k}{Scalar for number of subsequent/procceeding non-\code{NA} values that appear
 in smoothed signal and are used to provide sample mean replacement for \code{NA} values.}
 }
 \value{

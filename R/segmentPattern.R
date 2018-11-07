@@ -117,7 +117,6 @@ segmentPattern <- function(x,
     ## Run ADEPT procedure on each part of x separately
     out.list <- parLapply(cl, x.cut.seq, function(i){
       ## Define current x part indices
-      #   ## >>> TESTING x.cut.margin <<<
       idx.i <- i : min((i + x.cut.vl + x.cut.margin), length(x))
       ## If we cannot fit the longest pattern, return NULL
       if (length(idx.i) <= max(template.vl)) return(NULL)

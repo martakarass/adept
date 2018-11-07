@@ -91,7 +91,7 @@ RunningWinSmooth <- function(x, W, x.fs = 1){
 #' @param W A width of a moving window given in time (seconds).
 #' @param x.fs Frequency of \code{x} expressed in number of observations collected
 #' per second. Defaults to \code{1}.
-#' @param NA.repl.surce.k Scalar for number of subsequent/procceeding non-\code{NA} values that appear
+#' @param NA.repl.source.k Scalar for number of subsequent/procceeding non-\code{NA} values that appear
 #' in smoothed signal and are used to provide sample mean replacement for \code{NA} values.
 #'
 #' @return Smoothed signal with  \code{NA} values replaced with sample means of
@@ -107,26 +107,50 @@ RunningWinSmooth <- function(x, W, x.fs = 1){
 #'
 #' @export
 #'
-get.x.smoothed <- function(x, W, x.fs = 1, NA.repl.surce.k = 4){
+get.x.smoothed <- function(x, W, x.fs = 1, NA.repl.source.k = 4,
+                           x.cut.vl = 100 * 60 * 60 * 24){
 
   W.vl <- W * x.fs
-  x.smoothed <- RunningWinSmooth(x = x, W = W.vl)
-  ## Replace NA's in head/tail of smoothed signal with some neutral average flat line
-  ## Vector length of replacement NA's area
 
-  NA.vl <- floor((W.vl + (W.vl %% 2) - 1)/2)
-  ## Replace NAs in vector's head
-  repl.head.idx        <- 1:NA.vl
-  repl.head.source.idx <- 1:(NA.repl.surce.k * NA.vl)
-  x.smoothed[repl.head.idx] <- mean(x.smoothed[repl.head.source.idx], na.rm = TRUE)
+  ## Nested fuction responsible for filling the NAs
+  x.smoothed.fill.NA <- function(x.smoothed){
+    ## Replace NA's in head/tail of smoothed signal with some neutral average flat line
+    ## Vector length of replacement NA's area
+    NA.vl <- floor((W.vl + (W.vl %% 2) - 1)/2)
+    ## Replace NAs in vector's head
+    repl.head.idx        <- 1:NA.vl
+    repl.head.source.idx <- 1:(NA.repl.source.k * NA.vl)
+    x.smoothed[repl.head.idx] <- mean(x.smoothed[repl.head.source.idx], na.rm = TRUE)
+    ## Replace NAs in vector's tail
+    repl.tail.idx        <- length(x.smoothed) - ((NA.vl - 1):0)
+    repl.tail.source.idx <- length(x.smoothed) - ((NA.repl.source.k * NA.vl - 1):0)
+    x.smoothed[repl.tail.idx] <- mean(x.smoothed[repl.tail.source.idx], na.rm = TRUE)
+    return(x.smoothed)
+  }
 
-  ## Replace NAs in vector's tail
-  repl.tail.idx        <- length(x.smoothed) - ((NA.vl - 1):0)
-  repl.tail.source.idx <- length(x.smoothed) - ((NA.repl.surce.k * NA.vl - 1):0)
-  x.smoothed[repl.tail.idx] <- mean(x.smoothed[repl.tail.source.idx], na.rm = TRUE)
+  ## Decide whether to smooth on x parts or not
+  x.vl <- length(x)
+  if (x.vl > x.cut.vl){
+    rn <- ceiling(x.vl / x.cut.vl)
+    x.split.idx <- unlist(lapply(1:rn, function(i) rep(i, x.cut.vl)))[1:x.vl]
+    if ((sum(x.split.idx == rn) < 100 * 60) & (rn > 1)){
+      x.split.idx[x.split.idx == rn] <- rn - 1
+    }
+    x.split <- split(x, x.split.idx)
+    ## Apply to each part of x split
+    x.smoothed.list <- lapply(x.split, function(x.split.i){
+      x.smoothed.i <- RunningWinSmooth(x = x.split.i, W = W, x.fs = x.fs)
+      x.smoothed.i <- x.smoothed.fill.NA(x.smoothed.i)
+      return(x.smoothed.i)
+    })
+    x.smoothed <- unlist(x.smoothed.list)
+
+  } else {
+    x.smoothed <- RunningWinSmooth(x = x, W = W, x.fs = x.fs)
+    x.smoothed <- x.smoothed.fill.NA(x.smoothed)
+  }
 
   return(x.smoothed)
-
 }
 
 
