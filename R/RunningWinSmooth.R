@@ -153,4 +153,26 @@ get.x.smoothed <- function(x, W, x.fs = 1, NA.repl.source.k = 4,
   return(x.smoothed)
 }
 
+# get.x.smoothed<- function(x, W, x.fs = 1, NA.repl.surce.k = 4){
+#
+#   W.vl <- W * x.fs
+#   x.smoothed <- RunningWinSmooth(x = x, W = W, x.fs = x.fs)
+#   ## Replace NA's in head/tail of smoothed signal with some neutral average flat line
+#   ## Vector length of replacement NA's area
+#
+#   NA.vl <- floor((W.vl + (W.vl %% 2) - 1)/2)
+#   ## Replace NAs in vector's head
+#   repl.head.idx        <- 1:NA.vl
+#   repl.head.source.idx <- 1:(NA.repl.surce.k * NA.vl)
+#   x.smoothed[repl.head.idx] <- mean(x.smoothed[repl.head.source.idx], na.rm = TRUE)
+#
+#   ## Replace NAs in vector's tail
+#   repl.tail.idx        <- length(x.smoothed) - ((NA.vl - 1):0)
+#   repl.tail.source.idx <- length(x.smoothed) - ((NA.repl.surce.k * NA.vl - 1):0)
+#   x.smoothed[repl.tail.idx] <- mean(x.smoothed[repl.tail.source.idx], na.rm = TRUE)
+#
+#   return(x.smoothed)
+#
+# }
+
 
