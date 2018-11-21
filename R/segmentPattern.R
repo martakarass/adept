@@ -106,7 +106,7 @@ segmentPattern <- function(x,
   } else {
     plan(sequential)
   }
-  out.list <- lapply(x.cut.seq, function(i){
+  out.list.f <- lapply(x.cut.seq, function(i){
     future({
       ## Define current x part indices
       idx.i <- i : min((i + x.cut.vl + x.cut.margin), length(x))
@@ -129,6 +129,7 @@ segmentPattern <- function(x,
       return(out.df.i)
     })
   })
+  out.list <- lapply(out.list.f, value)
 
 
   ## ---------------------------------------------------------------------------
