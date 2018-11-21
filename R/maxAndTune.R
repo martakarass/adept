@@ -172,7 +172,7 @@ maxAndTune <- function(x,
 
   ## List to data frame
   out.df <- as.data.frame(do.call(rbind, out.list))
-  names(out.df) <- c("tau_i", "T_i", "sim_i")
+  if (nrow(out.df) > 0) names(out.df) <- c("tau_i", "T_i", "sim_i")
 
   return(out.df)
 
