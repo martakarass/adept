@@ -125,8 +125,15 @@ segmentPattern <- function(x,
                              finetune.maxima.x[idx.i],
                              finetune.maxima.nbh.vl)
       ## Shift \tau parameter according to which part of signal x we are currently working with
-      out.df.i$tau_i <- out.df.i$tau_i + i - 1
-      return(out.df.i)
+      if (nrow(out.df.i) > 0){
+        out.df.i$tau_i <- out.df.i$tau_i + i - 1
+        return(out.df.i)
+      } else {
+        ## Return empty data frame
+        return(data.frame(tau_i = numeric(), T_i = numeric(), sim_i = numeric()))
+      }
+      # if (nrow(out.df.i)>0) out.df.i$tau_i <- out.df.i$tau_i + i - 1
+      # return(out.df.i)
     })
   })
   out.list <- lapply(out.list.f, value)
