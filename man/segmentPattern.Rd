@@ -8,10 +8,10 @@ segmentPattern(x, x.fs, template, pattern.dur.seq,
   similarity.measure = "cov", similarity.measure.thresh = 0,
   x.adept.ma.W = NULL, finetune = NULL, finetune.maxima.ma.W = NULL,
   finetune.maxima.nbh.W = NULL, run.parallel = FALSE,
-  run.parallel.ncores = NULL, x.cut = TRUE, x.cut.vl = 6000)
+  run.parallel.workers = NULL, x.cut = TRUE, x.cut.vl = 6000)
 }
 \arguments{
-\item{run.parallel.ncores}{}
+\item{run.parallel.workers}{}
 }
 \value{
 Data frame with summary of segmented pattern occurences; has the

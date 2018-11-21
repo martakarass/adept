@@ -24,6 +24,7 @@ VignetteBuilder: knitr
 Imports: 
     tibble,
     dplyr,
-    runstats
+    runstats,
+    future
 Remotes: 
   martakarass/runstats
