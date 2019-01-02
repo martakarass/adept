@@ -4,11 +4,10 @@
 \alias{adeptSimilarity}
 \title{Title}
 \usage{
-adeptSimilarity(x, template.scaled, similarity.measure,
-  run.parallel = FALSE, run.parallel.ncores = NULL)
+adeptSimilarity(x, template.scaled, similarity.measure)
 }
 \arguments{
-\item{run.parallel.ncores}{}
+\item{similarity.measure}{}
 }
 \value{
 

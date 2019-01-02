@@ -6,12 +6,9 @@
 #' @param x
 #' @param template.scaled
 #' @param similarity.measure
-#' @param run.parallel
-#' @param run.parallel.ncores
 #'
 #' @return
 #'
-#' @import parallel
 #' @import runstats
 #'
 #' @export
