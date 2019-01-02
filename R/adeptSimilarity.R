@@ -20,9 +20,7 @@
 #'
 adeptSimilarity <- function(x,
                             template.scaled,
-                            similarity.measure,
-                            run.parallel = FALSE,
-                            run.parallel.ncores = NULL){
+                            similarity.measure){
 
   runstat.func <- switch(similarity.measure,
                          "cov" = RunningCov,
