@@ -28,41 +28,20 @@ adeptSimilarity <- function(x,
                          "cov" = RunningCov,
                          "cor" = RunningCor)
 
-  if (run.parallel) {
+  ## Outer lapply: iterate over template scales considered:
+  ## each lapply iteration "fills one row" of final similarity matrix
+  similarity.list <- lapply(template.scaled, function(template.scaled.i){
 
-    ## Parallel execution
-    if (is.null(run.parallel.ncores)) run.parallel.ncores <- detectCores() - 1
-    cl <- makeCluster(run.parallel.ncores)
-    clusterExport(cl,
-                  c("x", "template.scaled", "runstat.func"),
-                  envir = environment())
-    ## parLapply: apply over different scale parameters within `template.scaled`
-    similarity.list <- parLapply(cl, template.scaled, function(template.scaled.i){
-      ## lapply: for particular scale parameter, apply over possibly multiple templates
-      runstat.func.out0 <- lapply(template.scaled.i, function(template.scaled.ik){
-        do.call(runstat.func, list(x = x, y = template.scaled.ik))
-      })
-      ## Take best result over possibly multiple templates
-      do.call(pmax, runstat.func.out0)
-    })
-    stopCluster(cl)
-
-  } else {
-
-    ## Non-parallel execution
-    ## lapply: apply over different scale parameters within `template.scaled`
-    similarity.list <- lapply(template.scaled, function(template.scaled.i){
-      ## lapply: for particular scale parameter, apply over possibly multiple templates
-      runstat.func.out0 <- lapply(template.scaled.i, function(template.scaled.ik){
-        do.call(runstat.func, list(x = x, y = template.scaled.ik))
-      })
-      ## Take best result over possibly multiple templates
-      do.call(pmax, runstat.func.out0)
+    ## Outer lapply: iterate over distinct templates considered (fixed template scale)
+    runstat.func.out0 <- lapply(template.scaled.i, function(template.scaled.ik){
+      do.call(runstat.func, list(x = x, y = template.scaled.ik))
     })
 
-  }
+    ## Compute and store highest result over possibly multiple templates
+    do.call(pmax, runstat.func.out0)
+  })
 
-  ## List of vectors to matrix
+  ## rbind into a matrix
   similarity.mat <- do.call(rbind, similarity.list)
   return(similarity.mat)
 
