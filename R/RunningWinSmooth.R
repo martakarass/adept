@@ -3,23 +3,19 @@
 #' Fast Computation of Moving Window Average
 #'
 #' @description
-#' Computes moving window average of a vector via Fast Fourier Transform.
+#' Computes moving window average of a vector.
 #' The tails of the output vector where the moving window is undefined are filled with \code{NA}.
 #'
 #' @param x A numeric vector.
-#' @param W A width of a moving window given in time (seconds).
+#' @param W A length of a moving window given in time (seconds).
 #' @param x.fs Frequency of \code{x} expressed in number of observations collected
 #' per second. Defaults to \code{1}.
 #'
 #' @details
-#' Frequency of \code{x} and a width of a moving window given in time (seconds) determines
-#' \code{W.vl = W * x.fs}, a width of a moving window given in vector length.
+#' Frequency of \code{x} and a length of a moving window given in time (seconds) determines
+#' \code{W.vl = W * x.fs}, a length of a moving window given in vector length.
 #' If \code{W.vl} is  \eqn{W.vl < 3} then an error is thrown. If \code{W.vl} is an even number, then the
 #' value \code{W.vl-1} is silently used as a width of a moving window instead.
-#'
-#' Implementation uses convolution computed via Fast Fourier Transform,
-#' which is expected to reduce computational time, especially
-#' for a long \code{x} vector, compared to conventional convolution computation.
 #'
 #' @return A numeric vector of moving window average.
 #'
@@ -55,7 +51,7 @@ RunningWinSmooth <- function(x, W, x.fs = 1){
   ## Replace W with closest odd integer no larger than W
   W.vl <-  W.vl + (W.vl %% 2) - 1
 
-  ## Comoute moving average via convolution of signal and a fixed value vector
+  ## Compute moving average via convolution of signal and a fixed value vector
   N <- length(x)
   win <- rep(1/W.vl, W.vl)
   win <- append(win, rep(0, N - W.vl))
@@ -72,8 +68,6 @@ RunningWinSmooth <- function(x, W, x.fs = 1){
              x.out.tail)
   return(x.out)
 }
-
-
 
 
 
@@ -105,7 +99,7 @@ RunningWinSmooth <- function(x, W, x.fs = 1){
 #' plot(x, type = "l", col = "grey")
 #' lines(x.smoothed, col = "blue")
 #'
-#' @export
+#' @noRd
 #'
 get.x.smoothed <- function(x, W, x.fs = 1, NA.repl.source.k = 4,
                            x.cut.vl = 100 * 60 * 60 * 24){

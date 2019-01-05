@@ -4,33 +4,53 @@
 #' Compute ADEPT similarity matrix
 #'
 #' Compute ADEPT similarity matrix between time-series \code{x} and a collection
-#' of rescaled versions of empirical pattern(s).
+#' of scaled versions of empirical pattern(s).
 #'
 #' @param x A numeric vector; time-series \code{x}.
-#' @param template.scaled A list of rescaled versions of empirical pattern(s).
-#' Number of elements in the list corresponds to number of unique pattern scale
-#' parameters considered. Each element of \code{template.scaled} is a list
-#' itself and contains numeric vector(s) where each vector corresponds to
-#' one of possibly multiple distinct patterns considered.
-#' @param similarity.measure Character value; one of the following:
+#' @param template.scaled A list of scaled versions of empirical pattern(s).
+#' Number of elements in the \code{template.scaled} list corresponds to the number of unique pattern scale
+#' values considered. Each element of \code{template.scaled} is a list
+#' itself that contains a numeric vector(s), where each vector represents
+#' one of possibly multiple distinct empirical patterns considered, scaled
+#' to have the same vector length (same scale value). See: \code{scaleTemplate {adept}}.
+#' @param similarity.measure Character value; denotes similarity function to be
+#' used in similarity matrix computation; one of the following:
 #' \itemize{
-#'   \item "cov",
-#'   \item "cor".
+#'   \item "cov" - for running covariance,
+#'   \item "cor" - for running correlation.
 #' }
 #'
-#' @return A numeric matrix with similarity values; number of columns
-#' corresponds to vector length of time-series \code{x}. Number of rows
-#' corresponds different pattern scale values considered (equivalently:
-#' length of \code{template.scaled} list). Each row of the matrix consists
-#' of vector of running similarity statistic (correlation, covariance etc.)
-#' between  \code{x} and a pattern template(s) rescaled to matrix row-specific
-#' particular scale parameter. Precisely, a vector with the highest similarity
-#' result at each time point, over possibly multiple pattern templates, is
-#' returned.
+#' @return A numeric matrix with similarity values. A number of matrix columns
+#' corresponds to a vector length of time-series \code{x}. A number of matrix rows
+#' corresponds to a number of different pattern scale values considered (equivalently:
+#' length of \code{template.scaled} list). Each matrix row consists
+#' of a vector of similarity statistic (correlation, covariance etc.)
+#' between \code{x} and a pattern rescaled to matrix row-specific
+#' scale parameter; precisely, it is a vector with the highest similarity
+#' value corresponding to a particular time point of time-series \code{x}, computed out of
+#' possibly multiple patterns.
 #'
+#' @seealso \code{scaleTemplate {adept}}
+#'
+#' @export
 #' @import runstats
 #'
-#' @noRd
+#' @examples
+#' ## Simulate data
+#' par(mfrow = c(1,1))
+#' x0 <- sin(seq(0, 2 * pi * 100, length.out = 10000))
+#' x  <- x0 + rnorm(1000, sd = 0.1)
+#' template <- list(x0[1:500])
+#' template.vl <- seq(300, 700, by = 50)
+#' ## Rescale pattern
+#' template.scaled <- scaleTemplate(template, template.vl)
+#' ## Compute ADEPT similarity matrix
+#' out <- adeptSimilarity(x, template.scaled, "cov")
+#' \dontrun{
+#' ## Visualize
+#' par(mfrow = c(1,1))
+#' image(t(out), main = "ADEPT similarity matrix", xlab = "time-series x index")
+#' }
 #'
 adeptSimilarity <- function(x,
                             template.scaled,
@@ -40,13 +60,15 @@ adeptSimilarity <- function(x,
                          "cov" = RunningCov,
                          "cor" = RunningCor)
 
-  ## Outer lapply: iterate over template scales considered:
-  ## each lapply iteration fills one row of an output similarity matrix
+  ## Outer lapply: iterate over pattern scales considered;
+  ## each lapply iteration fills one row of the output similarity matrix.
   similarity.list <- lapply(template.scaled, function(template.scaled.i){
 
-    ## Inner lapply: iterate over distinct pattern templates considered
-    ## (fixed template scale); a vector with the highest similarity result
-    ## at each time point, over possibly multiple pattern templates, is returned
+    ## Inner lapply: iterate over, possibly, multiple patterns;
+    ## each lapply iteration returns a vector whose each element corresponds
+    ## to the highest value of similarity between signal \code{x} and
+    ## a short pattern
+    ## at a time point corresponding to this vector's element.
     runstat.func.out0 <- lapply(template.scaled.i, function(template.scaled.ik){
       do.call(runstat.func, list(x = x, y = template.scaled.ik))
     })
@@ -59,3 +81,4 @@ adeptSimilarity <- function(x,
   return(similarity.mat)
 
 }
+

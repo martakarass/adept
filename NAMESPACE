@@ -2,8 +2,7 @@
 
 export(RunningWinSmooth)
 export(adeptSimilarity)
-export(get.x.smoothed)
-export(maxAndTune)
+export(scaleTemplate)
 export(segmentPattern)
 import(future)
 import(runstats)

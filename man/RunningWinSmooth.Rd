@@ -9,7 +9,7 @@ RunningWinSmooth(x, W, x.fs = 1)
 \arguments{
 \item{x}{A numeric vector.}
 
-\item{W}{A width of a moving window given in time (seconds).}
+\item{W}{A length of a moving window given in time (seconds).}
 
 \item{x.fs}{Frequency of \code{x} expressed in number of observations collected
 per second. Defaults to \code{1}.}
@@ -18,18 +18,14 @@ per second. Defaults to \code{1}.}
 A numeric vector of moving window average.
 }
 \description{
-Computes moving window average of a vector via Fast Fourier Transform.
+Computes moving window average of a vector.
 The tails of the output vector where the moving window is undefined are filled with \code{NA}.
 }
 \details{
-Frequency of \code{x} and a width of a moving window given in time (seconds) determines
-\code{W.vl = W * x.fs}, a width of a moving window given in vector length.
+Frequency of \code{x} and a length of a moving window given in time (seconds) determines
+\code{W.vl = W * x.fs}, a length of a moving window given in vector length.
 If \code{W.vl} is  \eqn{W.vl < 3} then an error is thrown. If \code{W.vl} is an even number, then the
 value \code{W.vl-1} is silently used as a width of a moving window instead.
-
-Implementation uses convolution computed via Fast Fourier Transform,
-which is expected to reduce computational time, especially
-for a long \code{x} vector, compared to conventional convolution computation.
 }
 \examples{
 ## trivial example f(x) = x

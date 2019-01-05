@@ -8,18 +8,71 @@
 #' via identifying singal peaks in respective neighbourhoods of
 #' occurence start and end locations.
 #'
-#' @param s.TMP Index of preliminarily localized parttern occurence start within a signal.
-#' @param tau.TMP Vector length of preliminarily localized parttern occurence within a signal.
-#' @param nbh.wing Vector length of each side of a neighbourhood.
-#' @param x.Fitted Vector of same length as a signal length; contains information
-#' whether or not a signal has a pattern occurence already identified at certain index.
-#' @param finetune.maxima.x Singal (or its smoothed version) within which we are
-#' searching for pattern occurrences.
-#' @param template.vl.min Minimal assumed vector length of a pattern occurrence we are searching for.
-#' @param template.vl.max Maximal assumed vector length of a pattern occurrence we are searching for.
+#' @details
+#' First, respective neighbourhoods of preliminary locations of parttern
+#' occurence start and end, \code{tau1.nbh} and \code{tau2.nbh} respectivelty,
+#' are defined. To do this:
+#' \itemize{
+#'   \item we define a vector, centered at preliminary
+#'   start and end points, of length (2x \code{nbh.wing} + 1).
+#'   \item we assure these neighbourhoods are not outside the scope of, possibly
+#'   smoothed, time-series \code{x} (defined here as \code{finetune.maxima.x} vector),
+#'   \item we assure these neighbourhoods do not contain areas of time-series \code{x}
+#'   where a pattern occurence has been already identified.
+#' }
 #'
-#' @return 2-element vector of tuned: (1) index of localized parttern occurence start within a signal,
-#' (2) vector length of localized parttern occurence within a signal.
+#' Second, we define a matrix \code{tau12.mat} -- a matrix of distances between
+#' indices of all pairs of points from \code{tau1.nbh} and \code{tau2.nbh} neighbourhoods.
+#' We then identify these pairs of points which are "valid" in a sense the distance
+#' between their indices is within ranges defined as minimal and maximal
+#' vector length of a pattern occurrence we are searching for.
+#' In other words, a stride which has a start and end to be at any "valid"
+#' pair of points from \code{tau1.nbh} and \code{tau2.nbh} neighbourhoods, respectively,
+#' has vector length within ranges defined as minimal and maximal
+#' vector length of a pattern occurrence we are searching for.
+#' Matrix \code{tau12.mat.VALID} has entry equal to \code{1} where a corresponding
+#' pair of points from \code{tau1.nbh} and \code{tau2.nbh} neighbourhoods is "valid"
+#' and has entry equal to \code{0} otherwise.
+#'
+#' Third, we compute \code{x.mat} -- matrix whose entries are sums of values of,
+#' possibly smoothed, time-series \code{x}, (defined here as \code{finetune.maxima.x} vector),
+#' computed for each pairs of points from \code{tau1.nbh} and \code{tau2.nbh} neighbourhoods.
+#' Clearly, the highest \code{x.mat} matrix entry corresponds to
+#' two points for which  \code{finetune.maxima.x} attains its peaks within
+#' \code{tau1.nbh} and \code{tau2.nbh} neighbourhoods.
+#'
+#' Then, we define \code{x.mat.VALID} which is \code{x.mat} subset to a values
+#' whose corresponding indices are "valid", as coded within \code{tau12.mat.VALID}
+#' matrix. Finally, we identify the pair of points from \code{tau1.nbh} and
+#' \code{tau2.nbh} neighbourhoods which correspond to a maximum entry of
+#' \code{x.mat.VALID} matrix.
+#'
+#'
+#' @param s.TMP An integer; an index of a preliminarily idenitifed parttern occurence start
+#' within a time-series \code{x}.
+#' @param tau.TMP An integer; a vector length of a preliminarily idenitifed parttern occurence
+#' within a time-series \code{x}.
+#' @param nbh.wing An integer; a vector length of each side of a neighbourhood centered
+#' at preliminary locations of parttern occurence start and end.
+#' @param x.Fitted A numeric vector; has the same length as time-series \code{x} /
+#' \code{finetune.maxima.x};  each element of this vector has either value \code{1}
+#' if \code{x} has a pattern occurence already
+#' identified at a corresponding index, or value \code{NA} otherwise.
+#' @param finetune.maxima.x A numeric vector; either time-series \code{x} within which we are
+#' searching for pattern occurrences, or its already
+#' smoothed version.
+#' @param template.vl.min An integer; minimal vector length of a pattern occurrence we are searching for.
+#' @param template.vl.max An integer; maximal vector length of a pattern occurrence we are searching for.
+#'
+#' @return A 2-element numeric vector that contains:
+#' \itemize{
+#'   \item at its 1st element: an index of localized parttern occurence start
+#'   within a time-series \code{x},
+#'   \item at its 2nd element: a vector length of localized parttern occurence
+#'   within a time-series \code{x}.
+#' }
+#'
+#' @noRd
 #'
 finetune_maxima <- function(s.TMP,
                             tau.TMP,
@@ -29,10 +82,10 @@ finetune_maxima <- function(s.TMP,
                             template.vl.min,
                             template.vl.max){
 
-  # message("finetune_maxima2")
-
-  ## Define tau1: pattern occurence start index as identified so far
-  ## Define tau2: pattern occurence end index as identified so far
+  ## Define tau1: pattern occurence start index within a time-series \code{x}
+  ## (as preliminarily identified)
+  ## Define tau2: pattern occurence end index within a time-series \code{x}
+  ## (as preliminarily identified)
   tau1.TMP <- tau.TMP
   tau2.TMP <- tau.TMP + s.TMP - 1
   x.Fitted.vl <- length(x.Fitted)
@@ -56,13 +109,16 @@ finetune_maxima <- function(s.TMP,
   tau12.mat       <- outer(tau2.nbh, tau1.nbh, FUN = "-") + 1
   tau12.mat.VALID <- (1 * (tau12.mat <= template.vl.max) + 1 * (tau12.mat >= template.vl.min) - 1)
 
-  ## Identify maxima of `finetune.maxima.x` in the two neighbourhods with within egligible indices
+  ## Identify a pair of points in the two neighbourhods
+  ## which corresponds to maxima of `finetune.maxima.x` within egligible indices
   tau1.nbh.x  <- finetune.maxima.x[tau1.nbh]
   tau2.nbh.x  <- finetune.maxima.x[tau2.nbh]
   x.mat       <- outer(tau2.nbh.x, tau1.nbh.x, FUN = "+")
   x.mat.VALID <- x.mat * tau12.mat.VALID
   which.out   <- which(x.mat.VALID == max(x.mat.VALID), arr.ind = TRUE)[1,]
 
+  ## Define "tuned" start and end index point of identified pattern occurence
+  ## within a time-series \code{x}
   tau.NEW    <- tau1.nbh[which.out[2]]
   s.NEW      <- tau2.nbh[which.out[1]] - tau.NEW + 1
 
@@ -74,28 +130,81 @@ finetune_maxima <- function(s.TMP,
 
 
 
-## THIS IS (x, similarity.mat) SUBINDICES SPECIFIC
-#' Title
+#' Perform maximization-tunning procedure for ADEPT
 #'
-#' @param x
-#' @param template.vl
-#' @param similarity.mat
-#' @param similarity.measure.thresh
-#' @param finetune
-#' @param finetune.maxima.x
-#' @param finetune.maxima.nbh.vl
+#' Perform two-step maximization-tunning procedure to segment pattern occurrences
+#' from time-series \code{x}.
 #'
-#' @return
-#' @export
+#' @details
+#' The first step of the procedure consists of maximization of the
+#' covariance between the scaled empirical pattern(s) and time-series \code{x}.
+#' This provides a good idea about the where the pattern occurrence is localized,
+#' but it can miss the exact location by fractions of a second.
 #'
-#' @examples
+#' The second step (optional) is designed to tune the stride segmentation to more match
+#' the beginning and ends of the pattern. Currently, only maxima-detection
+#' tuning procedure is implemented. Maxima-detection tuning procedure
+#' identifies  local maximum of (possibly smoothed) time-series \code{x}
+#' in the neighbourhood of preliminary locations of parttern
+#' occurence start and end found in step 1.
+#'
+#' The arguments related to the second (optional) tunning step are:
+#' \code{finetune}, \code{finetune.maxima.x}, \code{finetune.maxima.nbh.vl}
+#' (all default to \code{NULL}).
+#'
+#' @param x A numeric vector. Time-series from which we intend to segment pattern occurrences.
+#' @param template.vl A numeric vector. A grid of vector lengths that were used for
+#' scaling the pattern.
+#' @param similarity.mat A numeric matrix with similarity values. A number of matrix columns
+#' corresponds to a vector length of time-series \code{x}. A number of matrix rows
+#' corresponds to a number of different pattern scale values considered (equivalently:
+#' length of \code{template.scaled} list). Each matrix row consists
+#' of a vector of similarity statistic (correlation, covariance etc.)
+#' between \code{x} (or, possibly, its smoothed version) and a pattern rescaled to matrix row-specific
+#' scale parameter; precisely, it is a vector with the highest similarity
+#' value corresponding to a particular time point of time-series \code{x}, computed out of
+#' possibly multiple patterns.
+#' @param similarity.measure.thresh A numeric scalar. Defines threshold of minimal similarity
+#' value between time-series \code{x} (or, possibly, its smoothed version) and scaled versions of pattern
+#' below which we no longer identify a pattern occurrence.
+#' @param finetune A string. Defines type of finetuning procedure empolyed in
+#' the procedure. Defaults to \code{NULL}. Currently supported values:
+#' \itemize{
+#'   \item "maxima" - denotes procedure which tunes preliminary locations of parttern occurence start and end so
+#'   as they correspond to local maxima of time-series \code{x} (or, possibly, its smoothed version),
+#'   \code{finetune.maxima.x}) found within two respective neighbourhoods of length,
+#'   \code{finetune.maxima.nbh.vl}, centered at preliminary locations of parttern occurence start and end.
+#' }
+#'
+#' @param finetune.maxima.x A numeric vector; time-series \code{x} or, possibly, its smoothed version
+#' used in "maxima" finetuning procedure.
+#' @param finetune.maxima.nbh.vl An integer scalar; denotes length of two respective neighbourhoods,
+#'  centered at preliminary locations of parttern occurence start and end, within which the tuned locations of
+#'  parttern occurence start and end are searched for.
+#'
+#' @return A \code{data.frame} object with the segmentation results. Each row
+#' of the output corresponds to one identified pattern occurrence:
+#' \itemize{
+#'   \item \code{tau_i} - index of time-series \code{x} where identified pattern occurence starts,
+#'   \item \code{T_i} - duration of identified pattern occurence starts, expressed in \code{x} vector length,
+#'   \item \code{sim_i} -  value of similarity statistic between identified pattern occurence and corresponding
+#'   window of time-series used in similarity matrix computation;
+#'   note: this value corresponds to similarity statistic between
+#'   preliminarily identified pattern occurence and corresponding window of time-series used in similarity matrix computation;
+#'   specifically: if the fine-tune procedure is employed,
+#'   the similarity value between the final pattern occurence location and corresponding window of time-series \code{x}
+#'   singal may differ from the value in this table.
+#' }
+#'
+#' @noRd
+#'
 maxAndTune <- function(x,
                        template.vl,
                        similarity.mat,
                        similarity.measure.thresh,
-                       finetune,
-                       finetune.maxima.x,
-                       finetune.maxima.nbh.vl){
+                       finetune = NULL,
+                       finetune.maxima.x = NULL,
+                       finetune.maxima.nbh.vl = NULL){
 
   ## Params
   mat.nrow <- nrow(similarity.mat)
@@ -142,8 +251,13 @@ maxAndTune <- function(x,
     ## Fine-tuning
 
     if (!is.null(finetune) && finetune == "maxima"){
-      finetune.out <- finetune_maxima(s.TMP, tau.TMP, nbh.wing, x.Fitted, finetune.maxima.x,
-                                       template.vl.min, template.vl.max)
+      finetune.out <- finetune_maxima(s.TMP,
+                                      tau.TMP,
+                                      nbh.wing,
+                                      x.Fitted,
+                                      finetune.maxima.x,
+                                      template.vl.min,
+                                      template.vl.max)
       tau.TMP <- finetune.out[1]
       s.TMP   <- finetune.out[2]
     }

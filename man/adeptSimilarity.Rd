@@ -2,19 +2,60 @@
 % Please edit documentation in R/adeptSimilarity.R
 \name{adeptSimilarity}
 \alias{adeptSimilarity}
-\title{Title}
+\title{Compute ADEPT similarity matrix}
 \usage{
 adeptSimilarity(x, template.scaled, similarity.measure)
 }
 \arguments{
-\item{similarity.measure}{}
+\item{x}{A numeric vector; time-series \code{x}.}
+
+\item{template.scaled}{A list of scaled versions of empirical pattern(s).
+Number of elements in the \code{template.scaled} list corresponds to the number of unique pattern scale
+values considered. Each element of \code{template.scaled} is a list
+itself that contains a numeric vector(s), where each vector represents
+one of possibly multiple distinct empirical patterns considered, scaled
+to have the same vector length (same scale value). See: \code{scaleTemplate {adept}}.}
+
+\item{similarity.measure}{Character value; denotes similarity function to be
+used in similarity matrix computation; one of the following:
+\itemize{
+  \item "cov" - for running covariance,
+  \item "cor" - for running correlation.
+}}
 }
 \value{
-
+A numeric matrix with similarity values. A number of matrix columns
+corresponds to a vector length of time-series \code{x}. A number of matrix rows
+corresponds to a number of different pattern scale values considered (equivalently:
+length of \code{template.scaled} list). Each matrix row consists
+of a vector of similarity statistic (correlation, covariance etc.)
+between \code{x} and a pattern rescaled to matrix row-specific
+scale parameter; precisely, it is a vector with the highest similarity
+value corresponding to a particular time point of time-series \code{x}, computed out of
+possibly multiple patterns.
 }
 \description{
-Title
+Compute ADEPT similarity matrix between time-series \code{x} and a collection
+of scaled versions of empirical pattern(s).
 }
 \examples{
+## Simulate data
+par(mfrow = c(1,1))
+x0 <- sin(seq(0, 2 * pi * 100, length.out = 10000))
+x  <- x0 + rnorm(1000, sd = 0.1)
+template <- list(x0[1:500])
+template.vl <- seq(300, 700, by = 50)
+## Rescale pattern
+template.scaled <- scaleTemplate(template, template.vl)
+## Compute ADEPT similarity matrix
+out <- adeptSimilarity(x, template.scaled, "cov")
+\dontrun{
+## Visualize
+par(mfrow = c(1,1))
+image(t(out), main = "ADEPT similarity matrix", xlab = "time-series x index")
+}
 
+}
+\seealso{
+\code{scaleTemplate {adept}}
 }

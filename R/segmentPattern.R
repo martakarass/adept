@@ -46,7 +46,7 @@ segmentPattern <- function(x,
                            x.cut.vl = 6000){
 
   ## ---------------------------------------------------------------------------
-  ## Compute collection of rescaled template(s)
+  ## Compute a list of rescaled template(s)
 
   ## Define grid of template vector lengths (corresponding to pattern durations)
   template.vl <- pattern.dur.seq * x.fs
