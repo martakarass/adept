@@ -61,7 +61,6 @@
 #' (and hence neighbourhood parts - to the left and to the right from the  preliminarilyidentified occurence beginning/end
 #' point -
 #' are of the same length).
-#'
 #' @param run.parallel Logical. Whether or not to use parallel method execution. The \code{future} package
 #' is used to evaluate expressions asynchronously. Default is \code{FALSE}.
 #' @param run.parallel.workers An integer scalar.
@@ -69,6 +68,14 @@
 #' Default is \code{NULL}. Note: If \code{run.parallel} is \code{TRUE} and
 #' \code{run.parallel.workers} is not provided, the number of workers used is set to a number of
 #' workers available minus 1.
+#' @param x.cut  Logical.
+#' Whether or not to use execution time optimization procedure in which time-series \code{x}
+#' is cut into parts so as segmentation is performed for each part of \code{x} separately and results aggregated then.
+#' Recommended for \code{x}  vector of length above 30,000.
+#' (which corresponds to 5 minutes of data collected at frequency 100 Hz).
+#' @param x.cut.vl An integer scalar.
+#' Defines a vector length of parts onto which \code{x vector is cut in the execution time optimization procedure.
+#' Default is 6000 (recommended).
 #'
 #' @return A \code{data.frame} object with the segmentation result. Each row
 #' of the output corresponds to one identified pattern occurrence:
