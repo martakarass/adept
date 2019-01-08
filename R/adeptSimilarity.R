@@ -25,7 +25,7 @@
 #' of scaled versions of empirical pattern(s). Each matrix row consists
 #' of a vector of similarity statistic between \code{x} windows and a pattern
 #' rescaled to a particular scale parameter (that is, scaled to a particular vector length);
-#' within such scale-specific matrix row vector, for each  vector element a maximum
+#' within such scale-specific matrix row vector, for each  vector element, a maximum
 #' similarity value is selected out of all distinct pattern templates considered.
 #'
 #' @seealso \code{scaleTemplate {adept}}
@@ -40,8 +40,10 @@
 #' x  <- x0 + rnorm(1000, sd = 0.1)
 #' template <- list(x0[1:500])
 #' template.vl <- seq(300, 700, by = 50)
+#'
 #' ## Rescale pattern
 #' template.scaled <- scaleTemplate(template, template.vl)
+#'
 #' ## Compute ADEPT similarity matrix
 #' out <- adeptSimilarity(x, template.scaled, "cov")
 #' \dontrun{
