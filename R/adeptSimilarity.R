@@ -6,7 +6,7 @@
 #' Compute ADEPT similarity matrix between time-series \code{x} windows and a collection
 #' of scaled versions of empirical pattern(s).
 #'
-#' @param x A numerical vector. Time-series \code{x}.
+#' @param x A numerical vector. A time-series \code{x}.
 #' @param template.scaled A list of lists of numeric vectors.  Each element of
 #' \code{template.scaled} list is a list of pattern templates scaled according
 #' to a particular scale parameter (that is, scaled to a particular vector length).
@@ -46,6 +46,7 @@
 #'
 #' ## Compute ADEPT similarity matrix
 #' out <- adeptSimilarity(x, template.scaled, "cov")
+#'
 #' \dontrun{
 #' ## Visualize
 #' par(mfrow = c(1,1))

@@ -3,50 +3,64 @@
 #' Fast Computation of Moving Window Average
 #'
 #' @description
-#' Computes moving window average of a vector.
+#' Computes moving window average of a time-series \code{x}.
 #' The tails of the output vector where the moving window is undefined are filled with \code{NA}.
 #'
-#' @param x A numeric vector.
-#' @param W A length of a moving window given in time (seconds).
-#' @param x.fs Frequency of \code{x} expressed in number of observations collected
+#' @details
+#' Frequency \code{x.fs} and the length \code{W} of a moving window expressed in seconds
+#' together determine
+#' \code{W.vl = round(W * x.fs)}, a length of a moving window expressed in vector length.
+#' Note: \code{W.vl} must be equal or greater than \code{3}.
+#' \itemize{
+#'   \item If \code{W.vl < 3}, then an error is thrown.
+#'   \item If \code{W.vl} is an even number, then \code{(W.vl-1)} value is silently
+#'   used as a width of a moving window instead.
+#' }
+#'
+#' @param x A numeric vector. A time-series for which moving window average is computed.
+#' @param W A numeric scalar. A length of a moving window, expressed in time (seconds).
+#' @param x.fs Frequency of time-series \code{x}, expressed in number of observations
 #' per second. Defaults to \code{1}.
 #'
-#' @details
-#' Frequency of \code{x} and a length of a moving window given in time (seconds) determines
-#' \code{W.vl = W * x.fs}, a length of a moving window given in vector length.
-#' If \code{W.vl} is  \eqn{W.vl < 3} then an error is thrown. If \code{W.vl} is an even number, then the
-#' value \code{W.vl-1} is silently used as a width of a moving window instead.
-#'
-#' @return A numeric vector of moving window average.
+#' @return A numeric vector of a moving window average.
 #'
 #' @importFrom stats convolve
 #'
 #' @export
 #'
 #' @examples
-#' ## trivial example f(x) = x
+#' ## Time-series defined as a function f(x) = x
 #' N <- 100
 #' W  <- 20
 #' x <- 1:N
-#' x.smoothed <- RunningWinSmooth(x, W)
+#' x.smoothed <- runningWinSmooth(x, W)
 #' \dontrun{
 #' plot(x, type = "l")
-#' points(RunningWinSmooth(x, W), col = "red")
+#' points(x.smoothed, col = "red")
 #' }
-#' ## f(x) = sin(x) + noise
+#'
+#' ## Time-series defined as a function f(x) = sin(x) + noise
 #' N <-  1000
 #' W  <- 100
 #' x <- sin(seq(0, 4 * pi, length.out = N)) + rnorm(N, sd = 0.1)
-#' x.smoothed <- RunningWinSmooth(x, W)
+#' x.smoothed <- runningWinSmooth(x, W)
 #' \dontrun{
 #' plot(x, type = "l")
-#' points(RunningWinSmooth(x, W), col = "red")
+#' points(x.smoothed, col = "red")
 #' }
 #'
-RunningWinSmooth <- function(x, W, x.fs = 1){
+runningWinSmooth <- function(x, W, x.fs = 1){
+
+  ## Check arguments correctness
+  if ((!(is.vector(x))) || (!(is.vector(x)))) stop("x must be a numeric vector.")
+  if (!is.numeric(W)) stop("W must be a numeric scalar")
+  if (length(W) > 1) stop("W must be a numeric scalar (1-element numeric vector)")
+  if (!is.numeric(x.fs)) stop("x.fs must be a numeric scalar")
+  if (length(x.fs) > 1) stop("x.fs must be a numeric scalar (1-element numeric vector)")
 
   W.vl <- round(W * x.fs)
-  if (W.vl < 3) stop("W must be not smaller than 3 vector indices. Define wider averaging window length")
+  if (W.vl < 3) stop("W.vl (refer to function's details description) must not be smaller than 3 vector indices. Define wider W averaging window length")
+  if (W.vl >= length(x)) stop("W.vl (refer to function's details description) must be less than x vector length. Define narrower W averaging window length")
 
   ## Replace W with closest odd integer no larger than W
   W.vl <-  W.vl + (W.vl %% 2) - 1
@@ -58,7 +72,7 @@ RunningWinSmooth <- function(x, W, x.fs = 1){
   x.out0 <- convolve(x, win)
   x.out0 <- x.out0[1:N]
 
-  ## Redefine head and tail of a signal
+  ## Replace head and tail of a signal with NA's
   W.wing <- floor(W.vl/2)
   x.out.head <- rep(NA, W.wing)
   x.out.tail <- rep(NA, W.wing)
@@ -72,9 +86,9 @@ RunningWinSmooth <- function(x, W, x.fs = 1){
 
 
 
-#' Wrapper function for \code{RunningWinSmooth}
+#' Wrapper function for \code{runningWinSmooth}
 #'
-#' Wrapper function for \code{RunningWinSmooth}. Replaces \code{NA} values with
+#' Wrapper function for \code{runningWinSmooth}. Replaces \code{NA} values with
 #' which appear in head and tail of smoothed signal as a result of MA not defined
 #' for first and last \code{k} elements of a signal. The \code{NA} values are replaced
 #' with sample means of subsequent/procceeding non-\code{NA} values that appear
@@ -133,14 +147,14 @@ get.x.smoothed <- function(x, W, x.fs = 1, NA.repl.source.k = 4,
     x.split <- split(x, x.split.idx)
     ## Apply to each part of x split
     x.smoothed.list <- lapply(x.split, function(x.split.i){
-      x.smoothed.i <- RunningWinSmooth(x = x.split.i, W = W, x.fs = x.fs)
+      x.smoothed.i <- runningWinSmooth(x = x.split.i, W = W, x.fs = x.fs)
       x.smoothed.i <- x.smoothed.fill.NA(x.smoothed.i)
       return(x.smoothed.i)
     })
     x.smoothed <- unlist(x.smoothed.list)
 
   } else {
-    x.smoothed <- RunningWinSmooth(x = x, W = W, x.fs = x.fs)
+    x.smoothed <- runningWinSmooth(x = x, W = W, x.fs = x.fs)
     x.smoothed <- x.smoothed.fill.NA(x.smoothed)
   }
 
@@ -150,7 +164,7 @@ get.x.smoothed <- function(x, W, x.fs = 1, NA.repl.source.k = 4,
 # get.x.smoothed<- function(x, W, x.fs = 1, NA.repl.surce.k = 4){
 #
 #   W.vl <- W * x.fs
-#   x.smoothed <- RunningWinSmooth(x = x, W = W, x.fs = x.fs)
+#   x.smoothed <- runningWinSmooth(x = x, W = W, x.fs = x.fs)
 #   ## Replace NA's in head/tail of smoothed signal with some neutral average flat line
 #   ## Vector length of replacement NA's area
 #

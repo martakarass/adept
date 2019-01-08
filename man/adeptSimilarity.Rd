@@ -7,7 +7,7 @@
 adeptSimilarity(x, template.scaled, similarity.measure)
 }
 \arguments{
-\item{x}{A numerical vector. Time-series \code{x}.}
+\item{x}{A numerical vector. A time-series \code{x}.}
 
 \item{template.scaled}{A list of lists of numeric vectors.  Each element of
 \code{template.scaled} list is a list of pattern templates scaled according
@@ -49,6 +49,7 @@ template.scaled <- scaleTemplate(template, template.vl)
 
 ## Compute ADEPT similarity matrix
 out <- adeptSimilarity(x, template.scaled, "cov")
+
 \dontrun{
 ## Visualize
 par(mfrow = c(1,1))
