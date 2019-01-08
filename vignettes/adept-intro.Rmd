@@ -1,0 +1,102 @@
+---
+title: "Marta Karas"
+author: "Introduction to `adept` package"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 4
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r package_options, include=FALSE}
+knitr::opts_knit$set(global.par = TRUE)
+```
+
+`adept` package implements ADaptive Empirical Pattern Transformation (ADEPT) method for pattern segmentation
+from a time-series `x`. ADEPT was designed with the aim of performing fast, accurate walking strides segmentation from high-density data collected from wearable accelerometer worn during continuous walking activity. 
+
+# ADEPT method   
+
+ADEPT identifies pattern occurrenes from a time-series `x` via maximizing similarity (correlation, covariance etc.) between time-series `x` windows and a pattern template(s). 
+
+To address a possible scenario in which a pattern occurrence is changing its duration within time-series `x`, for each window of `x`, a pattern template(s) is scaled to various scale parameters to allow for obtaining higher similarity between `x` and a template. Also, multiple pattern templates are allowed simultaneously to address that a pattern may potentially be changing its shape over the time-series `x`. 
+
+In practice, a pre-defined pattern template may be derived as an empirical pattern, that is, data-derived vector representing a pattern of interest.
+
+# Pattern segmentation with `adept` package  
+
+## Install / load `R` packages as needed
+
+- Install (if not installed yet)
+
+```{r, eval = FALSE}
+# install.packages("devtools")       ## for installing packages from GitHub repository
+```
+
+- Install `adept` from GitHub (need `devtools` package being installed to do it)
+
+```{r, eval = FALSE}
+devtools::install_github("martakarass/adept")
+```
+
+- Load packages
+
+```{r}
+library(adept)
+```
+
+## Examples 1: simulated signals, same pattern length, no noise 
+
+### Example 1(a) 
+
+Simulated data: 
+
+- No noise in simulated signal `x`
+- all simulated pattern occurences of the same length (vector length: `101`)
+
+```{r, fig.width=8, fig.height=2.7}
+## Simulate signal and template
+x0 <- cos(seq(0, 2 * pi * 10, length.out = 1001))
+x  <- x0
+template <- x0[1:101]
+
+## Plot signal
+par(mar = c(4.1, 4.1, 2.1, 2.1)) 
+plot(x, type = "l", main = "", xlab = "time-series x index")
+```
+
+- Plot pattern template
+
+```{r, fig.width=3.0, fig.height=2.7}
+plot(template, type = "l", main = "", xlab = "Duration phase", ylab = "Template", col = "red")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

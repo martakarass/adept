@@ -3,32 +3,30 @@
 
 #' Compute ADEPT similarity matrix
 #'
-#' Compute ADEPT similarity matrix between time-series \code{x} and a collection
+#' Compute ADEPT similarity matrix between time-series \code{x} windows and a collection
 #' of scaled versions of empirical pattern(s).
 #'
-#' @param x A numeric vector; time-series \code{x}.
-#' @param template.scaled A list of scaled versions of empirical pattern(s).
-#' Number of elements in the \code{template.scaled} list corresponds to the number of unique pattern scale
-#' values considered. Each element of \code{template.scaled} is a list
-#' itself that contains a numeric vector(s), where each vector represents
-#' one of possibly multiple distinct empirical patterns considered, scaled
-#' to have the same vector length (same scale value). See: \code{scaleTemplate {adept}}.
-#' @param similarity.measure Character value; denotes similarity function to be
+#' @param x A numerical vector. Time-series \code{x}.
+#' @param template.scaled A list of lists of numeric vectors.  Each element of
+#' \code{template.scaled} list is a list of pattern templates scaled according
+#' to a particular scale parameter (that is, scaled to a particular vector length).
+#' Number of elements in the \code{template.scaled} list corresponds to the number
+#'  of unique scale values considered in the method. See: \code{scaleTemplate {adept}}
+#'  for computation of \code{template.scaled} list.
+#' @param similarity.measure A character scalar. Defines a statistic
 #' used in similarity matrix computation; one of the following:
 #' \itemize{
-#'   \item "cov" - for running covariance,
-#'   \item "cor" - for running correlation.
+#'   \item "cov" - for covariance,
+#'   \item "cor" - for correlation.
 #' }
 #'
-#' @return A numeric matrix with similarity values. A number of matrix columns
-#' corresponds to a vector length of time-series \code{x}. A number of matrix rows
-#' corresponds to a number of different pattern scale values considered (equivalently:
-#' length of \code{template.scaled} list). Each matrix row consists
-#' of a vector of similarity statistic (correlation, covariance etc.)
-#' between \code{x} and a pattern rescaled to matrix row-specific
-#' scale parameter; precisely, it is a vector with the highest similarity
-#' value corresponding to a particular time point of time-series \code{x}, computed out of
-#' possibly multiple patterns.
+#' @return A numeric matrix. The matrix entries are similarity values between
+#' time-series \code{x} windows and a collection
+#' of scaled versions of empirical pattern(s). Each matrix row consists
+#' of a vector of similarity statistic between \code{x} windows and a pattern
+#' rescaled to a particular scale parameter (that is, scaled to a particular vector length);
+#' within such scale-specific matrix row vector, for each  vector element a maximum
+#' similarity value is selected out of all distinct pattern templates considered.
 #'
 #' @seealso \code{scaleTemplate {adept}}
 #'
@@ -49,7 +47,15 @@
 #' \dontrun{
 #' ## Visualize
 #' par(mfrow = c(1,1))
-#' image(t(out), main = "ADEPT similarity matrix", xlab = "time-series x index")
+#' image(t(out),
+#'       main = "ADEPT similarity matrix\nfor time-series x and scaled versions of a pattern",
+#'       xlab = "Time-series x index",
+#'       ylab = "Pattern scale (pattern vector length)",
+#'       xaxt = "n", yaxt = "n")
+#' xaxis <- c(1, seq(1000, length(x0), by = 1000))
+#' yaxis <- template.vl
+#' axis(1, at = xaxis/max(xaxis), labels = xaxis)
+#' axis(2, at = (yaxis - min(yaxis))/(max(yaxis) - min(yaxis)), labels = yaxis)
 #' }
 #'
 adeptSimilarity <- function(x,

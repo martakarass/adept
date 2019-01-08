@@ -2,7 +2,7 @@
 % Please edit documentation in R/segmentPattern.R
 \name{segmentPattern}
 \alias{segmentPattern}
-\title{Title}
+\title{Pattern Segmentation From a Time-series via ADEPT}
 \usage{
 segmentPattern(x, x.fs, template, pattern.dur.seq,
   similarity.measure = "cov", similarity.measure.thresh = 0,
@@ -11,16 +11,100 @@ segmentPattern(x, x.fs, template, pattern.dur.seq,
   run.parallel.workers = NULL, x.cut = TRUE, x.cut.vl = 6000)
 }
 \arguments{
-\item{run.parallel.workers}{}
+\item{x}{A numeric vector; time-series to segment pattern occurrences from.}
+
+\item{x.fs}{A numeric scalar; frequency at which time-series \code{x} was collected,
+expressed in a number of observations per second.}
+
+\item{template}{A numeric vector or a list of numeric vectors. Represents template(s) of a pattern to segment.}
+
+\item{pattern.dur.seq}{A numeric vector. Defines a grid of pattern duration time considered in the
+method. Expressed in seconds. Note: The provided grid is further translated into \code{x} vector length unit;
+his includes rounding the translated values onto integer values, and (if needed) selecting unique values only.}
+
+\item{similarity.measure}{A string. Denotes statistic used to define similarity
+between time-series \code{x} windows and a pattern template. Currently supported values:
+\describe{
+  \item{"cov"}{covariance},
+  \item{"cor"}{correlation}.
+}
+Default is \code{"cov"}.}
+
+\item{similarity.measure.thresh}{A numeric scalar. Defines threshold of minimal similarity
+value between time-series \code{x} and a pattern template
+below which we no longer identify a pattern occurrence.}
+
+\item{finetune}{A string. Defines type of fine-tuning procedure empolyed in
+ pattern identification. Defaults to \code{NULL}. Currently supported values:
+\itemize{
+  \item "maxima" - the procedure tunes preliminarily identified locations of parttern occurence beginning and end so
+  as they correspond to local maxima of time-series \code{x} (or smoothed version of \code{x})
+  found within neighbourhoods of those preliminary locations.
+}}
+
+\item{finetune.maxima.ma.W}{A numeric scalar.
+Defines the length of a window used for moving average smoothing of \code{x} signal in \code{"maxima"}
+fine-tuning procedure. Expressed in seconds. Default is \code{NULL} (no moving average smoothing applied).}
+
+\item{finetune.maxima.nbh.W}{A numeric scalar.
+Defines the length of neighborhoods centered at preliminarily identified pattern occurrence beginning and end points
+within which we search for local maxima of \code{x} (or smoothed version of \code{x}) in \code{"maxima"}
+fine-tuning procedure. Expressed in seconds. Default is \code{NULL}.
+Note: if the length provided rounds to an even number of \code{x} vector indices,
+it will be rounded down so as the corresponding number of vector indices is its closest odd number
+(and hence neighbourhood parts - to the left and to the right from the  preliminarilyidentified occurence beginning/end
+point -
+are of the same length).}
+
+\item{run.parallel}{Logical. Whether or not to use parallel method execution. The \code{future} package
+is used to evaluate expressions asynchronously. Default is \code{FALSE}.}
+
+\item{run.parallel.workers}{An integer scalar.
+Number of workers (\code{future} package syntax) used in the parallel execution of the method.
+Default is \code{NULL}. Note: If \code{run.parallel} is \code{TRUE} and
+\code{run.parallel.workers} is not provided, the number of workers used is set to a number of
+workers available minus 1.}
+
+\item{x.cut}{Logical.
+Whether or not to use execution time optimization procedure in which time-series \code{x}
+is cut into parts so as segmentation is performed for each part of \code{x} separately and results aggregated then.
+Recommended for \code{x}  vector of length above 30,000.
+(which corresponds to 5 minutes of data collected at frequency 100 Hz).}
 }
 \value{
-Data frame with summary of segmented pattern occurences; has the
-following columns:
-\describe{
-  \item{One}{First item}
-  \item{Two}{Second item}
+A \code{data.frame} object with the segmentation result. Each row
+of the output corresponds to one identified pattern occurrence:
+\itemize{
+  \item \code{tau_i} - index of time-series \code{x} where identified pattern occurence starts,
+  \item \code{T_i} - duration of identified pattern occurence starts, expressed in \code{x} vector length,
+  \item \code{sim_i} -  value of similarity statistic between identified pattern occurence and corresponding
+  window of time-series used in similarity matrix computation;
+  note: this value corresponds to similarity statistic between
+  preliminarily identified pattern occurence and corresponding window of time-series used in similarity matrix computation;
+  specifically: if the fine-tune procedure is employed,
+  the similarity value between the final pattern occurence location and corresponding window of time-series \code{x}
+  singal may differ from the value in this table.
 }
 }
 \description{
-Title
+Perform pattern segmentation from a time-series \code{x} via ADaptive Empirical Pattern
+Transformation (ADEPT).
+}
+\details{
+Function implements ADaptive Empirical Pattern Transformation (ADEPT) method for pattern segmentation
+from a time-series \code{x}.
+ADEPT was designed with the aim of performing fast, accurate walking strides segmentation from high-density data
+collected from wearable accelerometer worn during continuous walking activity.
+
+ADEPT identifies pattern occurrenes from a time-series \code{x} via maximizing similarity
+(correlation, covariance etc.) between time-series \code{x} windows and a
+template vector(s). In practice, a pre-defined pattern template may be derived as an empirical pattern, that is,
+data-derived vector representing a pattern of interest.
+
+To address a possible scenario in which a pattern occurrence is changing its duration
+within time-series \code{x}, for each window of \code{x} considered, an empirical pattern(s)
+is scaled to various scale parameters
+(that is, linearly interpolated into various vector lengths).
+Also, multiple pattern templates are allowed simultaneously to
+even better match a pattern which may also change its shape over the time-series \code{x}.
 }
