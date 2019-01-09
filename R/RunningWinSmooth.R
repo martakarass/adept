@@ -3,24 +3,24 @@
 #' Fast Computation of Moving Window Average
 #'
 #' @description
-#' Computes moving window average of a time-series \code{x}.
-#' The tails of the output vector where the moving window is undefined are filled with \code{NA}.
-#'
-#' @details
-#' Frequency \code{x.fs} and the length \code{W} of a moving window expressed in seconds
-#' together determine
-#' \code{W.vl = round(W * x.fs)}, a length of a moving window expressed in vector length.
-#' Note: \code{W.vl} must be equal or greater than \code{3}.
-#' \itemize{
-#'   \item If \code{W.vl < 3}, then an error is thrown.
-#'   \item If \code{W.vl} is an even number, then \code{(W.vl-1)} value is silently
-#'   used as a width of a moving window instead.
-#' }
+#' Compute moving window average of a time-series \code{x}.
+#' Head and tail of the output vector where the moving window is undefined are filled with \code{NA}.
 #'
 #' @param x A numeric vector. A time-series for which moving window average is computed.
 #' @param W A numeric scalar. A length of a moving window, expressed in time (seconds).
-#' @param x.fs Frequency of time-series \code{x}, expressed in number of observations
+#' @param x.fs Frequency of time-series \code{x}, expressed in a number of observations
 #' per second. Defaults to \code{1}.
+#'
+#' @details
+#' Time-series frequency \code{x.fs} and a length  of a moving window (expressed in time) \code{W}
+#' together determine
+#' \code{W.vl = round(W * x.fs)}, a length of a moving window expressed in \code{x} vector length.
+#' Note: \code{W.vl} must be equal or greater than \code{3}.
+#' \itemize{
+#'   \item If \code{W.vl < 3} then an error is thrown.
+#'   \item If \code{W.vl} is an even number then \code{(W.vl-1)} value is silently
+#'   used instead as a length of a moving window expressed in \code{x} vector length.
+#' }
 #'
 #' @return A numeric vector of a moving window average.
 #'
@@ -51,7 +51,7 @@
 #'
 runningWinSmooth <- function(x, W, x.fs = 1){
 
-  ## Check arguments correctness
+  ## Check function arguments for correctness
   if ((!(is.vector(x))) || (!(is.vector(x)))) stop("x must be a numeric vector.")
   if (!is.numeric(W)) stop("W must be a numeric scalar")
   if (length(W) > 1) stop("W must be a numeric scalar (1-element numeric vector)")

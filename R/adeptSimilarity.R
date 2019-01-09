@@ -4,7 +4,7 @@
 #' Compute ADEPT similarity matrix
 #'
 #' Compute ADEPT similarity matrix between time-series \code{x} windows and a collection
-#' of scaled versions of empirical pattern(s).
+#' of scaled versions of pattern templates.
 #'
 #' @param x A numerical vector. A time-series \code{x}.
 #' @param template.scaled A list of lists of numeric vectors.  Each element of
@@ -14,7 +14,7 @@
 #'  of unique scale values considered in the method. See: \code{scaleTemplate {adept}}
 #'  for computation of \code{template.scaled} list.
 #' @param similarity.measure A character scalar. Defines a statistic
-#' used in similarity matrix computation; one of the following:
+#' used in similarity matrix computation. One of the following:
 #' \itemize{
 #'   \item "cov" - for covariance,
 #'   \item "cor" - for correlation.
@@ -22,11 +22,11 @@
 #'
 #' @return A numeric matrix. The matrix entries are similarity values between
 #' time-series \code{x} windows and a collection
-#' of scaled versions of empirical pattern(s). Each matrix row consists
+#' of scaled versions of pattern templates. Each matrix row consists
 #' of a vector of similarity statistic between \code{x} windows and a pattern
 #' rescaled to a particular scale parameter (that is, scaled to a particular vector length);
-#' within such scale-specific matrix row vector, for each  vector element, a maximum
-#' similarity value is selected out of all distinct pattern templates considered.
+#' precisely, for a scale-specific matrix row vector, each vector element is a maximum
+#' similarity value selected out of all distinct pattern templates considered.
 #'
 #' @seealso \code{scaleTemplate {adept}}
 #'
@@ -90,4 +90,11 @@ adeptSimilarity <- function(x,
   return(similarity.mat)
 
 }
+
+
+
+
+
+
+
 

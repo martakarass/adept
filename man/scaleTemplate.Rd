@@ -2,39 +2,46 @@
 % Please edit documentation in R/scaleTemplate.R
 \name{scaleTemplate}
 \alias{scaleTemplate}
-\title{Compute a list of rescaled versions of empirical pattern(s)}
+\title{Compute a list of rescaled versions of pattern templates.}
 \usage{
 scaleTemplate(template, template.vl)
 }
 \arguments{
-\item{template}{A list of numerical vector(s) representing
-empirical pattern(s).}
+\item{template}{A list of numerical vectors. Each numeric vector represents
+a distinct pattern template.}
 
-\item{template.vl}{A numeric vector of vector lengths to which each of
-the empirical pattern(s) will be scaled to.}
+\item{template.vl}{A numeric vector. Defines a grid of vector lengths to which each of
+the distinct pattern templates is scaled into (linearly interpolated into).}
 }
 \value{
-A list of scaled versions of empirical pattern(s).
-Number of elements in the list corresponds to the number of unique pattern scale
-values considered. Each element of the list is a list
-itself that contains a numeric vector(s), where each vector represents
-one of possibly multiple distinct empirical patterns considered, scaled
-to have the same scale value (same vector length).
+A list of lists of numeric vectors.  Each element of
+the list is a list of pattern templates scaled according
+to a particular scale parameter (that is, scaled to a particular vector length).
+Number of elements in the returned list corresponds to the number
+of unique scale values considered in the method.
 }
 \description{
-Compute a list of rescaled versions of empirical pattern(s) via linear interpolation.
+Compute a list of rescaled versions of pattern templates via linear interpolation.
 }
 \examples{
+## List of two distinct pattern templates
 template <- list(sin(seq(0, 2 * pi, length.out = 100)),
                  cos(seq(0, 2 * pi, length.out = 100)))
+## Vector which defines a grid of vector lengths to which each of
+## the distinct pattern templates is scaled into
 template.vl <- c(50, 100, 200)
+## Compute list of rescaled versions of pattern templates
 out <- scaleTemplate(template, template.vl)
+
+## Plot 1st distinct pattern template, rescaled to different vector lengths
 par(mfrow = c(2, 1))
 plot(out[[3]][[1]], type = "l",
      main = "pattern: sin([0,2*pi]); different scales considered",
      ylab = "pattern", xlab = "output vector index")
 lines(out[[2]][[1]], col = "red")
 lines(out[[1]][[1]], col = "blue")
+
+## Plot 2nd distinct pattern template, rescaled to different vector lengths
 plot(out[[3]][[2]], type = "l",
      main = "pattern: cos([0,2*pi]); different scales considered",
      ylab = "pattern", xlab = "output vector index")

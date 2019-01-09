@@ -11,25 +11,25 @@ runningWinSmooth(x, W, x.fs = 1)
 
 \item{W}{A numeric scalar. A length of a moving window, expressed in time (seconds).}
 
-\item{x.fs}{Frequency of time-series \code{x}, expressed in number of observations
+\item{x.fs}{Frequency of time-series \code{x}, expressed in a number of observations
 per second. Defaults to \code{1}.}
 }
 \value{
 A numeric vector of a moving window average.
 }
 \description{
-Computes moving window average of a time-series \code{x}.
-The tails of the output vector where the moving window is undefined are filled with \code{NA}.
+Compute moving window average of a time-series \code{x}.
+Head and tail of the output vector where the moving window is undefined are filled with \code{NA}.
 }
 \details{
-Frequency \code{x.fs} and the length \code{W} of a moving window expressed in seconds
+Time-series frequency \code{x.fs} and a length  of a moving window (expressed in time) \code{W}
 together determine
-\code{W.vl = round(W * x.fs)}, a length of a moving window expressed in vector length.
+\code{W.vl = round(W * x.fs)}, a length of a moving window expressed in \code{x} vector length.
 Note: \code{W.vl} must be equal or greater than \code{3}.
 \itemize{
-  \item If \code{W.vl < 3}, then an error is thrown.
-  \item If \code{W.vl} is an even number, then \code{(W.vl-1)} value is silently
-  used as a width of a moving window instead.
+  \item If \code{W.vl < 3} then an error is thrown.
+  \item If \code{W.vl} is an even number then \code{(W.vl-1)} value is silently
+  used instead as a length of a moving window expressed in \code{x} vector length.
 }
 }
 \examples{
