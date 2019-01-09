@@ -2,7 +2,7 @@
 
 
 
-#' Compute a list of rescaled versions of pattern templates.
+#' Pattern Templates Scaling
 #'
 #' Compute a list of rescaled versions of pattern templates via linear interpolation.
 #'

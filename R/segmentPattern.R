@@ -7,51 +7,36 @@
 #' Perform pattern segmentation from a time-series \code{x} via ADaptive Empirical Pattern
 #' Transformation (ADEPT).
 #'
-#' @details
-#' Function implements ADaptive Empirical Pattern Transformation (ADEPT) method for pattern segmentation
-#' from a time-series \code{x}.
-#' ADEPT was designed with the aim of performing fast, accurate walking strides segmentation from high-density data
-#' collected from wearable accelerometer worn during continuous walking activity.
-#'
-#' ADEPT identifies pattern occurrenes from a time-series \code{x} via maximizing similarity
-#' (correlation, covariance etc.) between time-series \code{x} windows and a
-#' template vector(s). In practice, a pre-defined pattern template may be derived as an empirical pattern, that is,
-#' data-derived vector representing a pattern of interest.
-#'
-#' To address a possible scenario in which a pattern occurrence is changing its duration
-#' within time-series \code{x}, for each window of \code{x} considered, an empirical pattern(s)
-#' is scaled to various scale parameters
-#' (that is, linearly interpolated into various vector lengths).
-#' Also, multiple pattern templates are allowed simultaneously to
-#' even better match a pattern which may also change its shape over the time-series \code{x}.
-#'
-#' @param x A numeric vector; time-series to segment pattern occurrences from.
-#' @param x.fs A numeric scalar; frequency at which time-series \code{x} was collected,
+#' @param x A numeric vector. A time-series to segment pattern occurrences from.
+#' @param x.fs A numeric scalar. Frequency at which a time-series \code{x} is collected,
 #' expressed in a number of observations per second.
-#' @param template A numeric vector or a list of numeric vectors. Represents template(s) of a pattern to segment.
-#' @param pattern.dur.seq  A numeric vector. Defines a grid of pattern duration time considered in the
-#' method. Expressed in seconds. Note: The provided grid is further translated into \code{x} vector length unit;
-#' his includes rounding the translated values onto integer values, and (if needed) selecting unique values only.
-#' @param similarity.measure A string. Denotes statistic used to define similarity
+#' @param template A list of numeric vectors, or a numeric vector.
+#' Each vector represents a distinct pattern template used in the method.
+#' @param pattern.dur.seq  A numeric vector. Defines a grid of a pattern duration
+#' time considered in the method. Expressed in seconds. See Details.
+#' @param similarity.measure A character scalar. Denotes statistic used to define similarity
 #' between time-series \code{x} windows and a pattern template. Currently supported values:
-#' \describe{
-#'   \item{"cov"}{covariance},
-#'   \item{"cor"}{correlation}.
+#' \itemize{
+#'   \item \code{"cov"} - covariance,
+#'   \item \code{"cor"} - correlation,
 #' }
 #' Default is \code{"cov"}.
-#' @param similarity.measure.thresh A numeric scalar. Defines threshold of minimal similarity
-#' value between time-series \code{x} and a pattern template
-#' below which we no longer identify a pattern occurrence.
-#' @param finetune A string. Defines type of fine-tuning procedure empolyed in
+#' @param similarity.measure.thresh A numeric scalar. Defines a threshold of minimal similarity
+#' value between time-series \code{x} windows and a pattern template(s)
+#' below which we no longer identify a pattern occurrence
+#' from a time-series \code{x}.
+#' @param finetune A string scalar. Defines a type of fine-tuning procedure empolyed in
 #'  pattern identification. Defaults to \code{NULL}. Currently supported values:
 #' \itemize{
-#'   \item "maxima" - the procedure tunes preliminarily identified locations of parttern occurence beginning and end so
+#'   \item "maxima" - tunes preliminarily identified locations of parttern occurence
+#'   beginning and end so
 #'   as they correspond to local maxima of time-series \code{x} (or smoothed version of \code{x})
 #'   found within neighbourhoods of those preliminary locations.
 #' }
 #' @param finetune.maxima.ma.W A numeric scalar.
-#' Defines the length of a window used for moving average smoothing of \code{x} signal in \code{"maxima"}
-#' fine-tuning procedure. Expressed in seconds. Default is \code{NULL} (no moving average smoothing applied).
+#' Defines a length of a window used in moving average smoothing of a time-series \code{x} in
+#'  \code{"maxima"} fine-tuning procedure. Expressed in seconds.
+#'  Default is \code{NULL} (no moving average smoothing applied).
 #' @param finetune.maxima.nbh.W A numeric scalar.
 #' Defines the length of neighborhoods centered at preliminarily identified pattern occurrence beginning and end points
 #' within which we search for local maxima of \code{x} (or smoothed version of \code{x}) in \code{"maxima"}
@@ -77,15 +62,44 @@
 #' Defines a vector length of parts onto which \code{x vector is cut in the execution time optimization procedure.
 #' Default is 6000 (recommended).
 #'
-#' @return A \code{data.frame} object with the segmentation result. Each row
-#' of the output corresponds to one identified pattern occurrence:
+#' @details
+#' Function implements ADaptive Empirical Pattern Transformation (ADEPT) method for pattern segmentation
+#' from a time-series \code{x}.
+#' ADEPT was designed with the aim of performing fast, accurate walking strides segmentation
+#' from high-density data
+#' collected from wearable accelerometer worn during continuous walking activity.
+#'
+#' ADEPT identifies pattern occurrenes from a time-series \code{x} via maximizing similarity
+#' (correlation, covariance etc.) between time-series \code{x} windows and a pattern
+#' template vector(s). In practice, a pre-defined pattern template may be derived as an empirical pattern, that is,
+#' data-derived vector representing a pattern of interest.
+#'
+#' To address a possible scenario in which there is a change in a pattern duration
+#' along time-series \code{x}, for each window of \code{x} considered, an empirical pattern(s)
+#' is scaled to various scale parameters
+#' (that is, linearly interpolated into various vector lengths).
 #' \itemize{
-#'   \item \code{tau_i} - index of time-series \code{x} where identified pattern occurence starts,
-#'   \item \code{T_i} - duration of identified pattern occurence starts, expressed in \code{x} vector length,
-#'   \item \code{sim_i} -  value of similarity statistic between identified pattern occurence and corresponding
-#'   window of time-series used in similarity matrix computation;
+#'   \item \code{pattern.dur.seq} argument defines a grid of a pattern duration
+#'   time considered in the method. In practice, a range of the \code{pattern.dur.seq}
+#'   values may reflect a range of pattern occurrence duration we anticipate a priori.
+#'   A more dense grid may potentially increase method accuracy but also increase method
+#'   execution time. Note: The provided grid is further translated into \code{x}
+#'   vector length unit; his includes rounding the translated values onto integer
+#'   values, and (if needed) selecting unique values only.
+#' }
+#'
+#' Also, multiple pattern templates are allowed simultaneously to
+#' even better match a pattern which may also change its shape over the time-series \code{x}.
+#'
+#' @return A \code{data.frame} object with segmentation results. Each row
+#' of the \code{data.frame} output describes one identified pattern occurrences:
+#' \itemize{
+#'   \item \code{tau_i} - index of a time-series \code{x} where identified pattern occurence starts,
+#'   \item \code{T_i} - duration of identified pattern occurence starts, expressed in  a time-series \code{x} vector length,
+#'   \item \code{sim_i} -  value of similarity statistic between an identified pattern occurence and corresponding
+#'   window of a time-series used in similarity matrix computation;
 #'   note: this value corresponds to similarity statistic between
-#'   preliminarily identified pattern occurence and corresponding window of time-series used in similarity matrix computation;
+#'   preliminarily identified pattern occurence and corresponding window of a time-series used in similarity matrix computation;
 #'   specifically: if the fine-tune procedure is employed,
 #'   the similarity value between the final pattern occurence location and corresponding window of time-series \code{x}
 #'   singal may differ from the value in this table.

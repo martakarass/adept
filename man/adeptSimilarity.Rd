@@ -2,7 +2,7 @@
 % Please edit documentation in R/adeptSimilarity.R
 \name{adeptSimilarity}
 \alias{adeptSimilarity}
-\title{Compute ADEPT similarity matrix}
+\title{ADEPT Similarity Matrix Computation}
 \usage{
 adeptSimilarity(x, template.scaled, similarity.measure)
 }

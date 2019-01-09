@@ -2,7 +2,7 @@
 % Please edit documentation in R/scaleTemplate.R
 \name{scaleTemplate}
 \alias{scaleTemplate}
-\title{Compute a list of rescaled versions of pattern templates.}
+\title{Pattern Templates Scaling}
 \usage{
 scaleTemplate(template, template.vl)
 }

@@ -1,7 +1,7 @@
 
 
 
-#' Compute ADEPT similarity matrix
+#' ADEPT Similarity Matrix Computation
 #'
 #' Compute ADEPT similarity matrix between time-series \code{x} windows and a collection
 #' of scaled versions of pattern templates.
