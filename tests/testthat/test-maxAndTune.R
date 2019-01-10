@@ -23,7 +23,7 @@ test_that("Sute 1. Test if maxAndTune works correctly. Case: no noise in signal,
   if (!is.list(template)) template <- list(template)
   template.scaled <- scaleTemplate(template, template.vl)
   x.smoothed <- x
-  similarity.mat <- adeptSimilarity(x.smoothed, template.scaled, "cov")
+  similarity.mat <- similarityMatrix(x.smoothed, template.scaled, "cov")
 
   ## Output
   out <- maxAndTune(x,
@@ -62,7 +62,7 @@ test_that("Sute 2. Test if maxAndTune works correctly. Case: no noise in signal,
   if (!is.list(template)) template <- list(template)
   template.scaled <- scaleTemplate(template, template.vl)
   x.smoothed <- x
-  similarity.mat <- adeptSimilarity(x.smoothed, template.scaled, "cor")
+  similarity.mat <- similarityMatrix(x.smoothed, template.scaled, "cor")
 
   ## Output
   out <- maxAndTune(x,
@@ -114,7 +114,7 @@ test_that("Sute 3. Test if maxAndTune works correctly. Case: no noise in signal,
   if (!is.list(template)) template <- list(template)
   template.scaled <- scaleTemplate(template, template.vl)
   x.smoothed <- x
-  similarity.mat <- adeptSimilarity(x.smoothed, template.scaled, "cor")
+  similarity.mat <- similarityMatrix(x.smoothed, template.scaled, "cor")
 
   ## Output
   out <- maxAndTune(x,
@@ -181,7 +181,7 @@ test_that("Sute 4. Test if maxAndTune works correctly. Case: add noise to signal
   if (!is.list(template)) template <- list(template)
   template.scaled <- scaleTemplate(template, template.vl)
   x.smoothed <- x
-  similarity.mat <- adeptSimilarity(x.smoothed, template.scaled, "cor")
+  similarity.mat <- similarityMatrix(x.smoothed, template.scaled, "cor")
 
   ## Output
   out <- maxAndTune(x,
@@ -254,7 +254,7 @@ test_that("Sute 5. Test if maxAndTune works correctly. Case: add noise to signal
   if (!is.list(template)) template <- list(template)
   template.scaled <- scaleTemplate(template, template.vl)
   x.smoothed <- x
-  similarity.mat <- adeptSimilarity(x.smoothed, template.scaled, "cor")
+  similarity.mat <- similarityMatrix(x.smoothed, template.scaled, "cor")
 
   ## Output
   out <- maxAndTune(x,

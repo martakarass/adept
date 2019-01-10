@@ -4,18 +4,19 @@
 
 #' Pattern Templates Scaling
 #'
-#' Compute a list of rescaled versions of pattern templates via linear interpolation.
+#' Compute a list of scaled versions of pattern templates via linear interpolation.
 #'
-#' @param template A list of numerical vectors. Each numeric vector represents
+#' @param template A list of numeric vectors. Each vector represents
 #' a distinct pattern template.
-#' @param template.vl A numeric vector. Defines a grid of vector lengths to which each of
-#' the distinct pattern templates is scaled into (linearly interpolated into).
+#' @param template.vl A numeric vector. A grid of vector lengths that each
+#' element of \code{template} is to be linearly interpolated into.
 #'
-#' @return A list of lists of numeric vectors.  Each element of
-#' the list is a list of pattern templates scaled according
-#' to a particular scale parameter (that is, scaled to a particular vector length).
-#' Number of elements in the returned list corresponds to the number
-#' of unique scale values considered in the method.
+#' @return A list of lists of numeric vectors.
+#' Each element of the
+#' returned list is a list of pattern templates scaled according
+#' to a particular vector length. The number of elements in the returned
+#' list equals the length of \code{template.vl}.
+#'
 #'
 #' @examples
 #' ## List of two distinct pattern templates
@@ -43,6 +44,8 @@
 #' lines(out[[1]][[2]], col = "blue")
 #'
 #' @export
+#'
+#' @importFrom stats approx
 #'
 #'
 scaleTemplate <- function(template, template.vl){

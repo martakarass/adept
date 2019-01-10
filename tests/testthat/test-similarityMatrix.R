@@ -1,6 +1,6 @@
 
 
-context("Testing adeptSimilarity function.")
+context("Testing similarityMatrix function.")
 
 test_that("Testing nothing has change in a function output result for a case with 1 template, 3 scales.", {
 
@@ -15,12 +15,12 @@ test_that("Testing nothing has change in a function output result for a case wit
 
 
   ## Test for similarity.measure = "cov"
-  out <- adeptSimilarity(x, template.scaled, "cov")
+  out <- similarityMatrix(x, template.scaled, "cov")
   expect_equal(mean(out, na.rm = TRUE),
                -0.000104255166378453)
 
   ## Test for similarity.measure = "cor"
-  out <- adeptSimilarity(x, template.scaled, "cor")
+  out <- similarityMatrix(x, template.scaled, "cor")
   expect_equal(mean(out, na.rm = TRUE),
                -0.000610391199176645)
 
@@ -42,12 +42,12 @@ test_that("Testing nothing has change in a function output result for a case wit
   template.scaled <- scaleTemplate(template, template.vl)
 
   ## Test for similarity.measure = "cov"
-  out <- adeptSimilarity(x, template.scaled, "cov")
+  out <- similarityMatrix(x, template.scaled, "cov")
   expect_equal(mean(out, na.rm = TRUE),
                0.240442503501679)
 
   ## Test for similarity.measure = "cor"
-  out <- adeptSimilarity(x, template.scaled, "cor")
+  out <- similarityMatrix(x, template.scaled, "cor")
   expect_equal(mean(out, na.rm = TRUE),
                0.422636316622436)
 })

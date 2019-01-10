@@ -4,95 +4,89 @@
 
 #' Pattern Segmentation From a Time-series via ADEPT
 #'
-#' Perform pattern segmentation from a time-series \code{x} via ADaptive Empirical Pattern
+#' Segment pattern from a time-series \code{x} via Adaptive Empirical Pattern
 #' Transformation (ADEPT).
 #'
 #' @param x A numeric vector. A time-series to segment pattern occurrences from.
 #' @param x.fs A numeric scalar. Frequency at which a time-series \code{x} is collected,
 #' expressed in a number of observations per second.
 #' @param template A list of numeric vectors, or a numeric vector.
-#' Each vector represents a distinct pattern template used in the method.
-#' @param pattern.dur.seq  A numeric vector. Defines a grid of a pattern duration
-#' time considered in the method. Expressed in seconds. See Details.
-#' @param similarity.measure A character scalar. Denotes statistic used to define similarity
-#' between time-series \code{x} windows and a pattern template. Currently supported values:
+#' Each vector represents a distinct pattern template used in segmentation.
+#' @param pattern.dur.seq  A numeric vector. A grid of pattern duration
+#' times used in segmentation. Expressed in seconds. See: Details.
+#' @param similarity.measure A character scalar. Statistic used to compute similarity
+#' between a time-series \code{x}  and pattern templates. Currently supported values:
 #' \itemize{
 #'   \item \code{"cov"} - covariance,
 #'   \item \code{"cor"} - correlation,
 #' }
 #' Default is \code{"cov"}.
-#' @param similarity.measure.thresh A numeric scalar. Defines a threshold of minimal similarity
-#' value between time-series \code{x} windows and a pattern template(s)
-#' below which we no longer identify a pattern occurrence
-#' from a time-series \code{x}.
-#' @param finetune A string scalar. Defines a type of fine-tuning procedure empolyed in
-#'  pattern identification. Defaults to \code{NULL}. Currently supported values:
+#' @param similarity.measure.thresh A numeric scalar. Threshold of minimal similarity
+#' value between a time-series \code{x} and pattern templates
+#' below which the algorithm does not identify a pattern occurrence.
+#' Default is \code{0}.
+#' @param x.adept.ma.W A numeric scalar.
+#' A length of a window used in moving average smoothing of a time-series \code{x} for
+#'   similarity matrix computation. Expressed in seconds.
+#'  Default is \code{NULL} (no smoothing applied).
+#' @param finetune A character scalar. A type of fine-tuning procedure empolyed in
+#'  segmentation. Defaults to \code{NULL} (no ine-tuning procedure empolyed). Currently supported values:
 #' \itemize{
-#'   \item "maxima" - tunes preliminarily identified locations of parttern occurence
+#'   \item \code{"maxima"} - tunes preliminarily identified locations of parttern occurence
 #'   beginning and end so
 #'   as they correspond to local maxima of time-series \code{x} (or smoothed version of \code{x})
-#'   found within neighbourhoods of those preliminary locations.
+#'   found within neighbourhoods of preliminary locations.
 #' }
 #' @param finetune.maxima.ma.W A numeric scalar.
-#' Defines a length of a window used in moving average smoothing of a time-series \code{x} in
+#' A length of a window used in moving average smoothing of a time-series \code{x} in
 #'  \code{"maxima"} fine-tuning procedure. Expressed in seconds.
-#'  Default is \code{NULL} (no moving average smoothing applied).
+#'  Default is \code{NULL} (no smoothing applied).
 #' @param finetune.maxima.nbh.W A numeric scalar.
-#' Defines the length of neighborhoods centered at preliminarily identified pattern occurrence beginning and end points
+#' A length of the two neighborhoods centered at preliminarily identified pattern occurrence beginning and end points
 #' within which we search for local maxima of \code{x} (or smoothed version of \code{x}) in \code{"maxima"}
 #' fine-tuning procedure. Expressed in seconds. Default is \code{NULL}.
-#' Note: if the length provided rounds to an even number of \code{x} vector indices,
-#' it will be rounded down so as the corresponding number of vector indices is its closest odd number
-#' (and hence neighbourhood parts - to the left and to the right from the  preliminarilyidentified occurence beginning/end
-#' point -
-#' are of the same length).
-#' @param run.parallel Logical. Whether or not to use parallel method execution. The \code{future} package
-#' is used to evaluate expressions asynchronously. Default is \code{FALSE}.
-#' @param run.parallel.workers An integer scalar.
-#' Number of workers (\code{future} package syntax) used in the parallel execution of the method.
-#' Default is \code{NULL}. Note: If \code{run.parallel} is \code{TRUE} and
-#' \code{run.parallel.workers} is not provided, the number of workers used is set to a number of
-#' workers available minus 1.
-#' @param x.cut  Logical.
-#' Whether or not to use execution time optimization procedure in which time-series \code{x}
-#' is cut into parts so as segmentation is performed for each part of \code{x} separately and results aggregated then.
-#' Recommended for \code{x}  vector of length above 30,000.
-#' (which corresponds to 5 minutes of data collected at frequency 100 Hz).
+#' Note: if the length provided corresponds to an even number of \code{x} vector indices,
+#' it will be rounded down so as the corresponding number of vector indices is its closest odd number.
+#' @param run.parallel A logical scalar. Whether or not to use parallel execution in the algorithm.
+#' The \code{future} package
+#' is used to execute code asynchronously. Default is \code{FALSE}.
+#' @param run.parallel.cores An integer scalar.
+#' The number of cores to use for parallel execution.
+#' Default is \code{NULL}. If not specified, the number of cores is set to a number of
+#' cores available minus 1.
+#' @param x.cut  A logical scalar. Whether or not to use time optimization procedure in
+#' which a time-series \code{x} is cut into parts and segmentation is performed for
+#' each part of \code{x} separately. Recommended for a time-series \code{x} of vector length
+#'  above 30,000. Default is \code{TRUE}.
 #' @param x.cut.vl An integer scalar.
-#' Defines a vector length of parts onto which \code{x vector is cut in the execution time optimization procedure.
-#' Default is 6000 (recommended).
+#' Defines a vector length of parts that \code{x} vector is cut into during the execution time optimization procedure.
+#' Default is \code{6000} (recommended).
 #'
 #' @details
-#' Function implements ADaptive Empirical Pattern Transformation (ADEPT) method for pattern segmentation
+#'     Function implements Adaptive Empirical Pattern Transformation (ADEPT) method for pattern segmentation
 #' from a time-series \code{x}.
 #' ADEPT was designed with the aim of performing fast, accurate walking strides segmentation
 #' from high-density data
 #' collected from wearable accelerometer worn during continuous walking activity.
 #'
-#' ADEPT identifies pattern occurrenes from a time-series \code{x} via maximizing similarity
-#' (correlation, covariance etc.) between time-series \code{x} windows and a pattern
-#' template vector(s). In practice, a pre-defined pattern template may be derived as an empirical pattern, that is,
-#' data-derived vector representing a pattern of interest.
-#'
-#' To address a possible scenario in which there is a change in a pattern duration
-#' along time-series \code{x}, for each window of \code{x} considered, an empirical pattern(s)
-#' is scaled to various scale parameters
-#' (that is, linearly interpolated into various vector lengths).
+#'     ADEPT identifies pattern occurrenes from a time-series \code{x} via maximizing similarity
+#' (correlation, covariance etc.) between a time-series \code{x} and pattern
+#' templates.
 #' \itemize{
-#'   \item \code{pattern.dur.seq} argument defines a grid of a pattern duration
-#'   time considered in the method. In practice, a range of the \code{pattern.dur.seq}
-#'   values may reflect a range of pattern occurrence duration we anticipate a priori.
-#'   A more dense grid may potentially increase method accuracy but also increase method
-#'   execution time. Note: The provided grid is further translated into \code{x}
-#'   vector length unit; his includes rounding the translated values onto integer
-#'   values, and (if needed) selecting unique values only.
+#'   \item Pattern template is scaled to various scale parameters to allow
+#'   for a potentially better match with pattern occurrences that may change
+#'   its duration over time.  \code{pattern.dur.seq} argument defines a grid of a
+#'    pattern duration to be used in segmentation. Note:  the more dense grid may potentially
+#'    increase segmentation accuracy but may also increase method execution time.
+#'   \item Multiple pattern templates are allowed simultaneously to
+#'   allow for potentially better match with pattern occurrences
+#'   that may change its shape over time.
 #' }
+#' In practice, a pre-defined pattern template may be derived as an empirical pattern, that is,
+#' a data-derived vector representing a pattern of interest.
 #'
-#' Also, multiple pattern templates are allowed simultaneously to
-#' even better match a pattern which may also change its shape over the time-series \code{x}.
-#'
-#' @return A \code{data.frame} object with segmentation results. Each row
-#' of the \code{data.frame} output describes one identified pattern occurrences:
+#' @return A \code{data.frame} with segmentation results. Each row
+#' of the returned \code{data.frame} describes one identified pattern occurrence:
 #' \itemize{
 #'   \item \code{tau_i} - index of a time-series \code{x} where identified pattern occurence starts,
 #'   \item \code{T_i} - duration of identified pattern occurence starts, expressed in  a time-series \code{x} vector length,
@@ -108,8 +102,13 @@
 #' @export
 #'
 #' @import future
+#' @importFrom dplyr arrange mutate lag filter select
 #'
 #' @examples
+#'
+#'
+#'
+#'
 segmentPattern <- function(x,
                            x.fs,
                            template,
@@ -121,7 +120,7 @@ segmentPattern <- function(x,
                            finetune.maxima.ma.W = NULL,
                            finetune.maxima.nbh.W = NULL,
                            run.parallel = FALSE,
-                           run.parallel.workers = NULL,
+                           run.parallel.cores = NULL,
                            x.cut = TRUE,
                            x.cut.vl = 6000){
 
@@ -181,8 +180,8 @@ segmentPattern <- function(x,
 
   if (run.parallel){
     ## multiproces := multicore, if supported, otherwise multisession
-    if (is.null(run.parallel.workers)) run.parallel.workers <- availableCores() - 1
-    plan(multiprocess, workers = run.parallel.workers)
+    if (is.null(run.parallel.cores)) run.parallel.cores <- availableCores() - 1
+    plan(multiprocess, workers = run.parallel.cores)
   } else {
     plan(sequential)
   }
@@ -193,7 +192,7 @@ segmentPattern <- function(x,
       ## If we cannot fit the longest pattern, return NULL
       if (length(idx.i) <= max(template.vl)) return(NULL)
       ## Compute similarity matrix
-      similarity.mat.i <- adeptSimilarity(x.smoothed[idx.i],
+      similarity.mat.i <- similarityMatrix(x.smoothed[idx.i],
                                           template.scaled,
                                           similarity.measure)
       ## Run max and tine procedure
@@ -240,6 +239,25 @@ segmentPattern <- function(x,
   return(out.df)
 }
 
+
+
+
+# ## Example 1(a):
+# ## - no noise in time-series x,
+# ## - all pattern occurences of the same length (vector length: 101)
+# ## Generate signal and template
+# x0 <- cos(seq(0, 2 * pi * 10, length.out = 1001))
+# x  <- x0
+# template <- x0[1:101]
+# ## Use segmentPattern function to identify beginnings tau_i and duration T_i
+# ## of pattern occurences within a signal x
+# pattern.dur.seq <- c(90, 100, 110)
+# out <- segmentPattern(x = x,
+#                       x.fs = 1,
+#                       template = template,
+#                       pattern.dur.seq = pattern.dur.seq,
+#                       similarity.measure = "cor")
+# out
 
 
 
