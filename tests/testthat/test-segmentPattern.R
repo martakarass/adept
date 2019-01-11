@@ -116,6 +116,7 @@ test_that("Example 1(c): no noise in signal, all pattern occurences of the same 
 ######################
 ######################
 
+if (exists("template")) rm(template)
 
 test_that("Example 2(a): no noise in signal (no peak fine-tuning employed),
           pattern occurences of different length", {
@@ -123,12 +124,12 @@ test_that("Example 2(a): no noise in signal (no peak fine-tuning employed),
   ## Grid of different true pattern occurence durations
   set.seed(1)
   s.grid <- sample(60:120, size = 10)
-  templ <- cos(seq(0, 2 * pi, length.out = 200))
+  template <- cos(seq(0, 2 * pi, length.out = 200))
 
   ## Generate signal x that consists of "glued" pattern occurrences of different length
   x <- numeric()
   for (ss in s.grid){
-    templ0 <- approx(seq(0, 1, length.out = 200), templ, xout = seq(0, 1, length.out = ss))$y
+    templ0 <- approx(seq(0, 1, length.out = 200), template, xout = seq(0, 1, length.out = ss))$y
     if (length(x)>0){
       x <- x[-length(x)]
     }
@@ -143,18 +144,18 @@ test_that("Example 2(a): no noise in signal (no peak fine-tuning employed),
                         pattern.dur.seq = pattern.dur.seq,
                         similarity.measure = "cor")
 
-  res <- sort(out$tau_i)
+  res <- out$tau_i
   res.exp <- c(1, 76, 157, 249, 360, 430, 539, 649, 743, 860)
   expect_equal(res, res.exp)
 
-  res <- sort(out$T_i)
-  res.exp <- c(63, 71, 76, 82, 93, 95, 110, 111, 112, 118)
+  res <- out$T_i
+  res.exp <- c(76, 82, 93, 112, 71, 110, 111, 95, 118, 63)
   expect_equal(res, res.exp)
 
-  res <- sort(out$sim_i)
-  res.exp <- c(0.999999978863449, 0.999999986147232, 0.999999987426459, 0.999999987616627,
-               0.999999987957358, 0.999999988038671, 0.999999988177003, 0.999999988262704,
-               0.999999988270857, 0.999999988274299)
+  res <- out$sim_i
+  res.exp <- c(0.999999999999989, 0.999999999999991, 0.99999999999999, 0.99999999999999,
+               0.999999999999991, 0.999999999999988, 0.999999999999991, 0.999999999999991,
+               0.999999999999989, 0.999999999999992)
   expect_equal(res, res.exp)
 })
 
@@ -168,12 +169,12 @@ test_that("Example 2(b): no noise in signal (no peak fine-tuning employed),
   ## Grid of different true pattern occurence durations
   set.seed(1)
   s.grid <- sample(60:120, size = 10)
-  templ <- cos(seq(0, 2 * pi, length.out = 200))
+  template <- cos(seq(0, 2 * pi, length.out = 200))
 
   ## Generate signal x that consists of "glued" pattern occurrences of different length
   x <- numeric()
   for (ss in s.grid){
-    templ0 <- approx(seq(0, 1, length.out = 200), templ, xout = seq(0, 1, length.out = ss))$y
+    templ0 <- approx(seq(0, 1, length.out = 200), template, xout = seq(0, 1, length.out = ss))$y
     if (length(x)>0){
       x <- x[-length(x)]
     }
@@ -189,7 +190,7 @@ test_that("Example 2(b): no noise in signal (no peak fine-tuning employed),
                         similarity.measure = "cor")
 
   res <- out$tau_i
-  res.exp <- c(9, 77, 163, 245, 366, 435, 534, 657, 742, 861)
+  res.exp <- c(9, 77, 163, 245, 366, 435, 534, 656, 742, 861)
   expect_equal(res, res.exp)
 
   res <- out$T_i
@@ -197,9 +198,9 @@ test_that("Example 2(b): no noise in signal (no peak fine-tuning employed),
   expect_equal(res, res.exp)
 
   res <- out$sim_i
-  res.exp <- c(0.991356582934436, 0.999831987402593, 0.994901487934483, 0.998088156917189,
-              0.993305509171119, 0.998023479621162, 0.997327183352651, 0.993914137573433,
-              0.999911593085322, 0.99799791084828)
+  res.exp <- c(0.991353694993282, 0.999831828958601, 0.994900605403087, 0.998088931040552,
+               0.993303282206735, 0.998018011681711, 0.997327871634614, 0.993913153322669,
+               0.999911747300496, 0.997997165500962)
   expect_equal(res, res.exp)
 })
 
@@ -213,12 +214,12 @@ test_that("Example 2(c): no noise in signal (no peak fine-tuning employed),
   ## Grid of different true pattern occurence durations
   set.seed(1)
   s.grid <- sample(60:120, size = 10)
-  templ <- cos(seq(0, 2 * pi, length.out = 200))
+  template <- cos(seq(0, 2 * pi, length.out = 200))
 
   ## Generate signal x that consists of "glued" pattern occurrences of different length
   x <- numeric()
   for (ss in s.grid){
-    templ0 <- approx(seq(0, 1, length.out = 200), templ, xout = seq(0, 1, length.out = ss))$y
+    templ0 <- approx(seq(0, 1, length.out = 200), template, xout = seq(0, 1, length.out = ss))$y
     if (length(x)>0){
       x <- x[-length(x)]
     }
@@ -234,7 +235,7 @@ test_that("Example 2(c): no noise in signal (no peak fine-tuning employed),
                         similarity.measure = "cov")
 
   res <- out$tau_i
-  res.exp <- c(9, 87, 174, 245, 365, 455, 534, 666, 742, 862)
+  res.exp <- c(9, 87, 174, 245, 366, 455, 534, 666, 742, 861)
   expect_equal(res, res.exp)
 
   res <- out$T_i
@@ -242,264 +243,15 @@ test_that("Example 2(c): no noise in signal (no peak fine-tuning employed),
   expect_equal(res, res.exp)
 
   res <- out$sim_i
-  res.exp <- c(0.59186478601464, 0.540764650172252, 0.455919521310586, 0.728924948585804,
-               0.634803250987258, 0.352900628868909, 0.730662404365108, 0.442075511219409,
-               0.718248596674937, 0.698948050109923)
+  res.exp <- c(0.591863061841216, 0.540762733635577, 0.455917527932434, 0.728925513944514,
+               0.634801827775348, 0.35289880518215, 0.730662908614629, 0.442073525854687,
+               0.718248707449562, 0.69894752810577)
   expect_equal(res, res.exp)
 })
 
 
 
 
-
-context("Testing segmentPattern function.")
-
-######################
-######################
-######################
-###   Examples 1   ###
-######################
-######################
-######################
-
-test_that("Example 1(a): no noise in signal, all pattern occurences of the same
-          length (vector length: 101)", {
-
-            ## Generate signal and template
-            x0 <- cos(seq(0, 2 * pi * 10, length.out = 1001))
-            x  <- x0
-            template <- x0[1:101]
-
-            pattern.dur.seq <- c(90, 100, 110)
-            out <- segmentPattern(x = x,
-                                  x.fs = 1,
-                                  template = template,
-                                  pattern.dur.seq = pattern.dur.seq,
-                                  similarity.measure = "cor")
-
-            res <- sort(out$tau_i)
-            res.exp <- c(1, 101, 201, 302, 401, 501, 601, 701, 801, 901)
-            expect_equal(res, res.exp)
-
-            res <- sort(out$T_i)
-            res.exp <- c(100, 100, 100, 100, 100, 100, 100, 100, 100, 100)
-            expect_equal(res, res.exp)
-
-            res <- sort(out$sim_i)
-            res.exp <- c(0.99947934173182, 0.999479341731821, 0.999479341731821, 0.999479341731821,
-                         0.999479341731821, 0.999479341731821, 0.999479341731821, 0.999479341731821,
-                         0.999479341731821, 0.999479341731821)
-            expect_equal(res, res.exp)
-
-            })
-
-
-
-test_that("Example 1(b): no noise in signal, all pattern occurences of the same length
-          (vector length: 101), include in grid of considered pattern durations the
-          true value 101", {
-
-            ## Generate signal and template
-            x0 <- cos(seq(0, 2 * pi * 10, length.out = 1001))
-            x  <- x0
-            template <- x0[1:101]
-
-            pattern.dur.seq <- c(90, 100, 101, 102, 110)
-            out <- segmentPattern(x = x,
-                                  x.fs = 1,
-                                  template = template,
-                                  pattern.dur.seq = pattern.dur.seq,
-                                  similarity.measure = "cor")
-
-            res <- sort(out$tau_i)
-            res.exp <- c(1, 101, 201, 301, 401, 501, 601, 701, 801, 901)
-            expect_equal(res, res.exp)
-
-            res <- sort(out$T_i)
-            res.exp <- c(101, 101, 101, 101, 101, 101, 101, 101, 101, 101)
-            expect_equal(res, res.exp)
-
-            res <- sort(out$sim_i)
-            res.exp <- c(0.999999999999999, 0.999999999999999, 1, 1, 1, 1, 1, 1, 1,
-                         1)
-            expect_equal(res, res.exp)
-            })
-
-
-
-test_that("Example 1(c): no noise in signal, all pattern occurences of the same length
-          (vector length: 101), include in grid of considered pattern durations the
-          true value 101,
-          modify assumed signal frequency and scale of grid of pattern durations", {
-
-            ## Generate signal and template
-            x0 <- cos(seq(0, 2 * pi * 10, length.out = 1001))
-            x  <- x0
-            template <- x0[1:101]
-
-            pattern.dur.seq <- c(90, 100, 101, 102, 110) * 0.01
-            out <- segmentPattern(x = x,
-                                  x.fs = 100,
-                                  template = template,
-                                  pattern.dur.seq = pattern.dur.seq,
-                                  similarity.measure = "cor")
-
-            res <- sort(out$tau_i)
-            res.exp <- c(1, 101, 201, 301, 401, 501, 601, 701, 801, 901)
-            expect_equal(res, res.exp)
-
-            res <- sort(out$T_i)
-            res.exp <- c(101, 101, 101, 101, 101, 101, 101, 101, 101, 101)
-            expect_equal(res, res.exp)
-
-            res <- sort(out$sim_i)
-            res.exp <- c(0.999999999999999, 0.999999999999999, 1, 1, 1, 1, 1, 1, 1,
-                         1)
-            expect_equal(res, res.exp)
-            })
-
-
-
-######################
-######################
-######################
-###   Examples 2   ###
-######################
-######################
-######################
-
-
-test_that("Example 2(a): no noise in signal (no peak fine-tuning employed),
-          pattern occurences of different length", {
-
-            ## Grid of different true pattern occurence durations
-            set.seed(1)
-            s.grid <- sample(60:120, size = 10)
-            templ <- cos(seq(0, 2 * pi, length.out = 200))
-
-            ## Generate signal x that consists of "glued" pattern occurrences of different length
-            x <- numeric()
-            for (ss in s.grid){
-              templ0 <- approx(seq(0, 1, length.out = 200), templ, xout = seq(0, 1, length.out = ss))$y
-              if (length(x)>0){
-                x <- x[-length(x)]
-              }
-              x <- c(x, templ0)
-            }
-
-            ## Assume grid of assumed duration of pattern occurrences
-            pattern.dur.seq <- 60:120
-            out <- segmentPattern(x = x,
-                                  x.fs = 1,
-                                  template = template,
-                                  pattern.dur.seq = pattern.dur.seq,
-                                  similarity.measure = "cor")
-
-            res <- sort(out$tau_i)
-            res.exp <- c(1, 76, 157, 249, 360, 430, 539, 649, 743, 860)
-            expect_equal(res, res.exp)
-
-            res <- sort(out$T_i)
-            res.exp <- c(63, 71, 76, 82, 93, 95, 110, 111, 112, 118)
-            expect_equal(res, res.exp)
-
-            res <- sort(out$sim_i)
-            res.exp <- c(0.999999978863449, 0.999999986147232, 0.999999987426459, 0.999999987616627,
-                         0.999999987957358, 0.999999988038671, 0.999999988177003, 0.999999988262704,
-                         0.999999988270857, 0.999999988274299)
-            expect_equal(res, res.exp)
-            })
-
-
-
-
-test_that("Example 2(b): no noise in signal (no peak fine-tuning employed),
-          pattern occurences of different length; What happens if we define very
-          'poor' grid of assumed duration of pattern occurrences?", {
-
-            ## Grid of different true pattern occurence durations
-            set.seed(1)
-            s.grid <- sample(60:120, size = 10)
-            templ <- cos(seq(0, 2 * pi, length.out = 200))
-
-            ## Generate signal x that consists of "glued" pattern occurrences of different length
-            x <- numeric()
-            for (ss in s.grid){
-              templ0 <- approx(seq(0, 1, length.out = 200), templ, xout = seq(0, 1, length.out = ss))$y
-              if (length(x)>0){
-                x <- x[-length(x)]
-              }
-              x <- c(x, templ0)
-            }
-
-            ## Assume grid of assumed duration of pattern occurrences
-            pattern.dur.seq <- c(60, 80, 100, 120)
-            out <- segmentPattern(x = x,
-                                  x.fs = 1,
-                                  template = template,
-                                  pattern.dur.seq = pattern.dur.seq,
-                                  similarity.measure = "cor")
-
-            res <- out$tau_i
-            res.exp <- c(9, 77, 163, 245, 366, 435, 534, 657, 742, 861)
-            expect_equal(res, res.exp)
-
-            res <- out$T_i
-            res.exp <- c(60, 80, 80, 120, 60, 100, 120, 80, 120, 60)
-            expect_equal(res, res.exp)
-
-            res <- out$sim_i
-            res.exp <- c(0.991356582934436, 0.999831987402593, 0.994901487934483, 0.998088156917189,
-                         0.993305509171119, 0.998023479621162, 0.997327183352651, 0.993914137573433,
-                         0.999911593085322, 0.99799791084828)
-            expect_equal(res, res.exp)
-            })
-
-
-
-
-test_that("Example 2(d): no noise in signal (no peak fine-tuning employed),
-          pattern occurences of different length; Use covariance, and even more
-          'poor' grid of assumed duration of pattern occurrences;
-          Employ threshold for covariance", {
-
-  ## Grid of different true pattern occurence durations
-  set.seed(1)
-  s.grid <- sample(60:120, size = 10)
-  templ <- cos(seq(0, 2 * pi, length.out = 200))
-
-  ## Generate signal x that consists of "glued" pattern occurrences of different length
-  x <- numeric()
-  for (ss in s.grid){
-    templ0 <- approx(seq(0, 1, length.out = 200), templ, xout = seq(0, 1, length.out = ss))$y
-    if (length(x)>0){
-      x <- x[-length(x)]
-    }
-    x <- c(x, templ0)
-  }
-
-  ## Assume grid of assumed duration of pattern occurrences
-  pattern.dur.seq <- c(60, 120)
-  out <- segmentPattern(x = x,
-                        x.fs = 1,
-                        template = template,
-                        pattern.dur.seq = pattern.dur.seq,
-                        similarity.measure = "cov",
-                        similarity.measure.thresh = 0.6)
-
-  res <- out$tau_i
-  res.exp <- c(245, 365, 534, 742, 862)
-  expect_equal(res, res.exp)
-
-  res <- out$T_i
-  res.exp <- c(120, 60, 120, 120, 60)
-  expect_equal(res, res.exp)
-
-  res <- out$sim_i
-  res.exp <- c(0.728924948585804, 0.634803250987258, 0.730662404365108, 0.718248596674937,
-               0.698948050109923)
-  expect_equal(res, res.exp)
-})
 
 
 
@@ -519,11 +271,11 @@ test_that("Example 3(a): add noise in signal generation,
   ## Generate signal and template
   set.seed(1)
   s.grid <- sample(60:120, size = 10)
-  templ <- cos(seq(0, 2 * pi, length.out = 200))
+  template <- cos(seq(0, 2 * pi, length.out = 200))
 
   x <- numeric()
   for (ss in s.grid){
-    templ0 <- approx(seq(0, 1, length.out = 200), templ, xout = seq(0, 1, length.out = ss))$y
+    templ0 <- approx(seq(0, 1, length.out = 200), template, xout = seq(0, 1, length.out = ss))$y
     if (length(x)>0){
       x <- x[-length(x)]
     }
@@ -547,9 +299,9 @@ test_that("Example 3(a): add noise in signal generation,
   expect_equal(res, res.exp)
 
   res <- out$sim_i
-  res.exp <- c(0.926291306033366, 0.943178533162363, 0.909156293953748, 0.905525014013764,
-               0.922523794573569, 0.878846405199884, 0.896401753440613, 0.908357873425458,
-               0.892508399360682, 0.932536508269999)
+  res.exp <- c(0.926292653865246, 0.943177988579057, 0.909149333113241, 0.905514398680946,
+               0.922521494082868, 0.878835859702908, 0.896399820840297, 0.908359071401425,
+               0.892506179992972, 0.932539440191918)
   expect_equal(res, res.exp)
 })
 
@@ -562,11 +314,11 @@ test_that("Example 3(b): add noise in signal generation,
   ## Generate signal and template
   set.seed(1)
   s.grid <- sample(60:120, size = 10)
-  templ <- cos(seq(0, 2 * pi, length.out = 200))
+  template <- cos(seq(0, 2 * pi, length.out = 200))
 
   x <- numeric()
   for (ss in s.grid){
-    templ0 <- approx(seq(0, 1, length.out = 200), templ, xout = seq(0, 1, length.out = ss))$y
+    templ0 <- approx(seq(0, 1, length.out = 200), template, xout = seq(0, 1, length.out = ss))$y
     if (length(x)>0){
       x <- x[-length(x)]
     }
@@ -593,9 +345,9 @@ test_that("Example 3(b): add noise in signal generation,
   expect_equal(res, res.exp)
 
   res <- out$sim_i
-  res.exp <- c(0.926291306033366, 0.943178533162363, 0.909156293953748, 0.905525014013764,
-               0.922523794573569, 0.878846405199884, 0.896401753440613, 0.908357873425458,
-               0.892508399360682, 0.932536508269999)
+  res.exp <- c(0.926292653865246, 0.943177988579057, 0.909149333113241, 0.905514398680946,
+               0.922521494082868, 0.878835859702908, 0.896399820840297, 0.908359071401425,
+               0.892506179992972, 0.932539440191918)
   expect_equal(res, res.exp)
 
 
@@ -620,9 +372,9 @@ test_that("Example 3(b): add noise in signal generation,
   expect_equal(res, res.exp)
 
   res <- out$sim_i
-  res.exp <- c(0.934008825205221, 0.943178533162363, 0.917627061535885, 0.905525014013764,
-               0.922523794573569, 0.878846405199884, 0.896401753440613, 0.908357873425458,
-               0.890287715999962, 0.932536508269999)
+  res.exp <- c(0.934011470294625, 0.943177988579057, 0.917625765654425, 0.905514398680946,
+               0.922521494082868, 0.878835859702908, 0.896399820840297, 0.908359071401425,
+               0.89029293486179, 0.932539440191918)
   expect_equal(res, res.exp)
 
 
@@ -648,8 +400,8 @@ test_that("Example 3(b): add noise in signal generation,
   expect_equal(res, res.exp)
 
   res <- out$sim_i
-  res.exp <- c(0.705378003362227, 0.735918052569151, 0.759884581289357, 0.727240717460776,
-               0.742750320506588)
+  res.exp <- c(0.705380000974917, 0.735921165890131, 0.759885566360049, 0.727241676572737,
+               0.74274381619032)
   expect_equal(res, res.exp)
 
 
@@ -677,9 +429,9 @@ test_that("Example 3(b): add noise in signal generation,
   expect_equal(res, res.exp)
 
   res <- out$sim_i
-  res.exp <- c(0.387425918617852, 0.59334391287926, 0.628645307416092, 0.564182215998019,
-               0.524567526202169, 0.573154721743202, 0.561415062231443, 0.610366994688926,
-               0.589176030015489, 0.33404216471104)
+  res.exp <- c(0.387428828230924, 0.593344449562667, 0.628648114234425, 0.564177922975735,
+               0.524566992985259, 0.57315100219008, 0.561412683480699, 0.61036916804888,
+               0.589173737378179, 0.334041868743848)
   expect_equal(res, res.exp)
 
 
@@ -703,12 +455,92 @@ test_that("Example 3(b): add noise in signal generation,
   expect_equal(res, res.exp)
 
   res <- out$sim_i
-  res.exp <- c(0.934008825205221, 0.943178533162363, 0.917627061535885, 0.905525014013764,
-               0.922523794573569, 0.878846405199884, 0.913586332840362, 0.902548497003548,
-               0.892508399360682, 0.932536508269999)
+  res.exp <- c(0.934011470294625, 0.943177988579057, 0.917625765654425, 0.905514398680946,
+               0.922521494082868, 0.878835859702908, 0.913581497874648, 0.902543119926644,
+               0.892506179992972, 0.932539440191918)
   expect_equal(res, res.exp)
 
 })
+
+
+
+
+
+
+######################
+######################
+######################
+###   Examples 4   ###
+######################
+######################
+######################
+
+
+
+test_that("Example 4(a): no noise in signal, all pattern occurences of the same
+          length, LONG SIGNAL", {
+
+  ## Generate signal and template
+  ## approx 30 min for data collected at freq
+  x0 <- cos(seq(0, 2 * pi * 10 * 20, length.out = 1000 * 20 + 1))
+  x  <- x0
+  template <- x0[1:101]
+
+  pattern.dur.seq <- c(90, 100, 101)
+  out <- segmentPattern(x = x,
+                        x.fs = 1,
+                        template = template,
+                        pattern.dur.seq = pattern.dur.seq,
+                        similarity.measure = "cor",
+                        x.cut = TRUE,
+                        x.cut.vl = 6000)
+
+  res <- as.vector(summary(out$tau_i))
+  res.exp <- c(1, 4976, 9951, 9951, 14926, 19901)
+  expect_equal(res, res.exp)
+
+  res <- as.vector(summary(out$T_i))
+  res.exp <- c(101, 101, 101, 101, 101, 101)
+  expect_equal(res, res.exp)
+
+  res <- as.vector(summary(out$sim_i))
+  res.exp <- c(0.999999999999998, 1, 1, 1, 1, 1)
+  expect_equal(res, res.exp)
+
+  ## compare with no cut
+  out2 <- segmentPattern(x = x,
+                        x.fs = 1,
+                        template = template,
+                        pattern.dur.seq = pattern.dur.seq,
+                        similarity.measure = "cor",
+                        x.cut = FALSE)
+
+  ## compare with cut, parallel
+  out3 <- segmentPattern(x = x,
+                         x.fs = 1,
+                         template = template,
+                         pattern.dur.seq = pattern.dur.seq,
+                         similarity.measure = "cor",
+                         x.cut = TRUE,
+                         x.cut.vl = 6000,
+                         run.parallel = TRUE,
+                         run.parallel.cores = 2)
+
+
+  expect_equal(out$tau_i, out2$tau_i)
+  expect_equal(out$tau_i, out3$tau_i)
+
+  expect_equal(out$T_i, out2$T_i)
+  expect_equal(out$T_i, out3$T_i)
+
+  expect_equal(out$sim_i, out2$sim_i)
+  expect_equal(out$sim_i, out3$sim_i)
+})
+
+
+
+
+
 
 
 
