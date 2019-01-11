@@ -1,7 +1,6 @@
 
 
 
-
 #' Pattern Segmentation From a Time-series via ADEPT
 #'
 #' Segment pattern from a time-series \code{x} via Adaptive Empirical Pattern
@@ -103,11 +102,89 @@
 #'
 #' @import future
 #' @importFrom dplyr arrange mutate lag filter select
+#' @importFrom magrittr '%>%'
 #'
 #' @examples
+#' ## Example 1:
+#' ## - no noise in time-series x generation,
+#' ## - all pattern occurences of the same length (101) n time-series x generation.
+#' ## Generate signal and template.
+#' x0 <- cos(seq(0, 2 * pi * 10, length.out = 1001))
+#' x  <- x0
+#' template <- x0[1:101]
+#' ## Include true pattern occurrence length 101
+#' ## (and some redundat for the sake of example).
+#' pattern.dur.seq <- c(90, 100, 101, 102, 110)
+#' ## Use segmentPattern function to identify beginnings tau_i and duration T_i
+#' ## of pattern occurences within a signal x.
+#' out <- segmentPattern(x = x,
+#'                       x.fs = 1,
+#'                       template = template,
+#'                       pattern.dur.seq = pattern.dur.seq,
+#'                       similarity.measure = "cor")
+#' out
 #'
+#' ## Example 2:
+#' ## - no noise in time-series x generation,
+#' ## - use pattern occurences of different length in time-series x generation.
+#' ## Generate signal and template.
+#' set.seed(1)
+#' ## Grid of different true pattern occurence durations.
+#' s.grid <- sample(60:120, size = 10)
+#' x_block <- cos(seq(0, 2 * pi, length.out = 200))
+#' ## Generate signal x that consists of "glued" pattern occurrences of different length
+#' x <- numeric()
+#' for (ss in s.grid){
+#'   x_block_interpolated <- approx(seq(0, 1, length.out = 200),
+#'                                  x_block,
+#'                                  xout = seq(0, 1, length.out = ss))$y
+#'   if (length(x)>0){
+#'     x <- x[-length(x)]
+#'   }
+#'   x <- c(x, x_block_interpolated)
+#' }
+#' ## Assume dense grid of pattern occurrence duration.
+#' pattern.dur.seq <- 60:120
+#' ## Use segmentPattern function to identify beginnings tau_i and duration T_i.
+#' out <- segmentPattern(x = x,
+#'                       x.fs = 1,
+#'                       template = template,
+#'                       pattern.dur.seq = pattern.dur.seq,
+#'                       similarity.measure = "cor")
+#' out
 #'
-#'
+#' ## Example 3(a):
+#' ## - add noise in time-series x generation,
+#' ## - use pattern occurences of different length in time-series x generation.
+#' ## Generate signal and template
+#' set.seed(1)
+#' x <- x + rnorm(length(x), sd = 0.3)
+#' pattern.dur.seq <- seq(50, 150, by = 5)
+#' ## Use segmentPattern function to identify beginnings tau_i and duration T_i:
+#' ## - use fine-tune "maxima" procedure.
+#' out <- segmentPattern(x = x,
+#'                       x.fs = 1,
+#'                       template = template,
+#'                       pattern.dur.seq = pattern.dur.seq,
+#'                       similarity.measure = "cor",
+#'                       finetune = "maxima",
+#'                       finetune.maxima.ma.W = 30,
+#'                       finetune.maxima.nbh.W = 120)
+#' out
+#' ## Example 3(b):
+#' ## Use segmentPattern function to identify beginnings tau_i and duration T_i:
+#' ## - use time-series x smooting for ADEPT similarity matrix computation,
+#' ## - use fine-tune "maxima" procedure.
+#' out <- segmentPattern(x = x,
+#'                       x.fs = 1,
+#'                       template = template,
+#'                       pattern.dur.seq = pattern.dur.seq,
+#'                       similarity.measure = "cor",
+#'                       x.adept.ma.W = 30,
+#'                       finetune = "maxima",
+#'                       finetune.maxima.ma.W = 30,
+#'                       finetune.maxima.nbh.W = 120)
+#' out
 #'
 segmentPattern <- function(x,
                            x.fs,
@@ -222,6 +299,10 @@ segmentPattern <- function(x,
   ## Clear up after possibly multiple stride occurences
   out.df <- do.call("rbind", out.list)
 
+  ## To surpress the "Note" on package check
+  ## (after https://github.com/Rdatatable/data.table/issues/850)
+  tau_i <- NULL; T_i <- NULL; tau_i_diff <- NULL
+
   k <- floor((template.vl.max-1)/template.vl.min)
   if (k > 0){
     for (i in 1:k){
@@ -238,26 +319,4 @@ segmentPattern <- function(x,
 
   return(out.df)
 }
-
-
-
-
-# ## Example 1(a):
-# ## - no noise in time-series x,
-# ## - all pattern occurences of the same length (vector length: 101)
-# ## Generate signal and template
-# x0 <- cos(seq(0, 2 * pi * 10, length.out = 1001))
-# x  <- x0
-# template <- x0[1:101]
-# ## Use segmentPattern function to identify beginnings tau_i and duration T_i
-# ## of pattern occurences within a signal x
-# pattern.dur.seq <- c(90, 100, 110)
-# out <- segmentPattern(x = x,
-#                       x.fs = 1,
-#                       template = template,
-#                       pattern.dur.seq = pattern.dur.seq,
-#                       similarity.measure = "cor")
-# out
-
-
 
