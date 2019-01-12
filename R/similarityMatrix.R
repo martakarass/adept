@@ -99,4 +99,109 @@ similarityMatrix <- function(x,
 
 
 
+#' Template Index Matrix Computation
+#'
+#' Compute matrix of pattern templates yielding the highest similarity
+#' between a time-series \code{x} and a collection
+#' of scaled pattern templates.
+#'
+#' @param x A numeric vector. A time-series \code{x}.
+#' @param template.scaled A list of lists of numeric vectors, as returned by
+#' \code{scaleTemplate}.  Each element of
+#' \code{template.scaled}
+#' is a list of pattern templates interpolated to a particular vector length.
+#'  Number of elements in the \code{template.scaled}  corresponds to the
+#'  number of unique template length values used in segmentation.
+#' @param similarity.measure A character scalar. Statistic
+#' used in similarity matrix computation; one of the following:
+#' \itemize{
+#'   \item "cov" - for covariance,
+#'   \item "cor" - for correlation.
+#' }
+#'
+#' @return A numerc matrix. Represents number of pattern template
+#' yielding the highest similarity
+#' between a time-series \code{x} and a collection
+#' of scaled pattern templates. Precisely, the number
+#' is the order in which particular pattern template was provided in
+#' the \code{template} list in \code{segmentPattern}.
+#'
+#' @examples
+#' ## Grid of different true pattern occurence durations
+#' set.seed(1)
+#' s.grid <- sample(60:120, size = 5)
+#' template1 <- cos(seq(0, 2 * pi, length.out = 200))
+#' template2 <- c(rev(seq(-1, 1, length.out = 100)), seq(-1, 1, length.out = 100))
+#'
+#' ## Generate signal x that consists of "glued" pattern occurrences of different length
+#' x <- numeric()
+#' for (ss in s.grid){
+#'   ## Add piece from template1
+#'   templ0 <- approx(seq(0, 1, length.out = 200), template1, xout = seq(0, 1, length.out = ss))$y
+#'   if (length(x)>0) x <- x[-length(x)]
+#'   x <- c(x, templ0)
+#'   ## Add piece from template2
+#'   templ0 <- approx(seq(0, 1, length.out = 200), template2, xout = seq(0, 1, length.out = ss))$y
+#'   if (length(x)>0) x <- x[-length(x)]
+#'   x <- c(x, templ0)
+#'
+#' }
+#'
+#' ## Run ADEPT
+#' template <- list(template1, template2)
+#' template.vl <- sort(s.grid)
+#' template.scaled <- scaleTemplate(template, template.vl)
+#' similarity.measure <- "cor"
+#' out <- templateIdxMatrix(x, template.scaled, similarity.measure)
+#'
+#' \dontrun{
+#' ## Visualize
+#' par(mfrow = c(1,1))
+#' image(t(out),
+#'       main = "ADEPT template index matrix\nfor time-series x and scaled versions of pattern templates",
+#'       xlab = "Time index",
+#'       ylab = "Pattern vector length",
+#'       xaxt = "n", yaxt = "n")
+#' xaxis <- c(1, seq(100, length(x), by = 100), length(x))
+#' yaxis <- template.vl
+#' axis(1, at = xaxis/max(xaxis), labels = xaxis)
+#' axis(2, at = seq(0, 1, length.out = length(yaxis)), labels = yaxis)
+#' }
+#'
+#' @import runstats
+#'
+#' @noRd
+#'
+templateIdxMatrix <- function(x,
+                          template.scaled,
+                          similarity.measure){
+
+  runstat.func <- switch(similarity.measure,
+                         "cov" = RunningCov,
+                         "cor" = RunningCor)
+
+  ## Outer lapply: iterate over pattern scales considered;
+  ## each lapply iteration fills one row of the output similarity matrix.
+  templateIdx.list <- lapply(template.scaled, function(template.scaled.i){
+
+    ## Inner lapply: iterate over, possibly, multiple patterns;
+    ## each lapply iteration returns a vector whose each element corresponds
+    ## to the highest value of similarity between signal \code{x} and
+    ## a short pattern
+    ## at a time point corresponding to this vector's element.
+    runstat.func.out0 <- lapply(template.scaled.i, function(template.scaled.ik){
+      do.call(runstat.func, list(x = x, y = template.scaled.ik))
+    })
+    max.col(t(do.call(rbind, runstat.func.out0)), ties.method = "first")
+  })
+
+  ## rbind list elements (which are vectors) into a matrix
+  templateIdx.mat <- do.call(rbind, templateIdx.list)
+  return(templateIdx.mat)
+
+}
+
+
+
+
 
