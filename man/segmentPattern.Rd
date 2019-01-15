@@ -8,7 +8,8 @@ segmentPattern(x, x.fs, template, pattern.dur.seq,
   similarity.measure = "cov", similarity.measure.thresh = 0,
   x.adept.ma.W = NULL, finetune = NULL, finetune.maxima.ma.W = NULL,
   finetune.maxima.nbh.W = NULL, run.parallel = FALSE,
-  run.parallel.cores = NULL, x.cut = TRUE, x.cut.vl = 6000)
+  run.parallel.cores = NULL, x.cut = TRUE, x.cut.vl = 6000,
+  compute.template.idx = FALSE)
 }
 \arguments{
 \item{x}{A numeric vector. A time-series to segment pattern occurrences from.}
@@ -78,6 +79,10 @@ each part of \code{x} separately. Recommended for a time-series \code{x} of vect
 \item{x.cut.vl}{An integer scalar.
 Defines a vector length of parts that \code{x} vector is cut into during the execution time optimization procedure.
 Default is \code{6000} (recommended).}
+
+\item{compute.template.idx}{A logical scalar. Whether or not to compute and return information about
+which of the provided pattern templates yielded a similarity matrix value
+that corresponds to an identified pattern occurrence.}
 }
 \value{
 A \code{data.frame} with segmentation results. Each row
@@ -91,7 +96,9 @@ of the returned \code{data.frame} describes one identified pattern occurrence:
   preliminarily identified pattern occurence and corresponding window of a time-series used in similarity matrix computation;
   specifically: if the fine-tune procedure is employed,
   the similarity value between the final pattern occurence location and corresponding window of time-series \code{x}
-  singal may differ from the value in this table.
+  singal may differ from the value in this table,
+  \item \code{template_i} - index of pattern template that yielded a similarity matrix value
+ corresponding to an identified pattern occurrence.
 }
 }
 \description{
@@ -160,6 +167,8 @@ for (ss in s.grid){
   }
   x <- c(x, x_block_interpolated)
 }
+## Pattern template used in algorithm
+template <- x_block
 ## Assume dense grid of pattern occurrence duration.
 pattern.dur.seq <- 60:120
 ## Use segmentPattern function to identify beginnings tau_i and duration T_i.
@@ -174,9 +183,23 @@ out
 ## - add noise in time-series x generation,
 ## - use pattern occurences of different length in time-series x generation.
 ## Generate signal and template
+s.grid <- sample(60:120, size = 10)
+x_block <- cos(seq(0, 2 * pi, length.out = 200))
 set.seed(1)
+x <- numeric()
+for (ss in s.grid){
+  x_block_interpolated <- approx(seq(0, 1, length.out = 200),
+                                 x_block,
+                                 xout = seq(0, 1, length.out = ss))$y
+  if (length(x)>0){
+    x <- x[-length(x)]
+  }
+  x <- c(x, x_block_interpolated)
+}
 x <- x + rnorm(length(x), sd = 0.3)
 pattern.dur.seq <- seq(50, 150, by = 5)
+## Pattern template used in algorithm
+template <- x_block
 ## Use segmentPattern function to identify beginnings tau_i and duration T_i:
 ## - use fine-tune "maxima" procedure.
 out <- segmentPattern(x = x,

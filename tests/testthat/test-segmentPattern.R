@@ -540,6 +540,50 @@ test_that("Example 4(a): no noise in signal, all pattern occurences of the same
 
 
 
+######################
+######################
+######################
+###   Examples 4   ###
+######################
+######################
+######################
+
+
+test_that("Example 5(a): test returning template index matrix", {
+
+
+  ## Grid of different true pattern occurence durations
+  set.seed(1)
+  s.grid <- sample(60:120, size = 50)
+  template1 <- cos(seq(0, 2 * pi, length.out = 200))
+  template2 <- c(rev(seq(-1, 1, length.out = 100)), seq(-1, 1, length.out = 100))
+
+  ## Generate signal x that consists of "glued" pattern occurrences of different length
+  x <- numeric()
+  for (ss in s.grid){
+    ## Add piece from template1
+    templ0 <- approx(seq(0, 1, length.out = 200), template1, xout = seq(0, 1, length.out = ss))$y
+    if (length(x)>0) x <- x[-length(x)]
+    x <- c(x, templ0)
+    ## Add piece from template2
+    templ0 <- approx(seq(0, 1, length.out = 200), template2, xout = seq(0, 1, length.out = ss))$y
+    if (length(x)>0) x <- x[-length(x)]
+    x <- c(x, templ0)
+
+  }
+
+  ## Run ADEPT
+  out <- segmentPattern(x = x,
+                        x.fs = 1,
+                        template = list(template1, template2),
+                        pattern.dur.seq = sort(s.grid),
+                        similarity.measure = "cor",
+                        compute.template.idx = TRUE)
+
+  expect_true(all(out$template_i == rep(c(1,2), 50)))
+})
+
+
 
 
 

@@ -202,6 +202,7 @@ maxAndTune <- function(x,
                        template.vl,
                        similarity.mat,
                        similarity.measure.thresh,
+                       template.idx.mat = NULL,
                        finetune = NULL,
                        finetune.maxima.x = NULL,
                        finetune.maxima.nbh.vl = NULL){
@@ -211,6 +212,7 @@ maxAndTune <- function(x,
   x.vl     <- length(x)
   template.vl.min <- min(template.vl)
   template.vl.max <- max(template.vl)
+  template.idx.TMP <- NA
 
   ## Data objects to store iteration results
   out.list <- list()
@@ -234,17 +236,22 @@ maxAndTune <- function(x,
     }
 
     ## Determine current maximum value in similarity matrix
-    mat.MAX <- max(similarity.mat, na.rm = TRUE)
-    if (mat.MAX < similarity.measure.thresh) {
+    similarity.mat.MAX <- max(similarity.mat, na.rm = TRUE)
+    if (similarity.mat.MAX < similarity.measure.thresh) {
       break
     }
 
     ## Identify parameters s and tau corresponding to maximum of covariance matrix
     ## s:   expressed as vector length
     ## tau: expressed as index of x vector
-    mat.MAX.IDX <- which(similarity.mat == mat.MAX, arr.ind = TRUE)[1, ]
-    tau.TMP     <- mat.MAX.IDX[2]
-    s.TMP       <- template.vl[mat.MAX.IDX[1]]
+    similarity.mat.MAX.IDX <- which(similarity.mat == similarity.mat.MAX, arr.ind = TRUE)[1, ]
+    tau.TMP     <- similarity.mat.MAX.IDX[2]
+    s.TMP       <- template.vl[similarity.mat.MAX.IDX[1]]
+
+    ## Identify
+    if (!(is.null(template.idx.mat))){
+      template.idx.TMP <- template.idx.mat[similarity.mat.MAX.IDX[1], similarity.mat.MAX.IDX[2]]
+    }
 
 
     ## -------------------------------------------------------------------------
@@ -280,13 +287,13 @@ maxAndTune <- function(x,
     x.Fitted[(tau.TMP + 1):(tau.TMP + s.TMP - 2)] <- 1
 
     ## Store current iteration-specific results
-    out.list[[length(out.list) + 1]] <- c(tau.TMP, s.TMP, mat.MAX)
+    out.list[[length(out.list) + 1]] <- c(tau.TMP, s.TMP, similarity.mat.MAX, template.idx.TMP)
 
   }
 
   ## List to data frame
   out.df <- as.data.frame(do.call(rbind, out.list))
-  if (nrow(out.df) > 0) names(out.df) <- c("tau_i", "T_i", "sim_i")
+  if (nrow(out.df) > 0) names(out.df) <- c("tau_i", "T_i", "sim_i", "template_i")
 
   return(out.df)
 

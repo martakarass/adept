@@ -60,6 +60,9 @@
 #' @param x.cut.vl An integer scalar.
 #' Defines a vector length of parts that \code{x} vector is cut into during the execution time optimization procedure.
 #' Default is \code{6000} (recommended).
+#' @param compute.template.idx A logical scalar. Whether or not to compute and return information about
+#' which of the provided pattern templates yielded a similarity matrix value
+#' that corresponds to an identified pattern occurrence.
 #'
 #' @details
 #'     Function implements Adaptive Empirical Pattern Transformation (ADEPT) method for pattern segmentation
@@ -95,7 +98,9 @@
 #'   preliminarily identified pattern occurence and corresponding window of a time-series used in similarity matrix computation;
 #'   specifically: if the fine-tune procedure is employed,
 #'   the similarity value between the final pattern occurence location and corresponding window of time-series \code{x}
-#'   singal may differ from the value in this table.
+#'   singal may differ from the value in this table,
+#'   \item \code{template_i} - index of pattern template that yielded a similarity matrix value
+#'  corresponding to an identified pattern occurrence.
 #' }
 #'
 #' @export
@@ -143,6 +148,8 @@
 #'   }
 #'   x <- c(x, x_block_interpolated)
 #' }
+#' ## Pattern template used in algorithm
+#' template <- x_block
 #' ## Assume dense grid of pattern occurrence duration.
 #' pattern.dur.seq <- 60:120
 #' ## Use segmentPattern function to identify beginnings tau_i and duration T_i.
@@ -157,9 +164,23 @@
 #' ## - add noise in time-series x generation,
 #' ## - use pattern occurences of different length in time-series x generation.
 #' ## Generate signal and template
+#' s.grid <- sample(60:120, size = 10)
+#' x_block <- cos(seq(0, 2 * pi, length.out = 200))
 #' set.seed(1)
+#' x <- numeric()
+#' for (ss in s.grid){
+#'   x_block_interpolated <- approx(seq(0, 1, length.out = 200),
+#'                                  x_block,
+#'                                  xout = seq(0, 1, length.out = ss))$y
+#'   if (length(x)>0){
+#'     x <- x[-length(x)]
+#'   }
+#'   x <- c(x, x_block_interpolated)
+#' }
 #' x <- x + rnorm(length(x), sd = 0.3)
 #' pattern.dur.seq <- seq(50, 150, by = 5)
+#' ## Pattern template used in algorithm
+#' template <- x_block
 #' ## Use segmentPattern function to identify beginnings tau_i and duration T_i:
 #' ## - use fine-tune "maxima" procedure.
 #' out <- segmentPattern(x = x,
@@ -199,7 +220,8 @@ segmentPattern <- function(x,
                            run.parallel = FALSE,
                            run.parallel.cores = NULL,
                            x.cut = TRUE,
-                           x.cut.vl = 6000){
+                           x.cut.vl = 6000,
+                           compute.template.idx = FALSE){
 
   ## ---------------------------------------------------------------------------
   ## Compute a list of rescaled template(s)
@@ -219,7 +241,9 @@ segmentPattern <- function(x,
 
   if (!is.null(x.adept.ma.W)){
     # W.vl       <- x.adept.ma.W * x.fs
-    x.smoothed <- get.x.smoothed(x, W = x.adept.ma.W, x.fs = x.fs)
+    x.smoothed <- get.x.smoothed(x = x,
+                                 W = x.adept.ma.W,
+                                 x.fs = x.fs)
   } else {
     x.smoothed <- x
   }
@@ -233,7 +257,9 @@ segmentPattern <- function(x,
     ## Signal smoothing for fine tunning
     if (!is.null(finetune.maxima.ma.W) && finetune.maxima.ma.W > 0){
       # W.vl              <- finetune.maxima.ma.W * x.fs
-      finetune.maxima.x <- get.x.smoothed(x, W = finetune.maxima.ma.W, x.fs = x.fs)
+      finetune.maxima.x <- get.x.smoothed(x = x,
+                                          W = finetune.maxima.ma.W,
+                                          x.fs = x.fs)
     } else {
       finetune.maxima.x <- x
     }
@@ -252,8 +278,10 @@ segmentPattern <- function(x,
   ## If no signal cutting to parts is allowed
   if (!x.cut) x.cut.vl <- length(x)
 
-  x.cut.seq <- seq(1, to = length(x), by = x.cut.vl)
   x.cut.margin <- template.vl.max - 1
+  x.cut.seq <- seq(1, to = length(x), by = x.cut.vl)
+
+  template.idx.mat.i <- NULL
 
   if (run.parallel){
     ## multiproces := multicore, if supported, otherwise multisession
@@ -262,6 +290,8 @@ segmentPattern <- function(x,
   } else {
     plan(sequential)
   }
+
+
   out.list.f <- lapply(x.cut.seq, function(i){
     future({
       ## Define current x part indices
@@ -269,27 +299,38 @@ segmentPattern <- function(x,
       ## If we cannot fit the longest pattern, return NULL
       if (length(idx.i) <= max(template.vl)) return(NULL)
       ## Compute similarity matrix
-      similarity.mat.i <- similarityMatrix(x.smoothed[idx.i],
-                                          template.scaled,
-                                          similarity.measure)
+      similarity.mat.i <- similarityMatrix(x = x.smoothed[idx.i],
+                                           template.scaled = template.scaled,
+                                           similarity.measure = similarity.measure)
+      ## Compute template index matrix
+      if (compute.template.idx){
+        template.idx.mat.i <- templateIdxMatrix(x = x.smoothed[idx.i],
+                                                template.scaled = template.scaled,
+                                                similarity.measure = similarity.measure)
+      }
       ## Run max and tine procedure
-      out.df.i <- maxAndTune(x[idx.i],
-                             template.vl,
-                             similarity.mat.i,
-                             similarity.measure.thresh,
-                             finetune,
-                             finetune.maxima.x[idx.i],
-                             finetune.maxima.nbh.vl)
+      out.df.i <- maxAndTune(x = x[idx.i],
+                             template.vl = template.vl,
+                             similarity.mat = similarity.mat.i,
+                             similarity.measure.thresh = similarity.measure.thresh,
+                             template.idx.mat = template.idx.mat.i,
+                             finetune = finetune,
+                             finetune.maxima.x = finetune.maxima.x[idx.i],
+                             finetune.maxima.nbh.vl = finetune.maxima.nbh.vl)
+
       ## Shift \tau parameter according to which part of signal x we are currently working with
       if (nrow(out.df.i) > 0){
         out.df.i$tau_i <- out.df.i$tau_i + i - 1
         return(out.df.i)
+
       } else {
         ## Return empty data frame
-        return(data.frame(tau_i = numeric(), T_i = numeric(), sim_i = numeric()))
+        return(data.frame(tau_i = numeric(),
+                          T_i = numeric(),
+                          sim_i = numeric(),
+                          template_i = numeric()))
       }
-      # if (nrow(out.df.i)>0) out.df.i$tau_i <- out.df.i$tau_i + i - 1
-      # return(out.df.i)
+
     })
   })
   out.list <- lapply(out.list.f, value)
