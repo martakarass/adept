@@ -63,6 +63,7 @@
 #' @param compute.template.idx A logical scalar. Whether or not to compute and return information about
 #' which of the provided pattern templates yielded a similarity matrix value
 #' that corresponds to an identified pattern occurrence.
+#' Seting to \code{TRUE} may increase computation time. Default is \code{FALSE}.
 #'
 #' @details
 #'     Function implements Adaptive Empirical Pattern Transformation (ADEPT) method for pattern segmentation
@@ -99,8 +100,10 @@
 #'   specifically: if the fine-tune procedure is employed,
 #'   the similarity value between the final pattern occurence location and corresponding window of time-series \code{x}
 #'   singal may differ from the value in this table,
-#'   \item \code{template_i} - index of pattern template that yielded a similarity matrix value
-#'  corresponding to an identified pattern occurrence.
+#'   \item \code{template_i} - if \code{compute.template.idx} euqlas \code{TRUE}:
+#'   index of pattern template that yielded a similarity matrix value
+#'  corresponding to an identified pattern occurrence;
+#'  if \code{compute.template.idx} euqlas \code{FALSE}: \code{NA}.
 #' }
 #'
 #' @export
