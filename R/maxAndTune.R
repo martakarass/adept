@@ -228,10 +228,13 @@ maxAndTune <- function(x,
 
   while (TRUE) {
 
-    ## Check condition if any other pattern is left to be discovered
-    rl <- rle(is.na(x.Fitted))
-    max.empty <- max(rl$lengths[rl$values])
-    if (max.empty < template.vl.min){
+    # ## Check condition if any other pattern is left to be discovered
+    # rl <- rle(is.na(x.Fitted))
+    # max.empty <- max(rl$lengths[rl$values])
+    # if (max.empty < template.vl.min){
+    #   break
+    # }
+    if (all(is.na(similarity.mat))){
       break
     }
 

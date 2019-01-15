@@ -330,6 +330,19 @@ test_that("Example 3(b): add noise in signal generation,
 
   ## Without maxima detection
   pattern.dur.seq <- seq(60, 100, by = 5)
+
+
+  similarity.measure.thresh = 0.0
+  x.adept.ma.W = NULL
+  finetune = NULL
+  finetune.maxima.ma.W = NULL
+  finetune.maxima.nbh.W = NULL
+  run.parallel = FALSE
+  run.parallel.cores = NULL
+  x.cut = TRUE
+  x.cut.vl = 6000
+  compute.template.idx = FALSE
+
   out <- segmentPattern(x = x,
                         x.fs = 1,
                         template = template,
@@ -351,6 +364,10 @@ test_that("Example 3(b): add noise in signal generation,
   expect_equal(res, res.exp)
 
 
+  similarity.measure = "cor"
+  finetune = "maxima"
+  finetune.maxima.ma.W = 30
+  finetune.maxima.nbh.W = 120
 
   ## Use maxima detection (for comparison)
   pattern.dur.seq <- seq(60, 100, by = 5)
