@@ -25,7 +25,7 @@ install.packages("adept")
 
 This is a basic example which shows you how to solve a common problem:
 
-commit test
+commit test 2
 
 ``` r
 ## basic example code
