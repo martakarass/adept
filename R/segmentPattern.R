@@ -345,14 +345,15 @@ segmentPattern <- function(x,
 
   ## To surpress the "Note" on package check
   ## (after https://github.com/Rdatatable/data.table/issues/850)
-  tau_i <- NULL; T_i <- NULL; tau_i_diff <- NULL
+  tau_i <- NULL; T_i <- NULL; tau_i_diff <- NULL; sim_i <- NULL
 
   k <- floor((template.vl.max-1)/template.vl.min)
   if (k > 0){
     for (i in 1:k){
       out.df <-
         out.df %>%
-        arrange(tau_i) %>%
+        # arrange(tau_i) %>%
+        arrange(tau_i, dplyr::desc(sim_i)) %>%
         mutate(tau_i_diff = lag(tau_i + T_i - 1) - tau_i) %>%
         filter(tau_i_diff <= 0 | is.na(tau_i_diff))
     }
