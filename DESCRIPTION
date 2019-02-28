@@ -3,10 +3,9 @@ Type: Package
 Title: Adaptive Empirical Pattern Transformation 
 Version: 0.1.1
 Authors@R: c(
-  person("Marta", "Karas", email = "mkaras2@jhu.edu", role = c("aut", "cre")),
+  person("Marta", "Karas", email = "marta.karass@gmail.com", role = c("aut", "cre")),
   person("Jacek", "Urbanek", role = c("aut"))
   )
-Maintainer: Marta Karas <marta.karass@gmail.com>
 Description: Designed for optimal use in performing fast, 
     accurate walking strides segmentation from high-density 
     data collected from a wearable accelerometer worn 
