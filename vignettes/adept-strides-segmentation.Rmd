@@ -285,12 +285,12 @@ out1.la <- segmentPattern(x = x.la,
 ```
 
 ```{r, eval = FALSE, include=FALSE}
-path.tmp <- "/Users/martakaras/Dropbox/_PROJECTS/R/adept/vignettes/static/results/out1_la.csv"
+path.tmp <- "static/results/out1_la.csv"
 write.csv(out1.la, path.tmp, row.names = FALSE)
 ```
 
 ```{r, include=FALSE}
-path.tmp <- "/Users/martakaras/Dropbox/_PROJECTS/R/adept/vignettes/static/results/out1_la.csv"
+path.tmp <- "static/results/out1_la.csv"
 x.la <- acc_running$vm[acc_running$sensor_location == "left_ankle"]
 out1.la <- read.csv(path.tmp)
 ```
@@ -337,13 +337,13 @@ out1.lh <- segmentPattern(x = x.lh,
 ```
 
 ```{r, eval = FALSE, include=FALSE}
-path.tmp <- "/Users/martakaras/Dropbox/_PROJECTS/R/adept/vignettes/static/results/out1_lh.csv"
+path.tmp <- "static/results/out1_lh.csv"
 write.csv(out1.lh, path.tmp, row.names = FALSE)
 ```
 
 ```{r, include=FALSE}
 x.lh <- acc_running$vm[acc_running$sensor_location == "left_hip"]
-path.tmp <- "/Users/martakaras/Dropbox/_PROJECTS/R/adept/vignettes/static/results/out1_lh.csv"
+path.tmp <- "static/results/out1_lh.csv"
 out1.lh <- read.csv(path.tmp)
 ```
 
@@ -425,19 +425,19 @@ stride_S.df.la <- data.frame(acc = stride_S.acc.vec.la,
 
 ```{r, eval = FALSE, include=FALSE}
 ## For data frame #1 
-path.tmp <- "/Users/martakaras/Dropbox/_PROJECTS/R/adept/vignettes/static/results/stride_df_la.csv"
+path.tmp <- "static/results/stride_df_la.csv"
 write.csv(stride.df.la, path.tmp, row.names = FALSE)
 ## For data frame #2
-path.tmp <- "/Users/martakaras/Dropbox/_PROJECTS/R/adept/vignettes/static/results/stride_S_df_la.csv"
+path.tmp <- "static/results/stride_S_df_la.csv"
 write.csv(stride_S.df.la, path.tmp, row.names = FALSE)
 ```
 
 ```{r, include=FALSE}
 ## For data frame #1 
-path.tmp <- "/Users/martakaras/Dropbox/_PROJECTS/R/adept/vignettes/static/results/stride_df_la.csv"
+path.tmp <- "static/results/stride_df_la.csv"
 stride.df.la <- read.csv(path.tmp)
 ## For data frame #2
-path.tmp <- "/Users/martakaras/Dropbox/_PROJECTS/R/adept/vignettes/static/results/stride_S_df_la.csv"
+path.tmp <- "static/results/stride_S_df_la.csv"
 stride_S.df.la <- read.csv(path.tmp)
 ```
 
@@ -490,12 +490,12 @@ data.dfm$cluster <- paste0("cluster ", data.dfm$cluster)
 ```
 
 ```{r, eval = FALSE, include=FALSE}
-path.tmp <- "/Users/martakaras/Dropbox/_PROJECTS/R/adept/vignettes/static/results/data_dfm.csv"
+path.tmp <- "static/results/data_dfm.csv"
 write.csv(data.dfm, path.tmp, row.names = FALSE)
 ```
 
 ```{r, include=FALSE}
-path.tmp <- "/Users/martakaras/Dropbox/_PROJECTS/R/adept/vignettes/static/results/data_dfm.csv"
+path.tmp <- "static/results/data_dfm.csv"
 data.dfm <- read.csv(path.tmp)
 ```
 
@@ -707,16 +707,16 @@ out2.lh <- segmentPattern(x = x.lh,
 ```
 
 ```{r, eval = FALSE, include=FALSE}
-path.tmp <- "/Users/martakaras/Dropbox/_PROJECTS/R/adept/vignettes/static/results/out2_la.csv"
+path.tmp <- "static/results/out2_la.csv"
 write.csv(out2.la, path.tmp, row.names = FALSE)
-path.tmp <- "/Users/martakaras/Dropbox/_PROJECTS/R/adept/vignettes/static/results/out2_lh.csv"
+path.tmp <- "static/results/out2_lh.csv"
 write.csv(out2.lh, path.tmp, row.names = FALSE)
 ```
 
 ```{r, include=FALSE}
-path.tmp <- "/Users/martakaras/Dropbox/_PROJECTS/R/adept/vignettes/static/results/out2_la.csv"
+path.tmp <- "static/results/out2_la.csv"
 out2.la <- read.csv(path.tmp)
-path.tmp <- "/Users/martakaras/Dropbox/_PROJECTS/R/adept/vignettes/static/results/out2_lh.csv"
+path.tmp <- "static/results/out2_lh.csv"
 out2.lh <- read.csv(path.tmp)
 ```
 
