@@ -68,7 +68,7 @@ The sample accelerometry data is attached to the package as `acc_running` data f
 library(adept)
 library(lubridate)
 head(acc_running)
-acc_running$date_time = with_tz(acc_running$date_time, tzone = "UTC")
+acc_running$date_time = force_tz(acc_running$date_time, tzone = "UTC")
 head(acc_running)
 ```
 
