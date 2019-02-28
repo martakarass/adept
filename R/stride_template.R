@@ -11,7 +11,7 @@
 #'   \item \code{left_ankle},
 #'   \item \code{right_ankle}.
 #' }
-#' Each of the above is a five-elment \code{list} of \code{matrix} objects.
+#' Each of the above is a five-element \code{list} of \code{matrix} objects.
 #' The matrices are collection of (sub)population-specific stride pattern templates.
 #' For example,
 #' \itemize{
@@ -41,8 +41,8 @@
 #'
 #' To derive empirical stride pattern, firstly, from each body location,
 #' 642 data segments corresponding to individual walking strides
-#' were manually segmented. Secondly, Vector Magniture (VM), which is a univariate summary
-#' of three-dimentional time-series of raw accelerometry data, was computed.
+#' were manually segmented. Secondly, Vector Magnitude (VM), which is a univariate summary
+#' of three-dimensional time-series of raw accelerometry data, was computed.
 #' Lastly, 642 univariate vectors of VM were interpolated to have the same vector length,
 #' scaled, and clustered into 1-5 clusters via correlation clustering.
 #' The respective

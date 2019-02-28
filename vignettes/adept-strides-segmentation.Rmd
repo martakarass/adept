@@ -7,7 +7,7 @@ output:
     toc: true
     toc_depth: 4
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Walking strides segmentation with `adept`}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -81,11 +81,11 @@ head(acc_running)
 
 ##### Notes on `date_time` column values
 
-* The knitr HTML output truncates the subsecond level accurracy of `POSIXct` values stored in `date_time` column, hence in first rows of the table we see `2018-10-25 17:57:30` only; when `head(acc_running)` is executed in the `R` console, the result would be likely `2018-10-25 17:57:30.00`, `2018-10-25 17:57:30.01` etc. 
+* The knitr HTML output truncates the subsecond level accuracy of `POSIXct` values stored in `date_time` column, hence in first rows of the table we see `2018-10-25 17:57:30` only; when `head(acc_running)` is executed in the `R` console, the result would be likely `2018-10-25 17:57:30.00`, `2018-10-25 17:57:30.01` etc. 
 
 * When `head(acc_running)` is executed in the console, seemingly, there is "an error" in `date_time` column; indeed, we would expect its second value to be `17:57:30.01`, not: `17:57:30.00`. The `date_time` column was generated via `seq(from = as.POSIXct("2018-10-25 17:57:30.00"), by = 0.01, length.out = nrow(dat_sub))`; I identify the problem to be the floating point arithmetic problem, as discussed in [this SO question](https://stackoverflow.com/questions/11571105/odd-behavor-with-posixct-posixlt-and-subsecond-accuracy). Such errors are "made up for" over the column values, and the whole `date_time` has expected range of time. 
 
-Time collection spans 25 minutes. It agrees with a number of observations per sensor we have (`150000`), given the data was colected at frequency 100 observations per second. 
+Time collection spans 25 minutes. It agrees with a number of observations per sensor we have (`150000`), given the data was collected at frequency 100 observations per second. 
 ```{r}
 range(acc_running$date_time)
 table(acc_running$sensor_location)
@@ -96,7 +96,7 @@ table(acc_running$sensor_location)
 
 ### Raw accelerometry data 
 
-One way to visualize raw accelerometry data is to plot it as a three-dimmensional time-series. Here, we plot data from three different time frames, each of 4 seconds length, simultaneously for data collected at left ankle and right ankle. 
+One way to visualize raw accelerometry data is to plot it as a three-dimensional time-series. Here, we plot data from three different time frames, each of 4 seconds length, simultaneously for data collected at left ankle and right ankle. 
 
 ```{r plot_xyz, fig.width=7.5, fig.height=4.7}
 library(dplyr)
@@ -139,7 +139,7 @@ The two sensors used in experiment were set up to initialize their measurement c
 
 ### Vector magnitude 
 
-Using vector magnitude $(vm)$ is a way to summarize a three-dimmensional time-series $(x,y,z)$ as a one-dimensional time-series. Vector magnitude is computed as $vm = \sqrt{x^2 + y^2 + z^2}$ at each time point of data collection. 
+Using vector magnitude $(vm)$ is a way to summarize a three-dimensional time-series $(x,y,z)$ as a one-dimensional time-series. Vector magnitude is computed as $vm = \sqrt{x^2 + y^2 + z^2}$ at each time point of data collection. 
 
 ```{r plot_vm, fig.width=7.5, fig.height=4.3}
 ## Plot vector magnitude values 
@@ -226,7 +226,7 @@ The `segmentPattern` function algorithm has two phases in which a smoothed versi
 
 1. In computation of similarity matrix between pattern template and (possibly smoothed) $(vm)$ signal. Here, `x.adept.ma.W` argument of `segmentPattern` function defines a length of a window used in moving average smoothing; it is expressed in seconds. 
 
-    For this phase, we recomend low/moderarte smoothing (`x.adept.ma.W = 0.05`, `x.adept.ma.W = 0.15`) so as tiny $(vm)$ bumps are smoothed, but the pattern shape feaftures are not lost. 
+    For this phase, we recommend low/moderate smoothing (`x.adept.ma.W = 0.05`, `x.adept.ma.W = 0.15`) so as tiny $(vm)$ bumps are smoothed, but the pattern shape features are not lost. 
 
 2. In "maxima" tuning procedure where local maxima of (possibly smoothed) $(vm)$ signal are identified as final beginnings and endings of a stride pattern occurrence. Here, `finetune.maxima.ma.W` argument of `segmentPattern` function defines a length of a window used in moving average smoothing; it is expressed in seconds. 
 
@@ -267,7 +267,7 @@ plot(template[[1]], type = "l", xlab = "", ylab = "", main = "Left ankle: templa
 plot(template[[2]], type = "l", xlab = "", ylab = "", main = "Left ankle: template 2")
 ```
 
-We perform strides segmentation from $(vm)$ accelerometry signal. See `?segmentPattern` for detailes explanation of parameters. 
+We perform strides segmentation from $(vm)$ accelerometry signal. See `?segmentPattern` for details explanation of parameters. 
 
 ```{r segm_la2, eval = FALSE}
 x.la <- acc_running$vm[acc_running$sensor_location == "left_ankle"]
@@ -304,7 +304,7 @@ Each row of the returned `data.frame` describes one identified pattern occurrenc
 * `tau_i` - index of a vector (here: $(vm)$ time-series) where an identified pattern occurence starts,
 * `T_i` - duration of identified pattern occurence, expressed in a vector length,
 * `sim_i` - value of similarity statistic between an identified pattern occurence and corresponding window of a time-series used in similarity matrix computation (see `?segmentPattern` for details),
-* `template_i` - if `compute.template.idx` euqlas `TRUE`: index of pattern template that yielded highest similarity for an identified pattern occurrence; otherwise: `NA`.
+* `template_i` - if `compute.template.idx` equals `TRUE`: index of pattern template that yielded highest similarity for an identified pattern occurrence; otherwise: `NA`.
 
 We now run segmentation on data collected at left hip. We then compare the results.
 
@@ -353,7 +353,7 @@ head(out1.lh)
 
 #### Results: estimated stride duration time
 
-We now plot estimated stride duration in seconds (`T_i`/100) aganist estimated  stride start in minutes (`tau_i`/(100*60)). Note: 
+We now plot estimated stride duration in seconds (`T_i`/100) against estimated  stride start in minutes (`tau_i`/(100*60)). Note: 
 
 * From the computed $vmc$, we inferred that ~`r vmc.low.frac * 100`\% of the data time likely corresponds to standing and waiting (not: walking/running) time. Therefore, for the purposes of visualization, we discard ~`r vmc.low.frac * 100`\% of the strides segmented with the lowest similarity (`sim_i`) between stride pattern and $(vm)$ signal obtained. 
 
@@ -542,11 +542,11 @@ We now demonstrate a way of deriving stride patterns from data in a semi-manual 
 
 1. Select short fragments of $(vm)$ time-series that are likely to represent data coming from different pace of running/walking. Here, we select three such $(vm)$ fragments, each of 6 seconds length, similarly as we did above for $(x,y,z)$ and $(vm)$ visualization. 
     
-2. Within each of three $(vm)$ fragments, use a function to automatically idenitfy *all* local maxima.
+2. Within each of three $(vm)$ fragments, use a function to automatically identify *all* local maxima.
 
-3. Within each of three $(vm)$ fragments, indentify a *subset* of local maxima that corresponds to $(vm)$ peaks of interest via visual inspection ("manual" part). 
+3. Within each of three $(vm)$ fragments, identify a *subset* of local maxima that corresponds to $(vm)$ peaks of interest via visual inspection ("manual" part). 
 
-4. For each of three $(vm)$ fragments, cut the $(vm)$ fragment into parts at the points of indentified local maxima subset. Interpolate parts to common a length and compute their point-wise average. The resulted point-wise average is a newly created pattern template. 
+4. For each of three $(vm)$ fragments, cut the $(vm)$ fragment into parts at the points of identified local maxima subset. Interpolate parts to common a length and compute their point-wise average. The resulted point-wise average is a newly created pattern template. 
 
 That way, for each sensor location, we arrive at three distinct stride pattern templates that we further use in segmentation. 
 

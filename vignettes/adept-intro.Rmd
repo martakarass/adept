@@ -7,7 +7,7 @@ output:
     toc: yes
     toc_depth: 2
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Introduction to `adept` package}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -78,7 +78,7 @@ The examples below are organized into suites.
 - Suites are characterized by some specific data generation setting, for example: *Examples 1: signals simulated with no noise, same-length pattern*. 
 - Examples are intended to illustrate `segmentPattern` functionality, including effect of the function's parameter usage, for example: *Example 1(b): simple segmentation, modify `pattern.dur.seq` argument*. 
 
-## Examples 1: signals simulated with no noise, same length of all pattern occurences
+## Examples 1: signals simulated with no noise, same length of all pattern occurrences
 
 ### Simulate data
 
@@ -154,7 +154,7 @@ out
 
 ### Example 1(c): use `x.fs` argument to modify assumed frequency at which a time-series `x` is collected
 
-The below example demostrates usage of `x.fs` parameter. We shall see that if we: 
+The below example demonstrates usage of `x.fs` parameter. We shall see that if we: 
 
 - modify `x.fs` - assumed frequency at which a time-series `x` is collected, expressed in a number of observations per second,
 - adjust accordingly `pattern.dur.seq` - assumed grid of pattern duration times used in segmentation, expressed in seconds, 
@@ -174,14 +174,14 @@ out
 
 
 
-## Examples 2: signals simulated with no noise, length of pattern occurences varies
+## Examples 2: signals simulated with no noise, length of pattern occurrences varies
 
 ### Simulate data
 
 Simulate data: 
 
 - no noise in a simulated time-series `x`,
-- length of simulated pattern occurences varies (their vector length ranges between `60` and `120`.
+- length of simulated pattern occurrences varies (their vector length ranges between `60` and `120`.
 
 ```{r, fig.width=7, fig.height=2.3}
 ## Generate signal and pattern template
@@ -285,7 +285,7 @@ out.plot1(x, out)
 In this example we employ a less dense grid of assumed duration of pattern occurrences (`pattern.dur.seq`). As a result, we no longer see a perfect match between a time-series `x` and a template; we shall see that `sim_i` values are not all equal to `1` and we do see a lack of overlap between the start and end points of an individual identified pattern occurrence, as marked with red vertical lines. 
 
 - The reason to consider a less dense `pattern.dur.seq` grid of assumed duration of pattern occurrence in segmentation is a shorter computational time. 
-- We will see later that when *peak detection tuning procedure* is employed, having a "maximally dense" grid is not necesairly needed. 
+- We will see later that when *peak detection tuning procedure* is employed, having a "maximally dense" grid is not necessarily needed. 
 
 
 ```{r }
@@ -324,7 +324,7 @@ out.plot1(x, out)
 
 
 
-## Examples 3: signals simulated with no noise, length of pattern occurences and pattern shape vary
+## Examples 3: signals simulated with no noise, length of pattern occurrences and pattern shape vary
 
 ### Simulate data
 
@@ -438,7 +438,7 @@ out.plot1(x, out)
 
 Similarly as above, but now we use two distinct pattern templates in the `template` argument. As expected, now we see that every pattern occurrence identified has corresponding correlation `sim_i` equal to `1`. It is because these pattern occurrences were generated with the use of either a pattern template `true.pattern.1` or `true.pattern.2`, and we supplied *both* of them to the segmentation algorithm.
 
-The column `template_i` in a returned data frame shall show numbers `1` and `2` iterchangeably; the number is an indicator of pattern template that yielded particular identified pattern occurrence (see `segmentPattern` documentation manual for details). 
+The column `template_i` in a returned data frame shall show numbers `1` and `2` interchangeably; the number is an indicator of pattern template that yielded particular identified pattern occurrence (see `segmentPattern` documentation manual for details). 
  
 
 ```{r, fig.width=7, fig.height=2.3}
@@ -460,7 +460,7 @@ out.plot1(x, out)
 
 
 
-## Examples 4: signals simulated with noise, length of pattern occurences and pattern shape vary
+## Examples 4: signals simulated with noise, length of pattern occurrences and pattern shape vary
 
 
 ### Simulate data
@@ -507,7 +507,7 @@ out.plot1(x2, out)
 ```
 
 
-### Example 4(b): use `x.adept.ma.W` argument to smooth time-series `x` for similartity matrix computation purpose
+### Example 4(b): use `x.adept.ma.W` argument to smooth time-series `x` for similarity matrix computation purpose
 
 One may consider using a smoothed version of a time-series `x` for the purposes of computing  similarity between a time-series `x` and pattern template(s). To do this, the argument `x.adept.ma.W` is used to define a length of a window used in moving average smoothing of a time-series `x`; `W` is expressed in seconds. The default is `NULL` (no smoothing applied).
 
@@ -548,7 +548,7 @@ We continue to use the segmentation setting similar to the one we used above in 
 
 **"maxima" fine-tune procedure** 
 
-"maxima" fine-tune procedure tunes preliminarily identified locations of parttern occurence beginning and end so as they correspond to local maxima of time-series `x` (or smoothed version of `x`, as we shall see later) found within neighbourhoods of preliminary locations. 
+"maxima" fine-tune procedure tunes preliminarily identified locations of pattern occurence beginning and end so as they correspond to local maxima of time-series `x` (or smoothed version of `x`, as we shall see later) found within neighbourhoods of preliminary locations. 
 
 The parameter `finetune.maxima.nbh.W` defines a length of the two neighborhoods centered at preliminarily identified pattern occurrence beginning and end points within which we search for local maxima. (see `segmentPattern` documentation for more details).
 

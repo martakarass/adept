@@ -28,10 +28,10 @@
 #' A length of a window used in moving average smoothing of a time-series \code{x} for
 #'   similarity matrix computation. Expressed in seconds.
 #'  Default is \code{NULL} (no smoothing applied).
-#' @param finetune A character scalar. A type of fine-tuning procedure empolyed in
-#'  segmentation. Defaults to \code{NULL} (no ine-tuning procedure empolyed). Currently supported values:
+#' @param finetune A character scalar. A type of fine-tuning procedure employed in
+#'  segmentation. Defaults to \code{NULL} (no fine-tuning procedure employed). Currently supported values:
 #' \itemize{
-#'   \item \code{"maxima"} - tunes preliminarily identified locations of parttern occurence
+#'   \item \code{"maxima"} - tunes preliminarily identified locations of pattern occurence
 #'   beginning and end so
 #'   as they correspond to local maxima of time-series \code{x} (or smoothed version of \code{x})
 #'   found within neighbourhoods of preliminary locations.
@@ -63,7 +63,7 @@
 #' @param compute.template.idx A logical scalar. Whether or not to compute and return information about
 #' which of the provided pattern templates yielded a similarity matrix value
 #' that corresponds to an identified pattern occurrence.
-#' Seting to \code{TRUE} may increase computation time. Default is \code{FALSE}.
+#' Setting to \code{TRUE} may increase computation time. Default is \code{FALSE}.
 #'
 #' @details
 #'     Function implements Adaptive Empirical Pattern Transformation (ADEPT) method for pattern segmentation
@@ -72,7 +72,7 @@
 #' from high-density data
 #' collected from wearable accelerometer worn during continuous walking activity.
 #'
-#'     ADEPT identifies pattern occurrenes from a time-series \code{x} via maximizing similarity
+#'     ADEPT identifies pattern occurrences from a time-series \code{x} via maximizing similarity
 #' (correlation, covariance etc.) between a time-series \code{x} and pattern
 #' templates.
 #' \itemize{
@@ -99,11 +99,11 @@
 #'   preliminarily identified pattern occurence and corresponding window of a time-series used in similarity matrix computation;
 #'   specifically: if the fine-tune procedure is employed,
 #'   the similarity value between the final pattern occurence location and corresponding window of time-series \code{x}
-#'   singal may differ from the value in this table,
-#'   \item \code{template_i} - if \code{compute.template.idx} euqlas \code{TRUE}:
+#'   signal may differ from the value in this table,
+#'   \item \code{template_i} - if \code{compute.template.idx} equals \code{TRUE}:
 #'   index of pattern template that yielded a similarity matrix value
 #'  corresponding to an identified pattern occurrence;
-#'  if \code{compute.template.idx} euqlas \code{FALSE}: \code{NA}.
+#'  if \code{compute.template.idx} equals \code{FALSE}: \code{NA}.
 #' }
 #'
 #' @export
