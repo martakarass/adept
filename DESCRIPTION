@@ -19,8 +19,11 @@ Depends: R (>= 2.10)
 Suggests: 
     knitr,
     rmarkdown,
-    covr,
-    testthat
+    testthat,
+    ggplot2,
+    lubridate,
+    reshape2,
+    gridExtra
 VignetteBuilder: knitr
 Imports: 
     tibble,

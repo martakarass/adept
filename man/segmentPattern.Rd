@@ -90,7 +90,7 @@ A \code{data.frame} with segmentation results. Each row
 of the returned \code{data.frame} describes one identified pattern occurrence:
 \itemize{
   \item \code{tau_i} - index of a time-series \code{x} where identified pattern occurence starts,
-  \item \code{T_i} - duration of identified pattern occurence starts, expressed in  a time-series \code{x} vector length,
+  \item \code{T_i} - duration of identified pattern occurence, expressed in  a time-series \code{x} vector length,
   \item \code{sim_i} -  value of similarity statistic between an identified pattern occurence and corresponding
   window of a time-series used in similarity matrix computation;
   note: this value corresponds to similarity statistic between

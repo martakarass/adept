@@ -9,6 +9,7 @@
 #'   \item \code{x} - acceleration measurement time series collected from a "x" axis of the sensor accelerometer,
 #'   \item \code{y} - acceleration measurement time series collected from a "y" axis of the sensor accelerometer,
 #'   \item \code{z} - acceleration measurement time series collected from a "z" axis of the sensor accelerometer,
+#'   \item \code{vm} - vector magnitude of (x,y,z) vector of measurements, computed as \eqn{sqrt(x^2+y^2+z^2)},
 #'   \item \code{date_time} - date and time of acceleration measurement collection stored as \code{POSIXct},
 #'   \item \code{sensor_location} - sensor location label, one of: \code{"left_hip"}, \code{"left_ankle"}.
 #' }
