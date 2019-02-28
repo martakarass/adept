@@ -24,7 +24,8 @@ Suggests:
     ggplot2,
     lubridate,
     reshape2,
-    gridExtra
+    gridExtra,
+    spelling
 VignetteBuilder: knitr
 Imports: 
     tibble,
@@ -34,3 +35,4 @@ Imports:
     magrittr
 Remotes: 
   martakarass/runstats
+Language: en-US

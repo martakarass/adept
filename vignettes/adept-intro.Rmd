@@ -185,7 +185,7 @@ Simulate data:
 
 ```{r, fig.width=7, fig.height=2.3}
 ## Generate signal and pattern template
-## Grid of true pattern occurence durations
+## Grid of true pattern occurrence durations
 set.seed(1)
 s.grid <- sample(60:120, size = 10)
 ## True pattern assumed in data generation process
@@ -335,7 +335,7 @@ Simulate data:
 - two different true pattern shapes within a time-series `x`.  
 
 ```{r, fig.width=7, fig.height=2.3}
-# Grid of different true pattern occurence durations
+# Grid of different true pattern occurrence durations
 set.seed(1)
 s.grid <- sample(60:120, size = 5)
 true.pattern.1 <- cos(seq(0, 2 * pi, length.out = 200))
@@ -548,7 +548,7 @@ We continue to use the segmentation setting similar to the one we used above in 
 
 **"maxima" fine-tune procedure** 
 
-"maxima" fine-tune procedure tunes preliminarily identified locations of pattern occurence beginning and end so as they correspond to local maxima of time-series `x` (or smoothed version of `x`, as we shall see later) found within neighbourhoods of preliminary locations. 
+"maxima" fine-tune procedure tunes preliminarily identified locations of pattern occurrence beginning and end so as they correspond to local maxima of time-series `x` (or smoothed version of `x`, as we shall see later) found within neighbourhoods of preliminary locations. 
 
 The parameter `finetune.maxima.nbh.W` defines a length of the two neighborhoods centered at preliminarily identified pattern occurrence beginning and end points within which we search for local maxima. (see `segmentPattern` documentation for more details).
 

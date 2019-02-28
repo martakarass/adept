@@ -301,9 +301,9 @@ head(out1.la)
 
 Each row of the returned `data.frame` describes one identified pattern occurrence:
 
-* `tau_i` - index of a vector (here: $(vm)$ time-series) where an identified pattern occurence starts,
-* `T_i` - duration of identified pattern occurence, expressed in a vector length,
-* `sim_i` - value of similarity statistic between an identified pattern occurence and corresponding window of a time-series used in similarity matrix computation (see `?segmentPattern` for details),
+* `tau_i` - index of a vector (here: $(vm)$ time-series) where an identified pattern occurrence starts,
+* `T_i` - duration of identified pattern occurrence, expressed in a vector length,
+* `sim_i` - value of similarity statistic between an identified pattern occurrence and corresponding window of a time-series used in similarity matrix computation (see `?segmentPattern` for details),
 * `template_i` - if `compute.template.idx` equals `TRUE`: index of pattern template that yielded highest similarity for an identified pattern occurrence; otherwise: `NA`.
 
 We now run segmentation on data collected at left hip. We then compare the results.
