@@ -112,24 +112,30 @@ t3 <- as.POSIXct("2018-10-25 18:22:00")
 
 ## Subset data 
 acc_running_sub <- 
-  acc_running %>%
+  adept::acc_running %>%
   filter((date_time >= t1 & date_time < t1 + 4) | 
            (date_time >= t2 & date_time < t2 + 4) | 
            (date_time >= t3 & date_time < t3 + 4)) 
 
 ## Plot (x,y,z) values 
-acc_running_sub %>%
+df = acc_running_sub %>%
   select(-vm) %>%
   melt(id.vars = c("date_time", "sensor_location")) %>%
   mutate(dt_floor = paste0("time frame start: ", 
-                           floor_date(date_time, unit = "minutes"))) %>%
-  ggplot(aes(x = date_time, y = value, color = variable)) + 
-  geom_line(size = 0.5) + 
-  facet_grid(sensor_location ~ dt_floor, scales = "free_x") + 
-  theme_bw(base_size = 10) + 
-  labs(x = "Time [s]", y = "Acceleration [g]", color = "Axis: ",
-       title = "(x,y,z) three-dimensional time-series") + 
-  theme(legend.position = "top")
+                           floor_date(date_time, unit = "minutes")))
+if (nrow(df) > 0) {
+  p = df %>%
+    ggplot(aes(x = date_time, y = value, color = variable)) + 
+    geom_line(size = 0.5) + 
+    facet_grid(sensor_location ~ dt_floor, scales = "free_x") + 
+    theme_bw(base_size = 10) + 
+    labs(x = "Time [s]", y = "Acceleration [g]", color = "Axis: ",
+         title = "(x,y,z) three-dimensional time-series") + 
+    theme(legend.position = "top")
+  print(p)
+} else {
+  stop("ac_running_sub has no rows!")
+}
 ```
 
 ##### Note on sensors desynchronization 
