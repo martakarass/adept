@@ -66,7 +66,10 @@ The sample accelerometry data is attached to the package as `acc_running` data f
 # install.packages("devtools")
 # devtools::install_github("martakarass/adept")
 library(adept)
+library(lubridate)
 head(acc_running)
+tz(acc_running$date_time) = "UTC"
+
 ```
 
 `acc_running` consists of 300,000 observations of 5 variables:
@@ -99,16 +102,16 @@ table(acc_running$sensor_location)
 One way to visualize raw accelerometry data is to plot it as a three-dimensional time-series. Here, we plot data from three different time frames, each of 4 seconds length, simultaneously for data collected at left ankle and right ankle. 
 
 ```{r plot_xyz, fig.width=7.5, fig.height=4.7}
+library(lubridate)
 library(dplyr)
 library(ggplot2)
 library(reshape2)
-library(lubridate)
 library(gridExtra)
 
 ## Define time frame start values for data subset
-t1 <- as.POSIXct("2018-10-25 18:00:00") 
-t2 <- as.POSIXct("2018-10-25 18:10:00") 
-t3 <- as.POSIXct("2018-10-25 18:22:00") 
+t1 <- as.POSIXct("2018-10-25 18:00:00", tz = "UTC") 
+t2 <- as.POSIXct("2018-10-25 18:10:00", tz = "UTC") 
+t3 <- as.POSIXct("2018-10-25 18:22:00", tz = "UTC") 
 
 ## Subset data 
 acc_running_sub <- 
