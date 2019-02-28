@@ -69,6 +69,7 @@ library(adept)
 library(lubridate)
 head(acc_running)
 tz(acc_running$date_time) = "UTC"
+head(acc_running)
 
 ```
 
@@ -115,7 +116,7 @@ t3 <- as.POSIXct("2018-10-25 18:22:00", tz = "UTC")
 
 ## Subset data 
 acc_running_sub <- 
-  adept::acc_running %>%
+  acc_running %>%
   filter((date_time >= t1 & date_time < t1 + 4) | 
            (date_time >= t2 & date_time < t2 + 4) | 
            (date_time >= t3 & date_time < t3 + 4)) 
