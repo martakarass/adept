@@ -21,6 +21,9 @@ Vignettes
 
 Vignettes are available to better explain package methods functionality.
 
-1.  Vignette ***Introduction to `adept` package*** intends to introduce a reader to the ADEPT method and demonstrate the usage of the `segmentPattern` function which implements ADEPT method. Here, we focus on illustrating `segmentPattern` functionality via simulated data examples.
+1.  Vignette [Introduction to adept package](https://martakarass.github.io/adept/articles/adept-intro.html) intends to introduce a reader to the ADEPT method and demonstrate the usage of the `segmentPattern` function which implements ADEPT method. Here, we focus on illustrating `segmentPattern` functionality via simulated data examples.
 
-2.  Vignette ***Walking strides segmentation with `adept`*** provides an example of walking stride segmentation from subsecond accelerometry data with `adept` package. We demonstrate that ADEPT method can be used to perform automatic and precise walking stride segmentation from data collected during a combination of running, walking and resting exercise. We demonstrate how to segment data (a) with the use of stride templates that were pre-computed based on data from an external study, (b) by deriving new stride templates in a semi-manual manner.
+2.  Vignette [Walking strides segmentation with adept](https://martakarass.github.io/adept/articles/adept-strides-segmentation.html) provides an example of walking stride segmentation from subsecond accelerometry data with `adept` package. We demonstrate that ADEPT method can be used to perform automatic and precise walking stride segmentation from data collected during a combination of running, walking and resting exercise. We demonstrate how to segment data
+
+    -   with the use of stride templates that were pre-computed based on data from an external study,
+    -   by deriving new stride templates in a semi-manual manner.

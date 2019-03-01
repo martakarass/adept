@@ -1,5 +1,5 @@
 ---
-title: "Introduction to `adept` package"
+title: "Introduction to adept package"
 author: "Marta Karas"
 date: "`r Sys.Date()`"
 output:
@@ -7,7 +7,7 @@ output:
     toc: yes
     toc_depth: 2
 vignette: >
-  %\VignetteIndexEntry{Introduction to `adept` package}
+  %\VignetteIndexEntry{Introduction to adept package}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
