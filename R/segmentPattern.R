@@ -28,10 +28,10 @@
 #' A length of a window used in moving average smoothing of a time-series \code{x} for
 #'   similarity matrix computation. Expressed in seconds.
 #'  Default is \code{NULL} (no smoothing applied).
-#' @param finetune A character scalar. A type of fine-tuning procedure empolyed in
-#'  segmentation. Defaults to \code{NULL} (no ine-tuning procedure empolyed). Currently supported values:
+#' @param finetune A character scalar. A type of fine-tuning procedure employed in
+#'  segmentation. Defaults to \code{NULL} (no fine-tuning procedure employed). Currently supported values:
 #' \itemize{
-#'   \item \code{"maxima"} - tunes preliminarily identified locations of parttern occurence
+#'   \item \code{"maxima"} - tunes preliminarily identified locations of pattern occurrence
 #'   beginning and end so
 #'   as they correspond to local maxima of time-series \code{x} (or smoothed version of \code{x})
 #'   found within neighbourhoods of preliminary locations.
@@ -63,7 +63,7 @@
 #' @param compute.template.idx A logical scalar. Whether or not to compute and return information about
 #' which of the provided pattern templates yielded a similarity matrix value
 #' that corresponds to an identified pattern occurrence.
-#' Seting to \code{TRUE} may increase computation time. Default is \code{FALSE}.
+#' Setting to \code{TRUE} may increase computation time. Default is \code{FALSE}.
 #'
 #' @details
 #'     Function implements Adaptive Empirical Pattern Transformation (ADEPT) method for pattern segmentation
@@ -72,7 +72,7 @@
 #' from high-density data
 #' collected from wearable accelerometer worn during continuous walking activity.
 #'
-#'     ADEPT identifies pattern occurrenes from a time-series \code{x} via maximizing similarity
+#'     ADEPT identifies pattern occurrences from a time-series \code{x} via maximizing similarity
 #' (correlation, covariance etc.) between a time-series \code{x} and pattern
 #' templates.
 #' \itemize{
@@ -91,19 +91,19 @@
 #' @return A \code{data.frame} with segmentation results. Each row
 #' of the returned \code{data.frame} describes one identified pattern occurrence:
 #' \itemize{
-#'   \item \code{tau_i} - index of a time-series \code{x} where identified pattern occurence starts,
-#'   \item \code{T_i} - duration of identified pattern occurence, expressed in  a time-series \code{x} vector length,
-#'   \item \code{sim_i} -  value of similarity statistic between an identified pattern occurence and corresponding
+#'   \item \code{tau_i} - index of a time-series \code{x} where identified pattern occurrence starts,
+#'   \item \code{T_i} - duration of identified pattern occurrence, expressed in  a time-series \code{x} vector length,
+#'   \item \code{sim_i} -  value of similarity statistic between an identified pattern occurrence and corresponding
 #'   window of a time-series used in similarity matrix computation;
 #'   note: this value corresponds to similarity statistic between
-#'   preliminarily identified pattern occurence and corresponding window of a time-series used in similarity matrix computation;
+#'   preliminarily identified pattern occurrence and corresponding window of a time-series used in similarity matrix computation;
 #'   specifically: if the fine-tune procedure is employed,
-#'   the similarity value between the final pattern occurence location and corresponding window of time-series \code{x}
-#'   singal may differ from the value in this table,
-#'   \item \code{template_i} - if \code{compute.template.idx} euqlas \code{TRUE}:
+#'   the similarity value between the final pattern occurrence location and corresponding window of time-series \code{x}
+#'   signal may differ from the value in this table,
+#'   \item \code{template_i} - if \code{compute.template.idx} equals \code{TRUE}:
 #'   index of pattern template that yielded a similarity matrix value
 #'  corresponding to an identified pattern occurrence;
-#'  if \code{compute.template.idx} euqlas \code{FALSE}: \code{NA}.
+#'  if \code{compute.template.idx} equals \code{FALSE}: \code{NA}.
 #' }
 #'
 #' @export
@@ -115,7 +115,7 @@
 #' @examples
 #' ## Example 1:
 #' ## - no noise in time-series x generation,
-#' ## - all pattern occurences of the same length (101) n time-series x generation.
+#' ## - all pattern occurrences of the same length (101) n time-series x generation.
 #' ## Generate signal and template.
 #' x0 <- cos(seq(0, 2 * pi * 10, length.out = 1001))
 #' x  <- x0
@@ -124,7 +124,7 @@
 #' ## (and some redundat for the sake of example).
 #' pattern.dur.seq <- c(90, 100, 101, 102, 110)
 #' ## Use segmentPattern function to identify beginnings tau_i and duration T_i
-#' ## of pattern occurences within a signal x.
+#' ## of pattern occurrences within a signal x.
 #' out <- segmentPattern(x = x,
 #'                       x.fs = 1,
 #'                       template = template,
@@ -134,10 +134,10 @@
 #'
 #' ## Example 2:
 #' ## - no noise in time-series x generation,
-#' ## - use pattern occurences of different length in time-series x generation.
+#' ## - use pattern occurrences of different length in time-series x generation.
 #' ## Generate signal and template.
 #' set.seed(1)
-#' ## Grid of different true pattern occurence durations.
+#' ## Grid of different true pattern occurrence durations.
 #' s.grid <- sample(60:120, size = 10)
 #' x_block <- cos(seq(0, 2 * pi, length.out = 200))
 #' ## Generate signal x that consists of "glued" pattern occurrences of different length
@@ -165,7 +165,7 @@
 #'
 #' ## Example 3(a):
 #' ## - add noise in time-series x generation,
-#' ## - use pattern occurences of different length in time-series x generation.
+#' ## - use pattern occurrences of different length in time-series x generation.
 #' ## Generate signal and template
 #' s.grid <- sample(60:120, size = 10)
 #' x_block <- cos(seq(0, 2 * pi, length.out = 200))
@@ -340,7 +340,7 @@ segmentPattern <- function(x,
 
 
   ## ---------------------------------------------------------------------------
-  ## Clear up after possibly multiple stride occurences
+  ## Clear up after possibly multiple stride occurrences
   out.df <- do.call("rbind", out.list)
 
   ## To surpress the "Note" on package check

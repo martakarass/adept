@@ -1,14 +1,15 @@
 Package: adept
 Type: Package
 Title: Adaptive Empirical Pattern Transformation 
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: c(
-  person("Marta", "Karas", email = "mkaras2@jhu.edu", role = c("aut", "cre")),
+  person("Marta", "Karas", email = "marta.karass@gmail.com", role = c("aut", "cre")),
   person("Jacek", "Urbanek", role = c("aut"))
   )
-Maintainer: Marta Karas <marta.karass@gmail.com>
-Description: More about what it does (maybe more than one line).
-    Use four spaces when indenting paragraphs within the Description.
+Description: Designed for optimal use in performing fast, 
+    accurate walking strides segmentation from high-density 
+    data collected from a wearable accelerometer worn 
+    during continuous walking activity.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -23,7 +24,8 @@ Suggests:
     ggplot2,
     lubridate,
     reshape2,
-    gridExtra
+    gridExtra,
+    spelling
 VignetteBuilder: knitr
 Imports: 
     tibble,
@@ -33,3 +35,4 @@ Imports:
     magrittr
 Remotes: 
   martakarass/runstats
+Language: en-US
