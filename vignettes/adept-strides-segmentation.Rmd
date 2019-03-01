@@ -137,7 +137,10 @@ if (nrow(df) > 0) {
     theme(legend.position = "top")
   print(p)
 } else {
-  stop("ac_running_sub has no rows!")
+  msg = paste0("T1: ", t1,
+               ", dt_row1 of acc_running_sub: ",
+               acc_running$date_time[1], " ac_running_sub has no rows!")
+  stop(msg)
 }
 ```
 
