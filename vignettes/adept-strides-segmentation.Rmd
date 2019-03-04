@@ -138,7 +138,7 @@ if (nrow(df) > 0) {
   print(p)
 } else {
   msg = paste0("T1: ", t1,
-               ", dt_row1 of acc_running_sub: ",
+               ", dt_row1 of acc_running: ",
                data$date_time[1], " ac_running_sub has no rows!\n")
   stop(msg)
 }
