@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
   message = FALSE,
   global.par = TRUE
 )
-local = FALSE
+local = TRUE
 ```
 
 This vignette provides an example of walking stride segmentation from subsecond accelerometry data with `adept` package. We demonstrate that ADEPT method ([3]) can be used to perform automatic and precise walking stride segmentation from data collected during a combination of running, walking and resting exercise. We demonstrate how to segment data (a) with the use of stride templates that were pre-computed based on data from an external study, (b) by deriving new stride templates in a semi-manual manner. 
