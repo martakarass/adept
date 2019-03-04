@@ -479,7 +479,7 @@ grid.arrange(plt1, plt2, nrow = 1)
 
 We can further use correlation clustering to group segmented walking strides. 
 
-```{r, eval = FALSE, }
+```{r, eval = !local}
 ## Compute strides distance martrix
 stride_S.dfdc.la <- dcast(stride_S.df.la, phase ~ tau_i, value.var = "acc")[, -1]
 data.mat.tau_i <- as.numeric(colnames(stride_S.dfdc.la))
@@ -693,7 +693,7 @@ template.lh <- list(template.lh.x1, template.lh.x2, template.lh.x3)
 
 ##### Segmentation
 
-```{r segm_app2_la2, eval = FALSE}
+```{r segm_app2_la2, eval = !local}
 out2.la <- segmentPattern(x = x.la,
                           x.fs = 100,
                           template = template.la,
