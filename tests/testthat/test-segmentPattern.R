@@ -1,4 +1,6 @@
 
+# rm(list = ls())
+
 context("Testing segmentPattern function.")
 
 ######################
@@ -207,9 +209,50 @@ test_that("Example 2(b): no noise in signal (no peak fine-tuning employed),
 
 
 
+# test_that("Example 2(c): no noise in signal (no peak fine-tuning employed),
+#           pattern occurences of different length; Use covariance, and even more
+#           'poor' grid of assumed duration of pattern occurrences", {
+#
+#   ## Grid of different true pattern occurence durations
+#   template <- cos(seq(0, 2 * pi, length.out = 200))
+#
+#   ## Generate signal x that consists of "glued" pattern occurrences of different length
+#   x <- numeric()
+#   for (ss in s.grid){
+#     templ0 <- approx(seq(0, 1, length.out = 200), template, xout = seq(0, 1, length.out = ss))$y
+#     if (length(x)>0){
+#       x <- x[-length(x)]
+#     }
+#     x <- c(x, templ0)
+#   }
+#
+#   ## Assume grid of assumed duration of pattern occurrences
+#   pattern.dur.seq <- c(60, 120)
+#   out <- segmentPattern(x = x,
+#                         x.fs = 1,
+#                         template = template,
+#                         pattern.dur.seq = pattern.dur.seq,
+#                         similarity.measure = "cov")
+#
+#   res <- out$tau_i
+#   res.exp <- c(9, 87, 174, 245, 366, 455, 534, 666, 742, 861)
+#   expect_equal(res, res.exp)
+#
+#   res <- out$T_i
+#   res.exp <- c(60, 60, 60, 120, 60, 60, 120, 60, 120, 60)
+#   expect_equal(res, res.exp)
+#
+#   res <- out$sim_i
+#   res.exp <- c(0.591863061841216, 0.540762733635577, 0.455917527932434, 0.728925513944514,
+#                0.634801827775348, 0.35289880518215, 0.730662908614629, 0.442073525854687,
+#                0.718248707449562, 0.69894752810577)
+#   expect_equal(res, res.exp)
+# })
+
+
+
 test_that("Example 2(c): no noise in signal (no peak fine-tuning employed),
-          pattern occurences of different length; Use covariance, and even more
-          'poor' grid of assumed duration of pattern occurrences", {
+          pattern occurences of different length; Use covariance", {
 
   ## Grid of different true pattern occurence durations
   template <- cos(seq(0, 2 * pi, length.out = 200))
@@ -225,7 +268,7 @@ test_that("Example 2(c): no noise in signal (no peak fine-tuning employed),
   }
 
   ## Assume grid of assumed duration of pattern occurrences
-  pattern.dur.seq <- c(60, 120)
+  pattern.dur.seq <- c(60, 80, 100, 120)
   out <- segmentPattern(x = x,
                         x.fs = 1,
                         template = template,
@@ -233,22 +276,19 @@ test_that("Example 2(c): no noise in signal (no peak fine-tuning employed),
                         similarity.measure = "cov")
 
   res <- out$tau_i
-  res.exp <- c(9, 87, 174, 245, 366, 455, 534, 666, 742, 861)
+  res.exp <- c(1, 87, 154, 255, 355, 435, 534, 656, 742, 861)
   expect_equal(res, res.exp)
 
   res <- out$T_i
-  res.exp <- c(60, 60, 60, 120, 60, 60, 120, 60, 120, 60)
+  res.exp <- c(80, 60, 100, 100, 80, 100, 120, 80, 120, 60)
   expect_equal(res, res.exp)
 
   res <- out$sim_i
-  res.exp <- c(0.591863061841216, 0.540762733635577, 0.455917527932434, 0.728925513944514,
-               0.634801827775348, 0.35289880518215, 0.730662908614629, 0.442073525854687,
+  res.exp <- c(0.719501786387912, 0.540762733635577, 0.731177684709071, 0.662370934346171,
+               0.737357140142741, 0.672095166679452, 0.730662908614629, 0.629670599324224,
                0.718248707449562, 0.69894752810577)
   expect_equal(res, res.exp)
-})
-
-
-
+  })
 
 
 
