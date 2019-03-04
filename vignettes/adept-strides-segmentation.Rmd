@@ -20,6 +20,7 @@ knitr::opts_chunk$set(
   message = FALSE,
   global.par = TRUE
 )
+run_local = TRUE
 ```
 
 This vignette provides an example of walking stride segmentation from subsecond accelerometry data with `adept` package. We demonstrate that ADEPT method ([3]) can be used to perform automatic and precise walking stride segmentation from data collected during a combination of running, walking and resting exercise. We demonstrate how to segment data (a) with the use of stride templates that were pre-computed based on data from an external study, (b) by deriving new stride templates in a semi-manual manner. 
@@ -68,8 +69,7 @@ The sample accelerometry data is attached to the package as `acc_running` data f
 library(adept)
 library(lubridate)
 head(acc_running)
-acc_running$date_time = force_tz(acc_running$date_time, tzone = "UTC")
-head(acc_running)
+tz(acc_running$date_time)
 ```
 
 `acc_running` consists of 300,000 observations of 5 variables:
@@ -109,16 +109,16 @@ library(reshape2)
 library(gridExtra)
 
 ## Define time frame start values for data subset
-t1 <- as.POSIXct("2018-10-25 18:00:00", tz = "UTC") 
-t2 <- as.POSIXct("2018-10-25 18:10:00", tz = "UTC") 
-t3 <- as.POSIXct("2018-10-25 18:22:00", tz = "UTC") 
+t1 <- ymd_hms("2018-10-25 18:00:00", tz = "UTC") 
+t2 <- ymd_hms("2018-10-25 18:10:00", tz = "UTC") 
+t3 <- ymd_hms("2018-10-25 18:22:00", tz = "UTC") 
 
 ## Subset data 
 acc_running_sub <- 
   acc_running %>%
-  filter((date_time >= t1 & date_time < t1 + 4) | 
-           (date_time >= t2 & date_time < t2 + 4) | 
-           (date_time >= t3 & date_time < t3 + 4)) 
+  filter((date_time >= t1 & date_time < t1 + as.period(4, "seconds")) | 
+           (date_time >= t2 & date_time < t2 + as.period(4, "seconds")) | 
+           (date_time >= t3 & date_time < t3 + as.period(4, "seconds")) )
 
 ## Plot (x,y,z) values 
 df = acc_running_sub %>%
@@ -137,7 +137,10 @@ if (nrow(df) > 0) {
     theme(legend.position = "top")
   print(p)
 } else {
-  stop("ac_running_sub has no rows!")
+  msg = paste0("T1: ", t1,
+               ", dt_row1 of acc_running: ",
+               acc_running$date_time[1], " ac_running_sub has no rows!\n")
+  stop(msg)
 }
 ```
 
@@ -177,7 +180,7 @@ From the $(x,y,z)$ and $(vm)$ plots we can tell the presence of an asymmetric re
 ### Vector magnitude count  
 
 Clearly, it might be challenging to make a plot of *all* data points collected at frequency 100 Hz from 25 minutes-long exercise. A way to summarize accelerometry data of such high density is to use a vector magnitude count (vmc; also known as the mean amplitude deviation). For $\overline{vm}(t,H)$ - average of $(vm)$ time-series over time window of length $H$ starting at time $t$, we define 
-$$\mathrm { vmc } ( t, H ) = \frac { 1 } { H } \sum _ { h = 0 } ^ { H - 1 } | vm ( t + h ) - \overline{vm}(t,H) |.$$
+$$\mathrm { vmc } ( t, H ) = \frac { 1 } { H } \sum _ { h = 0 } ^ { H - 1 } \left| vm ( t + h ) - \overline{vm}(t,H) \right|.$$
 
 ```{r plot_vmc, fig.width=7.5, fig.height=4.3}
 ## Function to compute vmc from vm window vector
@@ -278,7 +281,7 @@ plot(template[[2]], type = "l", xlab = "", ylab = "", main = "Left ankle: templa
 
 We perform strides segmentation from $(vm)$ accelerometry signal. See `?segmentPattern` for details explanation of parameters. 
 
-```{r segm_la2, eval = FALSE}
+```{r segm_la2, eval = !run_local}
 x.la <- acc_running$vm[acc_running$sensor_location == "left_ankle"]
 out1.la <- segmentPattern(x = x.la,
                           x.fs = 100,
@@ -293,12 +296,12 @@ out1.la <- segmentPattern(x = x.la,
                           run.parallel = TRUE)
 ```
 
-```{r, eval = FALSE, include=FALSE}
+```{r, eval =  !run_local, include=FALSE}
 path.tmp <- "static/results/out1_la.csv"
 write.csv(out1.la, path.tmp, row.names = FALSE)
 ```
 
-```{r, include=FALSE}
+```{r, eval = run_local, include=FALSE}
 path.tmp <- "static/results/out1_la.csv"
 x.la <- acc_running$vm[acc_running$sensor_location == "left_ankle"]
 out1.la <- read.csv(path.tmp)
@@ -328,7 +331,7 @@ plot(template[[1]], type = "l", xlab = "", ylab = "", main = "Left hip: template
 plot(template[[2]], type = "l", xlab = "", ylab = "", main = "Left hip: template 2")
 ```
 
-```{r segm_lh2, eval = FALSE}
+```{r segm_lh2, eval = !run_local}
 template <- list(stride_template$left_hip[[1]][1, ],
                  stride_template$left_hip[[2]][2, ])
 x.lh <- acc_running$vm[acc_running$sensor_location == "left_hip"]
@@ -345,12 +348,12 @@ out1.lh <- segmentPattern(x = x.lh,
                           run.parallel = TRUE)
 ```
 
-```{r, eval = FALSE, include=FALSE}
+```{r, eval = !run_local, include=FALSE}
 path.tmp <- "static/results/out1_lh.csv"
 write.csv(out1.lh, path.tmp, row.names = FALSE)
 ```
 
-```{r, include=FALSE}
+```{r, eval = run_local, include=FALSE}
 x.lh <- acc_running$vm[acc_running$sensor_location == "left_hip"]
 path.tmp <- "static/results/out1_lh.csv"
 out1.lh <- read.csv(path.tmp)
@@ -393,7 +396,7 @@ rbind(plt.df.la, plt.df.lh) %>%
 
 We now use the estimated stride occurrence start index (`tau_i`) and estimated stride duration (`T_i`) to retrieve $(vm)$ time-series segments corresponding to stride occurrences. We further align them in phase and scale to better observe stride patterns. 
 
-```{r, eval = FALSE}
+```{r, eval = !run_local}
 ## For data frame #1 (raw vm segments)
 stride.acc.vec.la <- numeric()
 stride.tau_i.vec.la <- numeric()
@@ -432,7 +435,7 @@ stride_S.df.la <- data.frame(acc = stride_S.acc.vec.la,
                              phase = stride_S.phase.vec.la)
 ```
 
-```{r, eval = FALSE, include=FALSE}
+```{r, eval = !run_local, include=FALSE}
 ## For data frame #1 
 path.tmp <- "static/results/stride_df_la.csv"
 write.csv(stride.df.la, path.tmp, row.names = FALSE)
@@ -441,7 +444,7 @@ path.tmp <- "static/results/stride_S_df_la.csv"
 write.csv(stride_S.df.la, path.tmp, row.names = FALSE)
 ```
 
-```{r, include=FALSE}
+```{r, eval = run_local, include=FALSE}
 ## For data frame #1 
 path.tmp <- "static/results/stride_df_la.csv"
 stride.df.la <- read.csv(path.tmp)
@@ -475,7 +478,7 @@ grid.arrange(plt1, plt2, nrow = 1)
 
 We can further use correlation clustering to group segmented walking strides. 
 
-```{r, eval = FALSE, }
+```{r, eval = !run_local}
 ## Compute strides distance martrix
 stride_S.dfdc.la <- dcast(stride_S.df.la, phase ~ tau_i, value.var = "acc")[, -1]
 data.mat.tau_i <- as.numeric(colnames(stride_S.dfdc.la))
@@ -498,12 +501,12 @@ data.dfm$variable <- as.numeric(as.character(data.dfm$variable))
 data.dfm$cluster <- paste0("cluster ", data.dfm$cluster)
 ```
 
-```{r, eval = FALSE, include=FALSE}
+```{r, eval = !run_local, include=FALSE}
 path.tmp <- "static/results/data_dfm.csv"
 write.csv(data.dfm, path.tmp, row.names = FALSE)
 ```
 
-```{r, include=FALSE}
+```{r, eval = run_local, include=FALSE}
 path.tmp <- "static/results/data_dfm.csv"
 data.dfm <- read.csv(path.tmp)
 ```
@@ -689,7 +692,7 @@ template.lh <- list(template.lh.x1, template.lh.x2, template.lh.x3)
 
 ##### Segmentation
 
-```{r segm_app2_la2, eval = FALSE}
+```{r segm_app2_la2, eval = !run_local}
 out2.la <- segmentPattern(x = x.la,
                           x.fs = 100,
                           template = template.la,
@@ -715,14 +718,14 @@ out2.lh <- segmentPattern(x = x.lh,
                           run.parallel = TRUE)
 ```
 
-```{r, eval = FALSE, include=FALSE}
+```{r, eval = !run_local, include=FALSE}
 path.tmp <- "static/results/out2_la.csv"
 write.csv(out2.la, path.tmp, row.names = FALSE)
 path.tmp <- "static/results/out2_lh.csv"
 write.csv(out2.lh, path.tmp, row.names = FALSE)
 ```
 
-```{r, include=FALSE}
+```{r, eval = run_local, include=FALSE}
 path.tmp <- "static/results/out2_la.csv"
 out2.la <- read.csv(path.tmp)
 path.tmp <- "static/results/out2_lh.csv"
