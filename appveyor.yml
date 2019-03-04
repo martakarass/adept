@@ -21,6 +21,7 @@ environment:
   matrix:
     - R_VERSION: release
     - R_VERSION: oldrel
+    - R_VERSION: devel
 
 
 # Adapt as necessary starting from here
