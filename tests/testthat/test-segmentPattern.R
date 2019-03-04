@@ -529,7 +529,7 @@ test_that("Example 3(b): add noise in signal generation,
 
 
 test_that("Example 4(a): no noise in signal, all pattern occurences of the same
-          length, LONG SIGNAL", {
+          length, long signal. We check for same behaviour with and without x.cut = TRUE", {
 
   ## Generate signal and template
   ## approx 30 min for data collected at freq
@@ -566,7 +566,45 @@ test_that("Example 4(a): no noise in signal, all pattern occurences of the same
                         similarity.measure = "cor",
                         x.cut = FALSE)
 
-  ## compare with cut, parallel
+  expect_equal(out$tau_i, out2$tau_i)
+  expect_equal(out$T_i,   out2$T_i)
+  expect_equal(out$sim_i, out2$sim_i)
+})
+
+
+
+######################
+######################
+######################
+###   Examples 5   ###
+######################
+######################
+######################
+
+
+
+test_that("Example 5(a): no noise in signal, all pattern occurences of the same
+          length, long signal. We check for same behaviour with and without parallel
+          computation.", {
+
+  ## Generate signal and template
+  ## approx 30 min for data collected at freq
+  x0 <- cos(seq(0, 2 * pi * 10 * 20, length.out = 1000 * 20 + 1))
+  x  <- x0
+  template <- x0[1:101]
+
+  pattern.dur.seq <- c(90, 100, 101)
+
+  ## cut, no parallel
+  out <- segmentPattern(x = x,
+                        x.fs = 1,
+                        template = template,
+                        pattern.dur.seq = pattern.dur.seq,
+                        similarity.measure = "cor",
+                        x.cut = TRUE,
+                        x.cut.vl = 6000)
+
+  ## cut, parallel
   out3 <- segmentPattern(x = x,
                          x.fs = 1,
                          template = template,
@@ -578,13 +616,8 @@ test_that("Example 4(a): no noise in signal, all pattern occurences of the same
                          run.parallel.cores = 2)
 
 
-  expect_equal(out$tau_i, out2$tau_i)
   expect_equal(out$tau_i, out3$tau_i)
-
-  expect_equal(out$T_i, out2$T_i)
-  expect_equal(out$T_i, out3$T_i)
-
-  expect_equal(out$sim_i, out2$sim_i)
+  expect_equal(out$T_i,   out3$T_i)
   expect_equal(out$sim_i, out3$sim_i)
 })
 
@@ -594,7 +627,7 @@ test_that("Example 4(a): no noise in signal, all pattern occurences of the same
 ######################
 ######################
 ######################
-###   Examples 4   ###
+###   Examples 6   ###
 ######################
 ######################
 ######################
@@ -607,7 +640,7 @@ s.grid2 <- c(76L, 82L, 93L, 112L, 71L, 110L, 111L, 95L, 118L, 63L, 70L,
             105L, 89L, 79L, 62L, 102L, 106L, 100L, 72L, 101L, 81L, 80L, 84L,
             94L, 66L, 86L, 99L)
 
-test_that("Example 5(a): test returning template index matrix", {
+test_that("Example 6(a): test returning template index matrix", {
 
 
   ## Grid of different true pattern occurence durations
