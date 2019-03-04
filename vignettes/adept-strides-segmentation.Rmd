@@ -67,9 +67,9 @@ The sample accelerometry data is attached to the package as `acc_running` data f
 # devtools::install_github("martakarass/adept")
 library(adept)
 library(lubridate)
-head(acc_running)
-acc_running$date_time = force_tz(acc_running$date_time, tzone = "UTC")
-head(acc_running)
+data = adept::acc_running
+data$date_time = force_tz(data$date_time, tzone = "UTC")
+head(data)
 ```
 
 `acc_running` consists of 300,000 observations of 5 variables:
@@ -90,8 +90,8 @@ head(acc_running)
 
 Time collection spans 25 minutes. It agrees with a number of observations per sensor we have (`150000`), given the data was collected at frequency 100 observations per second. 
 ```{r}
-range(acc_running$date_time)
-table(acc_running$sensor_location)
+range(data$date_time)
+table(data$sensor_location)
 150000 / (100 * 60)  
 ```
 
@@ -115,10 +115,10 @@ t3 <- as.POSIXct("2018-10-25 18:22:00", tz = "UTC")
 
 ## Subset data 
 acc_running_sub <- 
-  acc_running %>%
-  filter((date_time >= t1 & date_time < t1 + 4) | 
-           (date_time >= t2 & date_time < t2 + 4) | 
-           (date_time >= t3 & date_time < t3 + 4)) 
+  data %>%
+  filter((date_time >= t1 & date_time < t1 + as.period(4, "seconds")) | 
+           (date_time >= t2 & date_time < t2 + as.period(4, "seconds")) | 
+           (date_time >= t3 & date_time < t3 + as.period(4, "seconds")) )
 
 ## Plot (x,y,z) values 
 df = acc_running_sub %>%
@@ -139,7 +139,7 @@ if (nrow(df) > 0) {
 } else {
   msg = paste0("T1: ", t1,
                ", dt_row1 of acc_running_sub: ",
-               acc_running$date_time[1], " ac_running_sub has no rows!")
+               data$date_time[1], " ac_running_sub has no rows!\n")
   stop(msg)
 }
 ```
@@ -188,7 +188,7 @@ vmc <- function(vm.win){
   mean(abs(vm.win - mean(vm.win)))
 }
 
-vm <- acc_running$vm
+vm <- data$vm
 ## vector length of 3 seconds of vm data window
 window.vl <- 100 * 3
 ## Sequence of indexes by which we cut signal into windows
@@ -202,10 +202,10 @@ vmc.vec <- sapply(rn.seq, function(rn.i){
 
 ## Plot vmc 
 data.frame(vmc = vmc.vec,
-           date_time = acc_running$date_time[rn.seq],
-           sensor_location = acc_running$sensor_location[rn.seq]) %>%
-  filter(date_time < max(acc_running$date_time) - 5, 
-         date_time > min(acc_running$date_time) + 5) %>%
+           date_time = data$date_time[rn.seq],
+           sensor_location = data$sensor_location[rn.seq]) %>%
+  filter(date_time < max(data$date_time) - 5, 
+         date_time > min(data$date_time) + 5) %>%
   ggplot(aes(x = date_time, y = vmc)) +
   facet_grid(sensor_location ~ .) + 
   geom_line(size = 0.3) +
@@ -213,7 +213,7 @@ data.frame(vmc = vmc.vec,
   labs(x = "Exercise time [min]", y = "Vector magnitue count",
        title = "Vector magnitude count (vmc) computed over 3 second-length windows of (vm)")
 ## Time percentage when vmc computed from left ankle is below 0.5
-(vmc.low.frac <- mean(vmc.vec[acc_running$sensor_location[rn.seq] == "left_ankle"] < 0.5))
+(vmc.low.frac <- mean(vmc.vec[data$sensor_location[rn.seq] == "left_ankle"] < 0.5))
 ```
 
 ##### Observations 
@@ -248,9 +248,9 @@ Function `windowSmooth {adept}` computes moving window average of a time-series 
 
 ```{r plot_vm_smoothed2, fig.width=7, fig.height=4}
 ## Use moving window average with a length of a window equal 0.05 s 
-acc_running$vm_smoothed1 <- windowSmooth(x = acc_running$vm, x.fs = 100, W = 0.05)
+data$vm_smoothed1 <- windowSmooth(x = data$vm, x.fs = 100, W = 0.05)
 
-acc_running %>%
+data %>%
   filter((date_time >= t1 & date_time < t1 + 4) | 
            (date_time >= t2 & date_time < t2 + 4) | 
            (date_time >= t3 & date_time < t3 + 4)) %>%
@@ -282,7 +282,7 @@ plot(template[[2]], type = "l", xlab = "", ylab = "", main = "Left ankle: templa
 We perform strides segmentation from $(vm)$ accelerometry signal. See `?segmentPattern` for details explanation of parameters. 
 
 ```{r segm_la2, eval = FALSE}
-x.la <- acc_running$vm[acc_running$sensor_location == "left_ankle"]
+x.la <- data$vm[data$sensor_location == "left_ankle"]
 out1.la <- segmentPattern(x = x.la,
                           x.fs = 100,
                           template = template,
@@ -303,7 +303,7 @@ write.csv(out1.la, path.tmp, row.names = FALSE)
 
 ```{r, include=FALSE}
 path.tmp <- "static/results/out1_la.csv"
-x.la <- acc_running$vm[acc_running$sensor_location == "left_ankle"]
+x.la <- data$vm[data$sensor_location == "left_ankle"]
 out1.la <- read.csv(path.tmp)
 ```
 
@@ -334,7 +334,7 @@ plot(template[[2]], type = "l", xlab = "", ylab = "", main = "Left hip: template
 ```{r segm_lh2, eval = FALSE}
 template <- list(stride_template$left_hip[[1]][1, ],
                  stride_template$left_hip[[2]][2, ])
-x.lh <- acc_running$vm[acc_running$sensor_location == "left_hip"]
+x.lh <- data$vm[data$sensor_location == "left_hip"]
 out1.lh <- segmentPattern(x = x.lh,
                           x.fs = 100,
                           template = template,
@@ -354,7 +354,7 @@ write.csv(out1.lh, path.tmp, row.names = FALSE)
 ```
 
 ```{r, include=FALSE}
-x.lh <- acc_running$vm[acc_running$sensor_location == "left_hip"]
+x.lh <- data$vm[data$sensor_location == "left_hip"]
 path.tmp <- "static/results/out1_lh.csv"
 out1.lh <- read.csv(path.tmp)
 ```
@@ -591,7 +591,7 @@ cut.and.avg <- function(x, x.cut.idx){
 
 ## Make subset of data which has data parts of different speed of running
 acc_running_sub2 <- 
-  acc_running %>%
+  data %>%
   filter((date_time >= t1 & date_time < t1 + 6) | 
            (date_time >= t2 & date_time < t2 + 6) | 
            (date_time >= t3 & date_time < t3 + 6))  %>%
