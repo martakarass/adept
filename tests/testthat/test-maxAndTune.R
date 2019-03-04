@@ -88,9 +88,13 @@ test_that("Sute 3. Test if maxAndTune works correctly. Case: no noise in signal,
 
   s.grid <- c(80, 100, 120)
   templ <- sin(seq(0, pi, length.out = 200))
-
+  # dput(sample(s.grid, size = 50, replace = TRUE))
+  the_grid = c(100, 80, 100, 100, 80, 120, 120, 80, 80, 100, 100, 100, 100,
+               100, 100, 120, 100, 120, 80, 120, 100, 100, 80, 80, 120, 100,
+               100, 80, 80, 120, 120, 80, 80, 80, 100, 100, 120, 80, 80, 80,
+               120, 100, 100, 80, 100, 100, 80, 80, 120, 120)
   x <- numeric()
-  for (ss in sample(s.grid, size = 50, replace = TRUE)){
+  for (ss in the_grid){
     templ0 <- approx(seq(0, 1, length.out = 200), templ, xout = seq(0, 1, length.out = ss))$y
     if (length(x)>0){
       x <- x[-length(x)]
@@ -155,9 +159,13 @@ test_that("Sute 4. Test if maxAndTune works correctly. Case: add noise to signal
 
   s.grid <- c(80, 100, 120)
   templ <- sin(seq(0, pi, length.out = 200))
-
+  # dput(sample(s.grid, size = 50, replace = TRUE))
+  the_grid = c(100, 80, 100, 100, 80, 120, 120, 80, 80, 100, 100, 100, 100,
+               100, 100, 120, 100, 120, 80, 120, 100, 100, 80, 80, 120, 100,
+               100, 80, 80, 120, 120, 80, 80, 80, 100, 100, 120, 80, 80, 80,
+               120, 100, 100, 80, 100, 100, 80, 80, 120, 120)
   x <- numeric()
-  for (ss in sample(s.grid, size = 50, replace = TRUE)){
+  for (ss in the_grid){
     templ0 <- approx(seq(0, 1, length.out = 200), templ, xout = seq(0, 1, length.out = ss))$y
     if (length(x)>0){
       x <- x[-length(x)]
@@ -228,9 +236,12 @@ test_that("Sute 5. Test if maxAndTune works correctly. Case: add noise to signal
 
   s.grid <- c(80, 100, 120)
   templ <- sin(seq(0, pi, length.out = 200))
-
+  the_grid = c(100, 80, 100, 100, 80, 120, 120, 80, 80, 100, 100, 100, 100,
+               100, 100, 120, 100, 120, 80, 120, 100, 100, 80, 80, 120, 100,
+               100, 80, 80, 120, 120, 80, 80, 80, 100, 100, 120, 80, 80, 80,
+               120, 100, 100, 80, 100, 100, 80, 80, 120, 120)
   x <- numeric()
-  for (ss in sample(s.grid, size = 50, replace = TRUE)){
+  for (ss in the_grid){
     templ0 <- approx(seq(0, 1, length.out = 200), templ, xout = seq(0, 1, length.out = ss))$y
     if (length(x)>0){
       x <- x[-length(x)]
