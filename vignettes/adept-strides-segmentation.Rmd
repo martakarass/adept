@@ -119,7 +119,7 @@ acc_running_sub <-
   filter((date_time >= t1 & date_time < t1 + as.period(4, "seconds")) | 
            (date_time >= t2 & date_time < t2 + as.period(4, "seconds")) | 
            (date_time >= t3 & date_time < t3 + as.period(4, "seconds")) )
-stop("it")
+
 ## Plot (x,y,z) values 
 df = acc_running_sub %>%
   select(-vm) %>%
