@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
   message = FALSE,
   global.par = TRUE
 )
-local = TRUE
+run_local = TRUE
 ```
 
 This vignette provides an example of walking stride segmentation from subsecond accelerometry data with `adept` package. We demonstrate that ADEPT method ([3]) can be used to perform automatic and precise walking stride segmentation from data collected during a combination of running, walking and resting exercise. We demonstrate how to segment data (a) with the use of stride templates that were pre-computed based on data from an external study, (b) by deriving new stride templates in a semi-manual manner. 
@@ -282,7 +282,7 @@ plot(template[[2]], type = "l", xlab = "", ylab = "", main = "Left ankle: templa
 
 We perform strides segmentation from $(vm)$ accelerometry signal. See `?segmentPattern` for details explanation of parameters. 
 
-```{r segm_la2, eval = !local}
+```{r segm_la2, eval = !run_local}
 x.la <- data$vm[data$sensor_location == "left_ankle"]
 out1.la <- segmentPattern(x = x.la,
                           x.fs = 100,
@@ -297,12 +297,12 @@ out1.la <- segmentPattern(x = x.la,
                           run.parallel = TRUE)
 ```
 
-```{r, eval =  !local, include=FALSE}
+```{r, eval =  !run_local, include=FALSE}
 path.tmp <- "static/results/out1_la.csv"
 write.csv(out1.la, path.tmp, row.names = FALSE)
 ```
 
-```{r, eval = local, include=FALSE}
+```{r, eval = run_local, include=FALSE}
 path.tmp <- "static/results/out1_la.csv"
 x.la <- data$vm[data$sensor_location == "left_ankle"]
 out1.la <- read.csv(path.tmp)
@@ -332,7 +332,7 @@ plot(template[[1]], type = "l", xlab = "", ylab = "", main = "Left hip: template
 plot(template[[2]], type = "l", xlab = "", ylab = "", main = "Left hip: template 2")
 ```
 
-```{r segm_lh2, eval = !local}
+```{r segm_lh2, eval = !run_local}
 template <- list(stride_template$left_hip[[1]][1, ],
                  stride_template$left_hip[[2]][2, ])
 x.lh <- data$vm[data$sensor_location == "left_hip"]
@@ -349,12 +349,12 @@ out1.lh <- segmentPattern(x = x.lh,
                           run.parallel = TRUE)
 ```
 
-```{r, eval = !local, include=FALSE}
+```{r, eval = !run_local, include=FALSE}
 path.tmp <- "static/results/out1_lh.csv"
 write.csv(out1.lh, path.tmp, row.names = FALSE)
 ```
 
-```{r, eval = local, include=FALSE}
+```{r, eval = run_local, include=FALSE}
 x.lh <- data$vm[data$sensor_location == "left_hip"]
 path.tmp <- "static/results/out1_lh.csv"
 out1.lh <- read.csv(path.tmp)
@@ -397,7 +397,7 @@ rbind(plt.df.la, plt.df.lh) %>%
 
 We now use the estimated stride occurrence start index (`tau_i`) and estimated stride duration (`T_i`) to retrieve $(vm)$ time-series segments corresponding to stride occurrences. We further align them in phase and scale to better observe stride patterns. 
 
-```{r, eval = !local}
+```{r, eval = !run_local}
 ## For data frame #1 (raw vm segments)
 stride.acc.vec.la <- numeric()
 stride.tau_i.vec.la <- numeric()
@@ -436,7 +436,7 @@ stride_S.df.la <- data.frame(acc = stride_S.acc.vec.la,
                              phase = stride_S.phase.vec.la)
 ```
 
-```{r, eval = !local, include=FALSE}
+```{r, eval = !run_local, include=FALSE}
 ## For data frame #1 
 path.tmp <- "static/results/stride_df_la.csv"
 write.csv(stride.df.la, path.tmp, row.names = FALSE)
@@ -445,7 +445,7 @@ path.tmp <- "static/results/stride_S_df_la.csv"
 write.csv(stride_S.df.la, path.tmp, row.names = FALSE)
 ```
 
-```{r, eval = local, include=FALSE}
+```{r, eval = run_local, include=FALSE}
 ## For data frame #1 
 path.tmp <- "static/results/stride_df_la.csv"
 stride.df.la <- read.csv(path.tmp)
@@ -479,7 +479,7 @@ grid.arrange(plt1, plt2, nrow = 1)
 
 We can further use correlation clustering to group segmented walking strides. 
 
-```{r, eval = !local}
+```{r, eval = !run_local}
 ## Compute strides distance martrix
 stride_S.dfdc.la <- dcast(stride_S.df.la, phase ~ tau_i, value.var = "acc")[, -1]
 data.mat.tau_i <- as.numeric(colnames(stride_S.dfdc.la))
@@ -502,12 +502,12 @@ data.dfm$variable <- as.numeric(as.character(data.dfm$variable))
 data.dfm$cluster <- paste0("cluster ", data.dfm$cluster)
 ```
 
-```{r, eval = !local, include=FALSE}
+```{r, eval = !run_local, include=FALSE}
 path.tmp <- "static/results/data_dfm.csv"
 write.csv(data.dfm, path.tmp, row.names = FALSE)
 ```
 
-```{r, eval = local, include=FALSE}
+```{r, eval = run_local, include=FALSE}
 path.tmp <- "static/results/data_dfm.csv"
 data.dfm <- read.csv(path.tmp)
 ```
@@ -693,7 +693,7 @@ template.lh <- list(template.lh.x1, template.lh.x2, template.lh.x3)
 
 ##### Segmentation
 
-```{r segm_app2_la2, eval = !local}
+```{r segm_app2_la2, eval = !run_local}
 out2.la <- segmentPattern(x = x.la,
                           x.fs = 100,
                           template = template.la,
@@ -719,14 +719,14 @@ out2.lh <- segmentPattern(x = x.lh,
                           run.parallel = TRUE)
 ```
 
-```{r, eval = !local, include=FALSE}
+```{r, eval = !run_local, include=FALSE}
 path.tmp <- "static/results/out2_la.csv"
 write.csv(out2.la, path.tmp, row.names = FALSE)
 path.tmp <- "static/results/out2_lh.csv"
 write.csv(out2.lh, path.tmp, row.names = FALSE)
 ```
 
-```{r, eval = local, include=FALSE}
+```{r, eval = run_local, include=FALSE}
 path.tmp <- "static/results/out2_la.csv"
 out2.la <- read.csv(path.tmp)
 path.tmp <- "static/results/out2_lh.csv"
