@@ -83,7 +83,8 @@ test_that("Testing nothing has change in templateIdxMatrix() output", {
 
   ## Grid of different true pattern occurence durations
   set.seed(1)
-  s.grid <- sample(60:120, size = 5)
+  # s.grid <- sample(60:120, size = 5)
+  s.grid <- c(76L, 82L, 93L, 112L, 71L)
   template1 <- cos(seq(0, 2 * pi, length.out = 200))
   template2 <- c(rev(seq(-1, 1, length.out = 100)), seq(-1, 1, length.out = 100))
 
