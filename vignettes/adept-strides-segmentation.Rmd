@@ -20,6 +20,7 @@ knitr::opts_chunk$set(
   message = FALSE,
   global.par = TRUE
 )
+local = FALSE
 ```
 
 This vignette provides an example of walking stride segmentation from subsecond accelerometry data with `adept` package. We demonstrate that ADEPT method ([3]) can be used to perform automatic and precise walking stride segmentation from data collected during a combination of running, walking and resting exercise. We demonstrate how to segment data (a) with the use of stride templates that were pre-computed based on data from an external study, (b) by deriving new stride templates in a semi-manual manner. 
@@ -281,7 +282,7 @@ plot(template[[2]], type = "l", xlab = "", ylab = "", main = "Left ankle: templa
 
 We perform strides segmentation from $(vm)$ accelerometry signal. See `?segmentPattern` for details explanation of parameters. 
 
-```{r segm_la2, eval = FALSE}
+```{r segm_la2, eval = !local}
 x.la <- data$vm[data$sensor_location == "left_ankle"]
 out1.la <- segmentPattern(x = x.la,
                           x.fs = 100,
@@ -296,12 +297,12 @@ out1.la <- segmentPattern(x = x.la,
                           run.parallel = TRUE)
 ```
 
-```{r, eval = FALSE, include=FALSE}
+```{r, eval =  !local, include=FALSE}
 path.tmp <- "static/results/out1_la.csv"
 write.csv(out1.la, path.tmp, row.names = FALSE)
 ```
 
-```{r, include=FALSE}
+```{r, eval = local, include=FALSE}
 path.tmp <- "static/results/out1_la.csv"
 x.la <- data$vm[data$sensor_location == "left_ankle"]
 out1.la <- read.csv(path.tmp)
@@ -331,7 +332,7 @@ plot(template[[1]], type = "l", xlab = "", ylab = "", main = "Left hip: template
 plot(template[[2]], type = "l", xlab = "", ylab = "", main = "Left hip: template 2")
 ```
 
-```{r segm_lh2, eval = FALSE}
+```{r segm_lh2, eval = !local}
 template <- list(stride_template$left_hip[[1]][1, ],
                  stride_template$left_hip[[2]][2, ])
 x.lh <- data$vm[data$sensor_location == "left_hip"]
@@ -348,12 +349,12 @@ out1.lh <- segmentPattern(x = x.lh,
                           run.parallel = TRUE)
 ```
 
-```{r, eval = FALSE, include=FALSE}
+```{r, eval = !local, include=FALSE}
 path.tmp <- "static/results/out1_lh.csv"
 write.csv(out1.lh, path.tmp, row.names = FALSE)
 ```
 
-```{r, include=FALSE}
+```{r, eval = local, include=FALSE}
 x.lh <- data$vm[data$sensor_location == "left_hip"]
 path.tmp <- "static/results/out1_lh.csv"
 out1.lh <- read.csv(path.tmp)
@@ -435,7 +436,7 @@ stride_S.df.la <- data.frame(acc = stride_S.acc.vec.la,
                              phase = stride_S.phase.vec.la)
 ```
 
-```{r, eval = FALSE, include=FALSE}
+```{r, eval = !local, include=FALSE}
 ## For data frame #1 
 path.tmp <- "static/results/stride_df_la.csv"
 write.csv(stride.df.la, path.tmp, row.names = FALSE)
@@ -444,7 +445,7 @@ path.tmp <- "static/results/stride_S_df_la.csv"
 write.csv(stride_S.df.la, path.tmp, row.names = FALSE)
 ```
 
-```{r, include=FALSE}
+```{r, eval = local, include=FALSE}
 ## For data frame #1 
 path.tmp <- "static/results/stride_df_la.csv"
 stride.df.la <- read.csv(path.tmp)
@@ -501,12 +502,12 @@ data.dfm$variable <- as.numeric(as.character(data.dfm$variable))
 data.dfm$cluster <- paste0("cluster ", data.dfm$cluster)
 ```
 
-```{r, eval = FALSE, include=FALSE}
+```{r, eval = !local, include=FALSE}
 path.tmp <- "static/results/data_dfm.csv"
 write.csv(data.dfm, path.tmp, row.names = FALSE)
 ```
 
-```{r, include=FALSE}
+```{r, eval = local, include=FALSE}
 path.tmp <- "static/results/data_dfm.csv"
 data.dfm <- read.csv(path.tmp)
 ```
@@ -718,14 +719,14 @@ out2.lh <- segmentPattern(x = x.lh,
                           run.parallel = TRUE)
 ```
 
-```{r, eval = FALSE, include=FALSE}
+```{r, eval = !local, include=FALSE}
 path.tmp <- "static/results/out2_la.csv"
 write.csv(out2.la, path.tmp, row.names = FALSE)
 path.tmp <- "static/results/out2_lh.csv"
 write.csv(out2.lh, path.tmp, row.names = FALSE)
 ```
 
-```{r, include=FALSE}
+```{r, eval = local, include=FALSE}
 path.tmp <- "static/results/out2_la.csv"
 out2.la <- read.csv(path.tmp)
 path.tmp <- "static/results/out2_lh.csv"
