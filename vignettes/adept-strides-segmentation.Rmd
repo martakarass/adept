@@ -397,7 +397,7 @@ rbind(plt.df.la, plt.df.lh) %>%
 
 We now use the estimated stride occurrence start index (`tau_i`) and estimated stride duration (`T_i`) to retrieve $(vm)$ time-series segments corresponding to stride occurrences. We further align them in phase and scale to better observe stride patterns. 
 
-```{r, eval = FALSE}
+```{r, eval = !local}
 ## For data frame #1 (raw vm segments)
 stride.acc.vec.la <- numeric()
 stride.tau_i.vec.la <- numeric()
