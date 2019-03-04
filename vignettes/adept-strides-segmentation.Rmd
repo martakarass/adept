@@ -180,7 +180,7 @@ From the $(x,y,z)$ and $(vm)$ plots we can tell the presence of an asymmetric re
 ### Vector magnitude count  
 
 Clearly, it might be challenging to make a plot of *all* data points collected at frequency 100 Hz from 25 minutes-long exercise. A way to summarize accelerometry data of such high density is to use a vector magnitude count (vmc; also known as the mean amplitude deviation). For $\overline{vm}(t,H)$ - average of $(vm)$ time-series over time window of length $H$ starting at time $t$, we define 
-$$\mathrm { vmc } ( t, H ) = \frac { 1 } { H } \sum _ { h = 0 } ^ { H - 1 } | vm ( t + h ) - \overline{vm}(t,H) |.$$
+$$\mathrm { vmc } ( t, H ) = \frac { 1 } { H } \sum _ { h = 0 } ^ { H - 1 } \left| vm ( t + h ) - \overline{vm}(t,H) \right|.$$
 
 ```{r plot_vmc, fig.width=7.5, fig.height=4.3}
 ## Function to compute vmc from vm window vector
