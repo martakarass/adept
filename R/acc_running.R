@@ -36,4 +36,5 @@
 #' activity described in the determination request does not qualify as human subjects research as
 #' defined by DHHS regulations 45 CFR 46.102, and does not require IRB oversight.
 #'
+#'
 "acc_running"
