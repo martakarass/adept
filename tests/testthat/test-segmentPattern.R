@@ -1,5 +1,4 @@
 
-
 context("Testing segmentPattern function.")
 
 ######################
@@ -116,14 +115,17 @@ test_that("Example 1(c): no noise in signal, all pattern occurences of the same 
 ######################
 ######################
 
+# set.seed(1)
+# s.grid <- sample(60:120, size = 10)
+## changed to correct for sample function bias in new release of R
+s.grid <- c(76L, 82L, 93L, 112L, 71L, 110L, 111L, 95L, 118L, 63L)
+
 if (exists("template")) rm(template)
 
 test_that("Example 2(a): no noise in signal (no peak fine-tuning employed),
           pattern occurences of different length", {
 
   ## Grid of different true pattern occurence durations
-  set.seed(1)
-  s.grid <- sample(60:120, size = 10)
   template <- cos(seq(0, 2 * pi, length.out = 200))
 
   ## Generate signal x that consists of "glued" pattern occurrences of different length
@@ -167,8 +169,6 @@ test_that("Example 2(b): no noise in signal (no peak fine-tuning employed),
           'poor' grid of assumed duration of pattern occurrences?", {
 
   ## Grid of different true pattern occurence durations
-  set.seed(1)
-  s.grid <- sample(60:120, size = 10)
   template <- cos(seq(0, 2 * pi, length.out = 200))
 
   ## Generate signal x that consists of "glued" pattern occurrences of different length
@@ -212,8 +212,6 @@ test_that("Example 2(c): no noise in signal (no peak fine-tuning employed),
           'poor' grid of assumed duration of pattern occurrences", {
 
   ## Grid of different true pattern occurence durations
-  set.seed(1)
-  s.grid <- sample(60:120, size = 10)
   template <- cos(seq(0, 2 * pi, length.out = 200))
 
   ## Generate signal x that consists of "glued" pattern occurrences of different length
@@ -268,9 +266,6 @@ test_that("Example 2(c): no noise in signal (no peak fine-tuning employed),
 test_that("Example 3(a): add noise in signal generation,
           pattern occurences of different length in singal generation", {
 
-  ## Generate signal and template
-  set.seed(1)
-  s.grid <- sample(60:120, size = 10)
   template <- cos(seq(0, 2 * pi, length.out = 200))
 
   x <- numeric()
@@ -281,6 +276,8 @@ test_that("Example 3(a): add noise in signal generation,
     }
     x <- c(x, templ0)
   }
+
+  set.seed(1)
   x <- x + rnorm(length(x), sd = 0.3)
 
   pattern.dur.seq <- seq(60, 100, by = 5)
@@ -291,17 +288,17 @@ test_that("Example 3(a): add noise in signal generation,
                         similarity.measure = "cor")
 
   res <- out$tau_i
-  res.exp <- c(4, 73, 162, 254, 358, 435, 545, 646, 752, 862)
+  res.exp <- c(4, 73, 162, 255, 362, 435, 545, 645, 752, 862)
   expect_equal(res, res.exp)
 
   res <- out$T_i
-  res.exp <- c(70, 90, 85, 100, 75, 100, 100, 100, 100, 60)
+  res.exp <- c(70, 90, 85, 100, 65, 100, 100, 100, 100, 60)
   expect_equal(res, res.exp)
 
   res <- out$sim_i
-  res.exp <- c(0.926292653865246, 0.943177988579057, 0.909149333113241, 0.905514398680946,
-               0.922521494082868, 0.878835859702908, 0.896399820840297, 0.908359071401425,
-               0.892506179992972, 0.932539440191918)
+  res.exp <- c(0.932841298514519, 0.937485762099541, 0.903795488242938, 0.902713349912544,
+               0.915232790752724, 0.87794212230542, 0.894118326687643, 0.907734430293421,
+               0.893770550717209, 0.93223222750356)
   expect_equal(res, res.exp)
 })
 
@@ -312,8 +309,6 @@ test_that("Example 3(b): add noise in signal generation,
           pattern occurences of different length in singal generation", {
 
   ## Generate signal and template
-  set.seed(1)
-  s.grid <- sample(60:120, size = 10)
   template <- cos(seq(0, 2 * pi, length.out = 200))
 
   x <- numeric()
@@ -324,24 +319,24 @@ test_that("Example 3(b): add noise in signal generation,
     }
     x <- c(x, templ0)
   }
+
+  set.seed(1)
   x <- x + rnorm(length(x), sd = 0.3)
-
-
 
   ## Without maxima detection
   pattern.dur.seq <- seq(60, 100, by = 5)
 
 
-  similarity.measure.thresh = 0.0
-  x.adept.ma.W = NULL
-  finetune = NULL
-  finetune.maxima.ma.W = NULL
-  finetune.maxima.nbh.W = NULL
-  run.parallel = FALSE
-  run.parallel.cores = NULL
-  x.cut = TRUE
-  x.cut.vl = 6000
-  compute.template.idx = FALSE
+  # similarity.measure.thresh = 0.0
+  # x.adept.ma.W = NULL
+  # finetune = NULL
+  # finetune.maxima.ma.W = NULL
+  # finetune.maxima.nbh.W = NULL
+  # run.parallel = FALSE
+  # run.parallel.cores = NULL
+  # x.cut = TRUE
+  # x.cut.vl = 6000
+  # compute.template.idx = FALSE
 
   out <- segmentPattern(x = x,
                         x.fs = 1,
@@ -350,24 +345,24 @@ test_that("Example 3(b): add noise in signal generation,
                         similarity.measure = "cor")
 
   res <- out$tau_i
-  res.exp <- c(4, 73, 162, 254, 358, 435, 545, 646, 752, 862)
+  res.exp <- c(4, 73, 162, 255, 362, 435, 545, 645, 752, 862)
   expect_equal(res, res.exp)
 
   res <- out$T_i
-  res.exp <- c(70, 90, 85, 100, 75, 100, 100, 100, 100, 60)
+  res.exp <- c(70, 90, 85, 100, 65, 100, 100, 100, 100, 60)
   expect_equal(res, res.exp)
 
   res <- out$sim_i
-  res.exp <- c(0.926292653865246, 0.943177988579057, 0.909149333113241, 0.905514398680946,
-               0.922521494082868, 0.878835859702908, 0.896399820840297, 0.908359071401425,
-               0.892506179992972, 0.932539440191918)
+  res.exp <- c(0.932841298514519, 0.937485762099541, 0.903795488242938, 0.902713349912544,
+               0.915232790752724, 0.87794212230542, 0.894118326687643, 0.907734430293421,
+               0.893770550717209, 0.93223222750356)
   expect_equal(res, res.exp)
 
 
-  similarity.measure = "cor"
-  finetune = "maxima"
-  finetune.maxima.ma.W = 30
-  finetune.maxima.nbh.W = 120
+  # similarity.measure = "cor"
+  # finetune = "maxima"
+  # finetune.maxima.ma.W = 30
+  # finetune.maxima.nbh.W = 120
 
   ## Use maxima detection (for comparison)
   pattern.dur.seq <- seq(60, 100, by = 5)
@@ -381,17 +376,17 @@ test_that("Example 3(b): add noise in signal generation,
                         finetune.maxima.nbh.W = 120)
 
   res <- out$tau_i
-  res.exp <- c(15, 77, 160, 257, 356, 434, 544, 651, 750, 849)
+  res.exp <- c(15, 75, 160, 253, 355, 435, 542, 648, 750, 849)
   expect_equal(res, res.exp)
 
   res <- out$T_i
-  res.exp <- c(63, 84, 89, 100, 79, 100, 100, 97, 100, 60)
+  res.exp <- c(61, 86, 92, 100, 77, 100, 100, 98, 100, 60)
   expect_equal(res, res.exp)
 
   res <- out$sim_i
-  res.exp <- c(0.934011470294625, 0.943177988579057, 0.917625765654425, 0.905514398680946,
-               0.922521494082868, 0.878835859702908, 0.896399820840297, 0.908359071401425,
-               0.89029293486179, 0.932539440191918)
+  res.exp <- c(0.934034172881348, 0.937485762099541, 0.914074642973907, 0.902713349912544,
+               0.915232790752724, 0.87794212230542, 0.894118326687643, 0.907734430293421,
+               0.888048574952028, 0.93223222750356)
   expect_equal(res, res.exp)
 
 
@@ -409,16 +404,15 @@ test_that("Example 3(b): add noise in signal generation,
                         finetune.maxima.nbh.W = 120)
 
   res <- out$tau_i
-  res.exp <- c(15, 77, 160, 651, 849)
+  res.exp <- c(15, 160, 648, 849)
   expect_equal(res, res.exp)
 
   res <- out$T_i
-  res.exp <- c(63, 84, 89, 97, 60)
+  res.exp <- c(61, 92, 98, 60)
   expect_equal(res, res.exp)
 
   res <- out$sim_i
-  res.exp <- c(0.705380000974917, 0.735921165890131, 0.759885566360049, 0.727241676572737,
-               0.74274381619032)
+  res.exp <- c(0.724850738169134, 0.736528364289848, 0.717833003791632, 0.743334116677552)
   expect_equal(res, res.exp)
 
 
@@ -438,17 +432,17 @@ test_that("Example 3(b): add noise in signal generation,
                         finetune.maxima.nbh.W = 120)
 
   res <- out$tau_i
-  res.exp <- c(15, 77, 160, 257, 356, 434, 544, 651, 751, 852)
+  res.exp <- c(15, 75, 160, 253, 355, 435, 542, 648, 751, 857)
   expect_equal(res, res.exp)
 
   res <- out$T_i
-  res.exp <- c(63, 84, 89, 100, 79, 100, 100, 97, 100, 60)
+  res.exp <- c(61, 86, 92, 100, 77, 100, 100, 98, 100, 60)
   expect_equal(res, res.exp)
 
   res <- out$sim_i
-  res.exp <- c(0.387428828230924, 0.593344449562667, 0.628648114234425, 0.564177922975735,
-               0.524566992985259, 0.57315100219008, 0.561412683480699, 0.61036916804888,
-               0.589173737378179, 0.334041868743848)
+  res.exp <- c(0.398855621994664, 0.574913156763604, 0.613893094434027, 0.562563743167577,
+               0.544951870561808, 0.562680022332807, 0.563855908578859, 0.614970735584006,
+               0.593536450844769, 0.320552985778579)
   expect_equal(res, res.exp)
 
 
@@ -464,17 +458,17 @@ test_that("Example 3(b): add noise in signal generation,
                         finetune.maxima.nbh.W = 120)
 
   res <- out$tau_i
-  res.exp <- c(15, 77, 160, 248, 356, 434, 537, 651, 747, 852)
+  res.exp <- c(15, 75, 160, 251, 355, 431, 541, 648, 745, 857)
   expect_equal(res, res.exp)
 
   res <- out$T_i
-  res.exp <- c(63, 84, 89, 109, 79, 104, 115, 97, 106, 57)
+  res.exp <- c(61, 86, 92, 105, 77, 111, 108, 98, 113, 52)
   expect_equal(res, res.exp)
 
   res <- out$sim_i
-  res.exp <- c(0.934011470294625, 0.943177988579057, 0.917625765654425, 0.905514398680946,
-               0.922521494082868, 0.878835859702908, 0.913581497874648, 0.902543119926644,
-               0.892506179992972, 0.932539440191918)
+  res.exp <- c(0.934034172881348, 0.937485762099541, 0.914074642973907, 0.920834847349191,
+               0.915232790752724, 0.896116452119818, 0.91682323488697, 0.9072682178912,
+               0.898872120860981, 0.93223222750356)
   expect_equal(res, res.exp)
 
 })
@@ -565,19 +559,24 @@ test_that("Example 4(a): no noise in signal, all pattern occurences of the same
 ######################
 ######################
 
+# set.seed(1)
+# s.grid2 <- sample(60:120, size = 50)
+s.grid2 <- c(76L, 82L, 93L, 112L, 71L, 110L, 111L, 95L, 118L, 63L, 70L,
+            68L, 117L, 78L, 96L, 119L, 92L, 103L, 120L, 104L, 98L, 109L,
+            85L, 64L, 69L, 73L, 60L, 113L, 88L, 115L, 74L, 77L, 90L, 65L,
+            105L, 89L, 79L, 62L, 102L, 106L, 100L, 72L, 101L, 81L, 80L, 84L,
+            94L, 66L, 86L, 99L)
 
 test_that("Example 5(a): test returning template index matrix", {
 
 
   ## Grid of different true pattern occurence durations
-  set.seed(1)
-  s.grid <- sample(60:120, size = 50)
   template1 <- cos(seq(0, 2 * pi, length.out = 200))
   template2 <- c(rev(seq(-1, 1, length.out = 100)), seq(-1, 1, length.out = 100))
 
   ## Generate signal x that consists of "glued" pattern occurrences of different length
   x <- numeric()
-  for (ss in s.grid){
+  for (ss in s.grid2){
     ## Add piece from template1
     templ0 <- approx(seq(0, 1, length.out = 200), template1, xout = seq(0, 1, length.out = ss))$y
     if (length(x)>0) x <- x[-length(x)]
@@ -593,7 +592,7 @@ test_that("Example 5(a): test returning template index matrix", {
   out <- segmentPattern(x = x,
                         x.fs = 1,
                         template = list(template1, template2),
-                        pattern.dur.seq = sort(s.grid),
+                        pattern.dur.seq = sort(s.grid2),
                         similarity.measure = "cor",
                         compute.template.idx = TRUE)
 
