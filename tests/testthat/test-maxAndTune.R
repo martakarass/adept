@@ -159,7 +159,8 @@ test_that("Sute 4. Test if maxAndTune works correctly. Case: add noise to signal
 
   s.grid <- c(80, 100, 120)
   templ <- sin(seq(0, pi, length.out = 200))
-  # dput(sample(s.grid, size = 50, replace = TRUE))
+  # need sample still here to reset RNG for rnorm
+  tg = sample(s.grid, size = 50, replace = TRUE)
   the_grid = c(100, 80, 100, 100, 80, 120, 120, 80, 80, 100, 100, 100, 100,
                100, 100, 120, 100, 120, 80, 120, 100, 100, 80, 80, 120, 100,
                100, 80, 80, 120, 120, 80, 80, 80, 100, 100, 120, 80, 80, 80,
@@ -236,6 +237,8 @@ test_that("Sute 5. Test if maxAndTune works correctly. Case: add noise to signal
 
   s.grid <- c(80, 100, 120)
   templ <- sin(seq(0, pi, length.out = 200))
+  # need sample still here to reset RNG for rnorm
+  tg = sample(s.grid, size = 50, replace = TRUE)
   the_grid = c(100, 80, 100, 100, 80, 120, 120, 80, 80, 100, 100, 100, 100,
                100, 100, 120, 100, 120, 80, 120, 100, 100, 80, 80, 120, 100,
                100, 80, 80, 120, 120, 80, 80, 80, 100, 100, 120, 80, 80, 80,
