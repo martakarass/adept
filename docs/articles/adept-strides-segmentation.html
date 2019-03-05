@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adept</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -84,7 +84,7 @@
 </h1>
                         <h4 class="author">Marta Karas</h4>
             
-            <h4 class="date">2019-02-28</h4>
+            <h4 class="date">2019-03-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/martakarass/adept/blob/master/vignettes/adept-strides-segmentation.Rmd"><code>vignettes/adept-strides-segmentation.Rmd</code></a></small>
       <div class="hidden name"><code>adept-strides-segmentation.Rmd</code></div>
@@ -133,15 +133,8 @@
 <span class="co">#&gt; 4 -0.191 -1.027 0.109 1.050281 2018-10-25 17:57:30        left_hip</span>
 <span class="co">#&gt; 5 -0.191 -1.016 0.109 1.039528 2018-10-25 17:57:30        left_hip</span>
 <span class="co">#&gt; 6 -0.184 -1.012 0.121 1.035684 2018-10-25 17:57:30        left_hip</span>
-acc_running<span class="op">$</span>date_time =<span class="st"> </span><span class="kw"><a href="http://lubridate.tidyverse.org/reference/force_tz.html">force_tz</a></span>(acc_running<span class="op">$</span>date_time, <span class="dt">tzone =</span> <span class="st">"UTC"</span>)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(acc_running)
-<span class="co">#&gt;        x      y     z       vm           date_time sensor_location</span>
-<span class="co">#&gt; 1 -0.199 -1.012 0.133 1.039920 2018-10-25 17:57:30        left_hip</span>
-<span class="co">#&gt; 2 -0.191 -1.027 0.133 1.053043 2018-10-25 17:57:30        left_hip</span>
-<span class="co">#&gt; 3 -0.191 -1.035 0.121 1.059409 2018-10-25 17:57:30        left_hip</span>
-<span class="co">#&gt; 4 -0.191 -1.027 0.109 1.050281 2018-10-25 17:57:30        left_hip</span>
-<span class="co">#&gt; 5 -0.191 -1.016 0.109 1.039528 2018-10-25 17:57:30        left_hip</span>
-<span class="co">#&gt; 6 -0.184 -1.012 0.121 1.035684 2018-10-25 17:57:30        left_hip</span></code></pre></div>
+<span class="kw"><a href="http://lubridate.tidyverse.org/reference/tz.html">tz</a></span>(acc_running<span class="op">$</span>date_time)
+<span class="co">#&gt; [1] "UTC"</span></code></pre></div>
 <p><code>acc_running</code> consists of 300,000 observations of 5 variables:</p>
 <ul>
 <li>
@@ -190,16 +183,16 @@ acc_running<span class="op">$</span>date_time =<span class="st"> </span><span cl
 <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(gridExtra)
 
 ## Define time frame start values for data subset
-t1 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/as.POSIXlt">as.POSIXct</a></span>(<span class="st">"2018-10-25 18:00:00"</span>, <span class="dt">tz =</span> <span class="st">"UTC"</span>) 
-t2 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/as.POSIXlt">as.POSIXct</a></span>(<span class="st">"2018-10-25 18:10:00"</span>, <span class="dt">tz =</span> <span class="st">"UTC"</span>) 
-t3 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/as.POSIXlt">as.POSIXct</a></span>(<span class="st">"2018-10-25 18:22:00"</span>, <span class="dt">tz =</span> <span class="st">"UTC"</span>) 
+t1 &lt;-<span class="st"> </span><span class="kw"><a href="http://lubridate.tidyverse.org/reference/ymd_hms.html">ymd_hms</a></span>(<span class="st">"2018-10-25 18:00:00"</span>, <span class="dt">tz =</span> <span class="st">"UTC"</span>) 
+t2 &lt;-<span class="st"> </span><span class="kw"><a href="http://lubridate.tidyverse.org/reference/ymd_hms.html">ymd_hms</a></span>(<span class="st">"2018-10-25 18:10:00"</span>, <span class="dt">tz =</span> <span class="st">"UTC"</span>) 
+t3 &lt;-<span class="st"> </span><span class="kw"><a href="http://lubridate.tidyverse.org/reference/ymd_hms.html">ymd_hms</a></span>(<span class="st">"2018-10-25 18:22:00"</span>, <span class="dt">tz =</span> <span class="st">"UTC"</span>) 
 
 ## Subset data 
 acc_running_sub &lt;-<span class="st"> </span>
 <span class="st">  </span>acc_running <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>((date_time <span class="op">&gt;=</span><span class="st"> </span>t1 <span class="op">&amp;</span><span class="st"> </span>date_time <span class="op">&lt;</span><span class="st"> </span>t1 <span class="op">+</span><span class="st"> </span><span class="dv">4</span>) <span class="op">|</span><span class="st"> </span>
-<span class="st">           </span>(date_time <span class="op">&gt;=</span><span class="st"> </span>t2 <span class="op">&amp;</span><span class="st"> </span>date_time <span class="op">&lt;</span><span class="st"> </span>t2 <span class="op">+</span><span class="st"> </span><span class="dv">4</span>) <span class="op">|</span><span class="st"> </span>
-<span class="st">           </span>(date_time <span class="op">&gt;=</span><span class="st"> </span>t3 <span class="op">&amp;</span><span class="st"> </span>date_time <span class="op">&lt;</span><span class="st"> </span>t3 <span class="op">+</span><span class="st"> </span><span class="dv">4</span>)) 
+<span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>((date_time <span class="op">&gt;=</span><span class="st"> </span>t1 <span class="op">&amp;</span><span class="st"> </span>date_time <span class="op">&lt;</span><span class="st"> </span>t1 <span class="op">+</span><span class="st"> </span><span class="kw"><a href="http://lubridate.tidyverse.org/reference/as.period.html">as.period</a></span>(<span class="dv">4</span>, <span class="st">"seconds"</span>)) <span class="op">|</span><span class="st"> </span>
+<span class="st">           </span>(date_time <span class="op">&gt;=</span><span class="st"> </span>t2 <span class="op">&amp;</span><span class="st"> </span>date_time <span class="op">&lt;</span><span class="st"> </span>t2 <span class="op">+</span><span class="st"> </span><span class="kw"><a href="http://lubridate.tidyverse.org/reference/as.period.html">as.period</a></span>(<span class="dv">4</span>, <span class="st">"seconds"</span>)) <span class="op">|</span><span class="st"> </span>
+<span class="st">           </span>(date_time <span class="op">&gt;=</span><span class="st"> </span>t3 <span class="op">&amp;</span><span class="st"> </span>date_time <span class="op">&lt;</span><span class="st"> </span>t3 <span class="op">+</span><span class="st"> </span><span class="kw"><a href="http://lubridate.tidyverse.org/reference/as.period.html">as.period</a></span>(<span class="dv">4</span>, <span class="st">"seconds"</span>)) )
 
 ## Plot (x,y,z) values 
 df =<span class="st"> </span>acc_running_sub <span class="op">%&gt;%</span>
@@ -218,7 +211,10 @@ df =<span class="st"> </span>acc_running_sub <span class="op">%&gt;%</span>
 <span class="st">    </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(<span class="dt">legend.position =</span> <span class="st">"top"</span>)
   <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(p)
 } <span class="cf">else</span> {
-  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/stop">stop</a></span>(<span class="st">"ac_running_sub has no rows!"</span>)
+  msg =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(<span class="st">"T1: "</span>, t1,
+               <span class="st">", dt_row1 of acc_running: "</span>,
+               acc_running<span class="op">$</span>date_time[<span class="dv">1</span>], <span class="st">" ac_running_sub has no rows!</span><span class="ch">\n</span><span class="st">"</span>)
+  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/stop">stop</a></span>(msg)
 }</code></pre></div>
 <p><img src="adept-strides-segmentation_files/figure-html/plot_xyz-1.png" width="720"></p>
 <div id="note-on-sensors-desynchronization" class="section level5">
@@ -256,7 +252,7 @@ acc_running_sub <span class="op">%&gt;%</span>
 <div id="vector-magnitude-count" class="section level3">
 <h3 class="hasAnchor">
 <a href="#vector-magnitude-count" class="anchor"></a>Vector magnitude count</h3>
-<p>Clearly, it might be challenging to make a plot of <em>all</em> data points collected at frequency 100 Hz from 25 minutes-long exercise. A way to summarize accelerometry data of such high density is to use a vector magnitude count (vmc; also known as the mean amplitude deviation). For <span class="math inline">\(\overline{vm}(t,H)\)</span> - average of <span class="math inline">\((vm)\)</span> time-series over time window of length <span class="math inline">\(H\)</span> starting at time <span class="math inline">\(t\)</span>, we define <span class="math display">\[\mathrm { vmc } ( t, H ) = \frac { 1 } { H } \sum _ { h = 0 } ^ { H - 1 } | vm ( t + h ) - \overline{vm}(t,H) |.\]</span></p>
+<p>Clearly, it might be challenging to make a plot of <em>all</em> data points collected at frequency 100 Hz from 25 minutes-long exercise. A way to summarize accelerometry data of such high density is to use a vector magnitude count (vmc; also known as the mean amplitude deviation). For <span class="math inline">\(\overline{vm}(t,H)\)</span> - average of <span class="math inline">\((vm)\)</span> time-series over time window of length <span class="math inline">\(H\)</span> starting at time <span class="math inline">\(t\)</span>, we define <span class="math display">\[\mathrm { vmc } ( t, H ) = \frac { 1 } { H } \sum _ { h = 0 } ^ { H - 1 } \left| vm ( t + h ) - \overline{vm}(t,H) \right|.\]</span></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Function to compute vmc from vm window vector
 vmc &lt;-<span class="st"> </span><span class="cf">function</span>(vm.win){
   <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">abs</a></span>(vm.win <span class="op">-</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(vm.win)))
