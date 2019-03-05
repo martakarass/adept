@@ -311,6 +311,10 @@ segmentPattern <- function(x,
                                                 template.scaled = template.scaled,
                                                 similarity.measure = similarity.measure)
       }
+      else
+      {
+        template.idx.mat.i <- NULL
+      }
       ## Run max and tine procedure
       out.df.i <- maxAndTune(x = x[idx.i],
                              template.vl = template.vl,
