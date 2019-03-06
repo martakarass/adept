@@ -205,7 +205,8 @@ maxAndTune <- function(x,
                        template.idx.mat = NULL,
                        finetune = NULL,
                        finetune.maxima.x = NULL,
-                       finetune.maxima.nbh.vl = NULL){
+                       finetune.maxima.nbh.vl = NULL,
+                       tol = sqrt(.Machine$double.eps)){
 
   ## Params
   mat.nrow <- nrow(similarity.mat)
@@ -248,6 +249,7 @@ maxAndTune <- function(x,
     ## s:   expressed as vector length
     ## tau: expressed as index of x vector
     similarity.mat.MAX.IDX <- which(similarity.mat == similarity.mat.MAX, arr.ind = TRUE)[1, ]
+    # similarity.mat.MAX.IDX <- which(similarity.mat + tol > similarity.mat.MAX, arr.ind = TRUE)[1, ]
     tau.TMP     <- similarity.mat.MAX.IDX[2]
     s.TMP       <- template.vl[similarity.mat.MAX.IDX[1]]
 

@@ -574,8 +574,8 @@ test_that("Example 4(a): no noise in signal, all pattern occurences of the same
 
 
 
-# ## TODO
-#
+## TODO
+
 # test_that("Example 4(b): no noise in signal, all pattern occurences of the same
 #           length, long signal. We check for same behaviour with and without x.cut = TRUE", {
 #
@@ -585,7 +585,7 @@ test_that("Example 4(a): no noise in signal, all pattern occurences of the same
 #
 #   ## Generate signal x that consists of "glued" pattern occurrences of different length
 #   x <- numeric()
-#   for (ss in as.vector(replicate(1, seq(80, 120)))){
+#   for (ss in as.vector(replicate(4, seq(80, 120)))){
 #     ## Add piece from template1
 #     templ0 <- approx(seq(0, 1, length.out = 200), template1, xout = seq(0, 1, length.out = ss))$y
 #     if (length(x)>0) x <- x[-length(x)]
@@ -622,7 +622,6 @@ test_that("Example 4(a): no noise in signal, all pattern occurences of the same
 # })
 
 
-# data.frame(out$tau_i, out2$tau_i, out$T_i, out2$T_i, out$sim_i, out2$sim_i)
 
 
 
