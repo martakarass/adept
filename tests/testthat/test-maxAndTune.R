@@ -92,9 +92,8 @@ test_that("Sute 3. Test if maxAndTune works correctly. Case: no noise in signal,
 
   set.seed(20181019)
   templ <- sin(seq(0, pi, length.out = 200))
-
+  # dput(sample(s.grid, size = 50, replace = TRUE))
   x <- numeric()
-  # for (ss in sample(s.grid, size = 50, replace = TRUE)){
   for (ss in s.grid.sample){
     templ0 <- approx(seq(0, 1, length.out = 200), templ, xout = seq(0, 1, length.out = ss))$y
     if (length(x)>0){
@@ -158,7 +157,7 @@ test_that("Sute 4. Test if maxAndTune works correctly. Case: add noise to signal
 
   set.seed(20181019)
   templ <- sin(seq(0, pi, length.out = 200))
-
+  # need sample still here to reset RNG for rnorm
   x <- numeric()
   for (ss in s.grid.sample){
     templ0 <- approx(seq(0, 1, length.out = 200), templ, xout = seq(0, 1, length.out = ss))$y
@@ -229,7 +228,6 @@ test_that("Sute 5. Test if maxAndTune works correctly. Case: add noise to signal
 
   set.seed(20181019)
   templ <- sin(seq(0, pi, length.out = 200))
-
   x <- numeric()
   for (ss in s.grid.sample){
     templ0 <- approx(seq(0, 1, length.out = 200), templ, xout = seq(0, 1, length.out = ss))$y
