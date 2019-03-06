@@ -248,8 +248,9 @@ maxAndTune <- function(x,
     ## Identify parameters s and tau corresponding to maximum of covariance matrix
     ## s:   expressed as vector length
     ## tau: expressed as index of x vector
-    similarity.mat.MAX.IDX <- which(similarity.mat == similarity.mat.MAX, arr.ind = TRUE)[1, ]
-    # similarity.mat.MAX.IDX <- which(similarity.mat + tol > similarity.mat.MAX, arr.ind = TRUE)[1, ]
+    ## Mar 5, 2019 @MK: fix the discrepancies caused by floating precision
+    # similarity.mat.MAX.IDX <- which(similarity.mat == similarity.mat.MAX, arr.ind = TRUE)[1, ]
+    similarity.mat.MAX.IDX <- which(similarity.mat + tol > similarity.mat.MAX, arr.ind = TRUE)[1, ]
     tau.TMP     <- similarity.mat.MAX.IDX[2]
     s.TMP       <- template.vl[similarity.mat.MAX.IDX[1]]
 

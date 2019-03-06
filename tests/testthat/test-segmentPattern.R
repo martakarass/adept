@@ -27,7 +27,7 @@ test_that("Example 1(a): no noise in signal, all pattern occurences of the same
                         similarity.measure = "cor")
 
   res <- sort(out$tau_i)
-  res.exp <- c(1, 101, 201, 302, 401, 501, 601, 701, 801, 901)
+  res.exp <- c(1, 101, 201, 301, 401, 501, 601, 701, 801, 901)
   expect_equal(res, res.exp)
 
   res <- sort(out$T_i)
@@ -192,7 +192,7 @@ test_that("Example 2(b): no noise in signal (no peak fine-tuning employed),
                         similarity.measure = "cor")
 
   res <- out$tau_i
-  res.exp <- c(9, 77, 163, 245, 366, 435, 534, 656, 742, 861)
+  res.exp <-c(9, 77, 163, 245, 365, 435, 534, 656, 742, 861)
   expect_equal(res, res.exp)
 
   res <- out$T_i
@@ -571,58 +571,6 @@ test_that("Example 4(a): no noise in signal, all pattern occurences of the same
   expect_equal(out$T_i,   out2$T_i)
   expect_equal(out$sim_i, out2$sim_i)
 })
-
-
-
-## TODO
-
-# test_that("Example 4(b): no noise in signal, all pattern occurences of the same
-#           length, long signal. We check for same behaviour with and without x.cut = TRUE", {
-#
-#   ## Grid of different true pattern occurence durations
-#   template1 <- cos(seq(0, 2 * pi, length.out = 200))
-#   template2 <- c(rev(seq(-1, 1, length.out = 100)), seq(-1, 1, length.out = 100))
-#
-#   ## Generate signal x that consists of "glued" pattern occurrences of different length
-#   x <- numeric()
-#   for (ss in as.vector(replicate(4, seq(80, 120)))){
-#     ## Add piece from template1
-#     templ0 <- approx(seq(0, 1, length.out = 200), template1, xout = seq(0, 1, length.out = ss))$y
-#     if (length(x)>0) x <- x[-length(x)]
-#     x <- c(x, templ0)
-#     ## Add piece from template2
-#     templ0 <- approx(seq(0, 1, length.out = 200), template2, xout = seq(0, 1, length.out = ss))$y
-#     if (length(x)>0) x <- x[-length(x)]
-#     x <- c(x, templ0)
-#   }
-#
-#   pattern.dur.seq <- seq(80, 120, by = 4)
-#
-#   out <- segmentPattern(x = x,
-#                         x.fs = 1,
-#                         template = list(template1, template2),
-#                         pattern.dur.seq = pattern.dur.seq,
-#                         similarity.measure = "cov",
-#                         x.cut = TRUE,
-#                         x.cut.vl = 6000,
-#                         compute.template.idx = TRUE)
-#
-#   out2 <- segmentPattern(x = x,
-#                         x.fs = 1,
-#                         template = list(template1, template2),
-#                         pattern.dur.seq = pattern.dur.seq,
-#                         similarity.measure = "cov",
-#                         x.cut = FALSE,
-#                         compute.template.idx = TRUE)
-#
-#   expect_equal(out$tau_i, out2$tau_i)
-#   expect_equal(out$T_i,   out2$T_i)
-#   expect_equal(out$sim_i, out2$sim_i)
-#   expect_equal(out$template_i, out2$template_i)
-# })
-
-
-
 
 
 ######################
