@@ -5,7 +5,8 @@ Version: 0.1.2
 Authors@R: c(
   person("Marta", "Karas", email = "marta.karass@gmail.com", role = c("aut", "cre")),
   person("Jacek", "Urbanek", role = c("aut")),
-  person("John", "Muschelli", role = c("ctb"))
+  person("John", "Muschelli", role = c("ctb")),
+  person("Adi", "Gherman", role = c("ctb"))
   )
 Description: Designed for optimal use in performing fast, 
     accurate walking strides segmentation from high-density 

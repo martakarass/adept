@@ -281,7 +281,8 @@ segmentPattern <- function(x,
   ## If no signal cutting to parts is allowed
   if (!x.cut) x.cut.vl <- length(x)
 
-  x.cut.margin <- template.vl.max - 1
+  # x.cut.margin <- template.vl.max - 1
+  x.cut.margin <- 2 * template.vl.max - 1
   x.cut.seq <- seq(1, to = length(x), by = x.cut.vl)
 
   template.idx.mat.i <- NULL
@@ -310,6 +311,10 @@ segmentPattern <- function(x,
         template.idx.mat.i <- templateIdxMatrix(x = x.smoothed[idx.i],
                                                 template.scaled = template.scaled,
                                                 similarity.measure = similarity.measure)
+      }
+      else
+      {
+        template.idx.mat.i <- NULL
       }
       ## Run max and tine procedure
       out.df.i <- maxAndTune(x = x[idx.i],
@@ -347,7 +352,8 @@ segmentPattern <- function(x,
   ## (after https://github.com/Rdatatable/data.table/issues/850)
   tau_i <- NULL; T_i <- NULL; tau_i_diff <- NULL; sim_i <- NULL
 
-  k <- floor((template.vl.max-1)/template.vl.min)
+  # k <- floor((template.vl.max-1)/template.vl.min)
+  k <- floor((2 * template.vl.max - 1)/template.vl.min)
   if (k > 0){
     for (i in 1:k){
       out.df <-
