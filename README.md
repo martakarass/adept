@@ -19,13 +19,27 @@ Vignettes
 
 Vignettes are available to better explain package methods functionality.
 
-1.  Vignette [Introduction to adept package](https://martakarass.github.io/adept/articles/adept-intro.html) intends to introduce a reader to the ADEPT method and demonstrate the usage of the `segmentPattern` function which implements ADEPT method. Here, we focus on illustrating `segmentPattern` functionality with a comprehesive set of simulated data examples.
+#### Vignette 1. Introduction to adept package
 
-<img src="inst/img/readme_art1_pic1.png" width="24%" /> <img src="inst/img/readme_art1_pic2.png" width="60%" />
+Vignette [Introduction to adept package](https://martakarass.github.io/adept/articles/adept-intro.html) intends to introduce a reader to the ADEPT method and demonstrate the usage of the `segmentPattern` function which implements ADEPT method. Here, we focus on illustrating `segmentPattern` functionality with a comprehesive set of simulated data examples.
 
-1.  Vignette [Walking strides segmentation with adept](https://martakarass.github.io/adept/articles/adept-strides-segmentation.html) provides an example of walking stride segmentation from subsecond accelerometry data with `adept` package. We demonstrate that ADEPT method can be used to perform automatic and precise walking stride segmentation from data collected during a combination of running, walking and resting exercise. We demonstrate how to segment stride pattern:
+<img src="https://imgur.com/Z45aaTf.jpg" style="width:75.0%" />
 
-    1.  with the use of stride templates that were pre-computed based on data from an external study,
-    2.  by deriving new stride templates in a semi-manual manner.
+#### Vignette 2. Walking strides segmentation with adept
 
-<img src="inst/img/readme_art2_pic1.png" width="70%" /><img src="inst/img/readme_art2_pic2.png" width="70%" /><img src="inst/img/readme_art2_pic3.png" width="70%" />
+Vignette [Walking strides segmentation with adept](https://martakarass.github.io/adept/articles/adept-strides-segmentation.html) provides an example of walking stride segmentation from subsecond accelerometry data with `adept` package. We demonstrate that ADEPT method can be used to perform automatic and precise walking stride segmentation from data collected during a combination of running, walking and resting exercise. We demonstrate how to segment stride pattern:
+
+1.  with the use of stride templates that were pre-computed based on data from an external study,
+2.  by deriving new stride templates in a semi-manual manner.
+
+##### Accelerometry data collection
+
+<img src="https://imgur.com/7P6KB0G.jpg" style="width:75.0%" />
+
+##### Accelerometry data visualization
+
+<img src="https://imgur.com/2hrUomw.jpg" style="width:75.0%" />
+
+##### Segmentation results
+
+<img src="https://imgur.com/YhguNLb.jpg" style="width:75.0%" />

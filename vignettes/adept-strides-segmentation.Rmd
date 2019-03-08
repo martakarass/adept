@@ -412,7 +412,8 @@ ggplot(plt.df,
   geom_point(alpha = 0.2) + 
   facet_grid(location ~ .) + 
   theme_bw(base_size = 10) + 
-  labs(x = "Exercise time [min]", y = "Estimated stride duration time [s]") + 
+  labs(x = "Exercise time [min]", y = "Estimated stride duration time [s]",
+       fill = "Resting: ") + 
   theme(legend.position = "top") + 
   scale_fill_manual(values = c("white", "blue")) + 
   theme(legend.position = "top",
@@ -778,7 +779,8 @@ ggplot(plt.df,
   geom_point(alpha = 0.2) + 
   facet_grid(location ~ .) + 
   theme_bw(base_size = 10) + 
-  labs(x = "Exercise time [min]", y = "Estimated stride duration time [s]") + 
+  labs(x = "Exercise time [min]", y = "Estimated stride duration time [s]",
+       fill = "Resting: ") + 
   theme(legend.position = "top") + 
   scale_fill_manual(values = c("white", "blue")) + 
   theme(legend.position = "top",

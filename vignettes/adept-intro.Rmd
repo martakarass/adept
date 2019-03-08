@@ -8,15 +8,16 @@ output:
     toc_depth: 2
 vignette: >
   %\VignetteIndexEntry{Introduction to adept package}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
 ---
 
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  cache = FALSE
 )
 ```
 
@@ -27,7 +28,7 @@ knitr::opts_chunk$set(
 `adept` package implements ADaptive Empirical Pattern Transformation (ADEPT) ([1]) **method for pattern segmentation from a time-series `x`**. ADEPT was designed for optimal use in performing fast, accurate walking strides segmentation from high-density data collected from a wearable accelerometer worn during continuous walking activity. 
 <!-- It has been tested ([1]) for data collected with sensors worn at left wrist, left hip and both ankles.  -->
 
-This vignette intends to introduce a reader to the ADEPT method and demonstrate the usage of the `segmentPattern` function which implements ADEPT method. Here, we focus on illustrating `segmentPattern` functionality via simulated data examples; see the *Walking strides segmentation with `adept`"*  vignette ([2]) for an example of walking stride segmentation from subsecond accelerometry data with `adept` package. 
+This vignette intends to introduce a reader to the ADEPT method and demonstrate the usage of the `segmentPattern` function which implements ADEPT method. Here, we focus on illustrating `segmentPattern` functionality via simulated data examples; see the [Walking strides segmentation with adept](file://localhost/Users/martakaras/Dropbox/_PROJECTS/R/adept/docs/articles/adept-strides-segmentation.html)  vignette for an example of walking stride segmentation from subsecond accelerometry data with `adept` package. 
 
 # ADEPT method   
 
@@ -671,7 +672,6 @@ References:
 
 1: Karas, M., Straczkiewicz, M., Fadel, W., Harezlak, J., Crainiceanu, C., Urbanek, J.K. *Adaptive empirical pattern transformation (ADEPT) with application to walking stride segmentation*, Submitted to *Biostatistics*, 2018.
 
-2: Karas, M. *Walking strides segmentation with `adept`* package vignette. 
 
 
 
