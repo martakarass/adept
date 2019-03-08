@@ -20,3 +20,6 @@ matrix:
 
 after_success:
   - Rscript -e 'covr::codecov(type = "all")'
+
+env:
+  - _R_CHECK_SYSTEM_CLOCK_=0
