@@ -5,11 +5,11 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Walking strides segmentation with <code>adept</code> • adept</title>
+<title>Walking strides segmentation with adept • adept</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Walking strides segmentation with &lt;code&gt;adept&lt;/code&gt;">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Walking strides segmentation with adept">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adept</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -56,7 +56,7 @@
       <a href="../articles/adept-intro.html">Introduction to adept package</a>
     </li>
     <li>
-      <a href="../articles/adept-strides-segmentation.html">Walking strides segmentation with `adept`</a>
+      <a href="../articles/adept-strides-segmentation.html">Walking strides segmentation with adept</a>
     </li>
   </ul>
 </li>
@@ -80,11 +80,10 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>Walking strides segmentation with <code>adept</code>
-</h1>
+      <h1>Walking strides segmentation with adept</h1>
                         <h4 class="author">Marta Karas</h4>
             
-            <h4 class="date">2019-03-05</h4>
+            <h4 class="date">2019-03-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/martakarass/adept/blob/master/vignettes/adept-strides-segmentation.Rmd"><code>vignettes/adept-strides-segmentation.Rmd</code></a></small>
       <div class="hidden name"><code>adept-strides-segmentation.Rmd</code></div>
@@ -93,16 +92,20 @@
 
     
     
-<p>This vignette provides an example of walking stride segmentation from subsecond accelerometry data with <code>adept</code> package. We demonstrate that ADEPT method ([3]) can be used to perform automatic and precise walking stride segmentation from data collected during a combination of running, walking and resting exercise. We demonstrate how to segment data (a) with the use of stride templates that were pre-computed based on data from an external study, (b) by deriving new stride templates in a semi-manual manner.</p>
-<p>See <em>“Introduction to <code>adept</code> package”</em> vignette ([1]) for an introduction to the ADEPT method and usage examples of the <code>segmentPattern</code> function which implements the ADEPT method.</p>
+<p>This vignette provides an example of walking stride segmentation from subsecond accelerometry data with <code>adept</code> package. We demonstrate that ADEPT method ([1]) can be used to perform automatic and precise walking stride segmentation from data collected during a combination of running, walking and resting exercise. We demonstrate how to segment data:</p>
+<ol style="list-style-type: lower-roman">
+<li>with the use of stride templates that were pre-computed based on data from an external study,</li>
+<li>by deriving new stride templates in a semi-manual manner.</li>
+</ol>
+<p>See <a href="https://martakarass.github.io/adept/articles/adept-intro.html">Introduction to adept package</a> vignette for an introduction to the ADEPT method and usage examples of the <code>segmentPattern</code> function which implements the ADEPT method.</p>
 <div id="raw-accelerometry-data-sample" class="section level1">
 <h1 class="hasAnchor">
 <a href="#raw-accelerometry-data-sample" class="anchor"></a>Raw accelerometry data sample</h1>
-<p>The <code>adept</code> package comes with a sample of raw accelerometry data collected during 25 minutes of an outdoor run. Data were collected at frequency 100 Hz with two ActiGraph GT9X Link sensors located at left hip and left ankle.</p>
+<p>The <code>adept</code> package comes with <code>acc_running</code> data - a sample of raw accelerometry data collected during 25 minutes of an outdoor run. Data were collected at frequency 100 Hz with two ActiGraph GT9X Link sensors located at left hip and left ankle.</p>
 <div id="running-trial" class="section level3">
 <h3 class="hasAnchor">
 <a href="#running-trial" class="anchor"></a>Running trial</h3>
-<p>Based on a <em>mapmyrun</em> mobile tracking application, the distance covered while an application was turned on is approximately 3.35 km. The ground elevation difference between start and end point of the data collection is approximately 36 m (17 m at the start point, 53 m at the finish point). The data sample attached is a subset of accelerometry data collected over a few days time; the sample attached should match the time while an application was turned on up to ~1 minute accuracy.</p>
+<p><em>mapmyrun</em> mobile tracking application (<a href="mapmyrun.com">link</a>) was used during 25 minutes of run corresponding to <code>acc_running</code> accelerometry data set. Based on the app, the distance covered is approximately 3.35 km. A ground elevation plot from the app output indicates some trial signatures, including an uphill part on the north side of the Patterson Park in Baltimore, MD. The <code>acc_running</code> data sample is a subset of accelerometry data collected over a few days time; the sample attached should match the time while an app was turned on up to ~1-minute accuracy.</p>
 <p><img src="img/mapmyrun_map.png" width="90%"><small><small><small> Screenshot taken from a personal profile of <em>mapmyrun</em> tracking application, accessed via <a href="https://www.mapmyrun.com" class="uri">https://www.mapmyrun.com</a>. </small></small></small></p>
 </div>
 <div id="sensor-and-accelerometry-data" class="section level3">
@@ -113,8 +116,8 @@
 <div id="sensor-location" class="section level3">
 <h3 class="hasAnchor">
 <a href="#sensor-location" class="anchor"></a>Sensor location</h3>
-<p>One of the sensors was attached to the shoe with a clip on the outside side of a left foot, just below the left ankle. The other sensor was attached to the elastic belt located at hip, on the left side of a hip. Both devices stayed in a fairly stable way during the run.</p>
-<p><img src="img/sensor_la.jpg" width="40%"><img src="img/sensor_lh.jpg" width="40%"><small><small><small> Wearable accelerometer devices location during the experiment. The devices were still covered with a protective plastic foil. </small></small></small></p>
+<p>One of the sensors was attached to the shoe with a clip on the outside side of a left foot, just below the left ankle. The other sensor was attached to the elastic belt located at the hip, on the left side of a hip. Both devices stayed in a fairly stable way during the run.</p>
+<p><img src="img/sensor_la.jpg" width="45%"><img src="img/sensor_lh.jpg" width="45%"><small><small><small> Wearable accelerometer devices location during the experiment. The devices were still covered with a protective plastic foil. </small></small></small></p>
 </div>
 <div id="data-set-acc_running" class="section level3">
 <h3 class="hasAnchor">
@@ -125,14 +128,15 @@
 <span class="co"># devtools::install_github("martakarass/adept")</span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(adept)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(lubridate)
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/options">options</a></span>(<span class="dt">digits.secs =</span> <span class="dv">2</span>)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(acc_running)
-<span class="co">#&gt;        x      y     z       vm           date_time sensor_location</span>
-<span class="co">#&gt; 1 -0.199 -1.012 0.133 1.039920 2018-10-25 17:57:30        left_hip</span>
-<span class="co">#&gt; 2 -0.191 -1.027 0.133 1.053043 2018-10-25 17:57:30        left_hip</span>
-<span class="co">#&gt; 3 -0.191 -1.035 0.121 1.059409 2018-10-25 17:57:30        left_hip</span>
-<span class="co">#&gt; 4 -0.191 -1.027 0.109 1.050281 2018-10-25 17:57:30        left_hip</span>
-<span class="co">#&gt; 5 -0.191 -1.016 0.109 1.039528 2018-10-25 17:57:30        left_hip</span>
-<span class="co">#&gt; 6 -0.184 -1.012 0.121 1.035684 2018-10-25 17:57:30        left_hip</span>
+<span class="co">#&gt;        x      y     z       vm              date_time sensor_location</span>
+<span class="co">#&gt; 1 -0.199 -1.012 0.133 1.039920 2018-10-25 17:57:30.00        left_hip</span>
+<span class="co">#&gt; 2 -0.191 -1.027 0.133 1.053043 2018-10-25 17:57:30.00        left_hip</span>
+<span class="co">#&gt; 3 -0.191 -1.035 0.121 1.059409 2018-10-25 17:57:30.01        left_hip</span>
+<span class="co">#&gt; 4 -0.191 -1.027 0.109 1.050281 2018-10-25 17:57:30.02        left_hip</span>
+<span class="co">#&gt; 5 -0.191 -1.016 0.109 1.039528 2018-10-25 17:57:30.03        left_hip</span>
+<span class="co">#&gt; 6 -0.184 -1.012 0.121 1.035684 2018-10-25 17:57:30.04        left_hip</span>
 <span class="kw"><a href="http://lubridate.tidyverse.org/reference/tz.html">tz</a></span>(acc_running<span class="op">$</span>date_time)
 <span class="co">#&gt; [1] "UTC"</span></code></pre></div>
 <p><code>acc_running</code> consists of 300,000 observations of 5 variables:</p>
@@ -150,16 +154,15 @@
 <li>
 <code>sensor_location</code> - sensor location label, one of: <code>"left_hip"</code>, <code>"left_ankle"</code>.</li>
 </ul>
-<div id="notes-on-date_time-column-values" class="section level5">
+<div id="note-on-date_time-column-values" class="section level5">
 <h5 class="hasAnchor">
-<a href="#notes-on-date_time-column-values" class="anchor"></a>Notes on <code>date_time</code> column values</h5>
+<a href="#note-on-date_time-column-values" class="anchor"></a>Note on <code>date_time</code> column values</h5>
 <ul>
-<li><p>The knitr HTML output truncates the subsecond level accuracy of <code>POSIXct</code> values stored in <code>date_time</code> column, hence in first rows of the table we see <code>2018-10-25 17:57:30</code> only; when <code><a href="https://www.rdocumentation.org/packages/utils/topics/head">head(acc_running)</a></code> is executed in the <code>R</code> console, the result would be likely <code>2018-10-25 17:57:30.00</code>, <code>2018-10-25 17:57:30.01</code> etc.</p></li>
-<li><p>When <code><a href="https://www.rdocumentation.org/packages/utils/topics/head">head(acc_running)</a></code> is executed in the console, seemingly, there is “an error” in <code>date_time</code> column; indeed, we would expect its second value to be <code>17:57:30.01</code>, not: <code>17:57:30.00</code>. The <code>date_time</code> column was generated via <code><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq(from = as.POSIXct("2018-10-25 17:57:30.00"), by = 0.01, length.out = nrow(dat_sub))</a></code>; I identify the problem to be the floating point arithmetic problem, as discussed in <a href="https://stackoverflow.com/questions/11571105/odd-behavor-with-posixct-posixlt-and-subsecond-accuracy">this SO question</a>. Such errors are “made up for” over the column values, and the whole <code>date_time</code> has expected range of time.</p></li>
+<li>Seemingly, there is an error in <code>date_time</code> column: we would expect its second value to be <code>17:57:30.01</code>, not: <code>17:57:30.00</code>. Values in <code>date_time</code> column were generated via <code><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq(from = as.POSIXct("2018-10-25 17:57:30.00", tz = "UTC"), by = 0.01, length.out = 150000)</a></code>. I identify the problem to be the floating point arithmetic problem, as discussed in <a href="https://stackoverflow.com/questions/11571105/odd-behavor-with-posixct-posixlt-and-subsecond-accuracy">this SO question</a>. Such errors are “made up for” over the column values, and the whole <code>date_time</code> has expected range of time.</li>
 </ul>
 <p>Time collection spans 25 minutes. It agrees with a number of observations per sensor we have (<code>150000</code>), given the data was collected at frequency 100 observations per second.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/range">range</a></span>(acc_running<span class="op">$</span>date_time)
-<span class="co">#&gt; [1] "2018-10-25 17:57:30 UTC" "2018-10-25 18:22:29 UTC"</span>
+<span class="co">#&gt; [1] "2018-10-25 17:57:30.00 UTC" "2018-10-25 18:22:29.99 UTC"</span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/table">table</a></span>(acc_running<span class="op">$</span>sensor_location)
 <span class="co">#&gt; </span>
 <span class="co">#&gt; left_ankle   left_hip </span>
@@ -175,7 +178,7 @@
 <div id="raw-accelerometry-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#raw-accelerometry-data" class="anchor"></a>Raw accelerometry data</h3>
-<p>One way to visualize raw accelerometry data is to plot it as a three-dimensional time-series. Here, we plot data from three different time frames, each of 4 seconds length, simultaneously for data collected at left ankle and right ankle.</p>
+<p>One way to visualize raw accelerometry data is to plot it as a three-dimensional time-series <span class="math inline">\((x,y,z)\)</span>. Here, we plot data from three different time frames, each of 4 seconds length, simultaneously for data collected at left ankle and right ankle.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(lubridate)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(dplyr)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(ggplot2)
@@ -183,8 +186,8 @@
 <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(gridExtra)
 
 ## Define time frame start values for data subset
-t1 &lt;-<span class="st"> </span><span class="kw"><a href="http://lubridate.tidyverse.org/reference/ymd_hms.html">ymd_hms</a></span>(<span class="st">"2018-10-25 18:00:00"</span>, <span class="dt">tz =</span> <span class="st">"UTC"</span>) 
-t2 &lt;-<span class="st"> </span><span class="kw"><a href="http://lubridate.tidyverse.org/reference/ymd_hms.html">ymd_hms</a></span>(<span class="st">"2018-10-25 18:10:00"</span>, <span class="dt">tz =</span> <span class="st">"UTC"</span>) 
+t1 &lt;-<span class="st"> </span><span class="kw"><a href="http://lubridate.tidyverse.org/reference/ymd_hms.html">ymd_hms</a></span>(<span class="st">"2018-10-25 18:07:00"</span>, <span class="dt">tz =</span> <span class="st">"UTC"</span>) 
+t2 &lt;-<span class="st"> </span><span class="kw"><a href="http://lubridate.tidyverse.org/reference/ymd_hms.html">ymd_hms</a></span>(<span class="st">"2018-10-25 18:20:30"</span>, <span class="dt">tz =</span> <span class="st">"UTC"</span>) 
 t3 &lt;-<span class="st"> </span><span class="kw"><a href="http://lubridate.tidyverse.org/reference/ymd_hms.html">ymd_hms</a></span>(<span class="st">"2018-10-25 18:22:00"</span>, <span class="dt">tz =</span> <span class="st">"UTC"</span>) 
 
 ## Subset data 
@@ -195,32 +198,25 @@ acc_running_sub &lt;-<span class="st"> </span>
 <span class="st">           </span>(date_time <span class="op">&gt;=</span><span class="st"> </span>t3 <span class="op">&amp;</span><span class="st"> </span>date_time <span class="op">&lt;</span><span class="st"> </span>t3 <span class="op">+</span><span class="st"> </span><span class="kw"><a href="http://lubridate.tidyverse.org/reference/as.period.html">as.period</a></span>(<span class="dv">4</span>, <span class="st">"seconds"</span>)) )
 
 ## Plot (x,y,z) values 
-df =<span class="st"> </span>acc_running_sub <span class="op">%&gt;%</span>
+acc_running_sub <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="op">-</span>vm) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/reshape2/topics/melt">melt</a></span>(<span class="dt">id.vars =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"date_time"</span>, <span class="st">"sensor_location"</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">dt_floor =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(<span class="st">"time frame start: "</span>, 
-                           <span class="kw"><a href="http://lubridate.tidyverse.org/reference/round_date.html">floor_date</a></span>(date_time, <span class="dt">unit =</span> <span class="st">"minutes"</span>)))
-<span class="cf">if</span> (<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">nrow</a></span>(df) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) {
-  p =<span class="st"> </span>df <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">x =</span> date_time, <span class="dt">y =</span> value, <span class="dt">color =</span> variable)) <span class="op">+</span><span class="st"> </span>
-<span class="st">    </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="dt">size =</span> <span class="fl">0.5</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">    </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span>(sensor_location <span class="op">~</span><span class="st"> </span>dt_floor, <span class="dt">scales =</span> <span class="st">"free_x"</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">    </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(<span class="dt">base_size =</span> <span class="dv">10</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">    </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="dt">x =</span> <span class="st">"Time [s]"</span>, <span class="dt">y =</span> <span class="st">"Acceleration [g]"</span>, <span class="dt">color =</span> <span class="st">"Axis: "</span>,
-         <span class="dt">title =</span> <span class="st">"(x,y,z) three-dimensional time-series"</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">    </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(<span class="dt">legend.position =</span> <span class="st">"top"</span>)
-  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(p)
-} <span class="cf">else</span> {
-  msg =<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(<span class="st">"T1: "</span>, t1,
-               <span class="st">", dt_row1 of acc_running: "</span>,
-               acc_running<span class="op">$</span>date_time[<span class="dv">1</span>], <span class="st">" ac_running_sub has no rows!</span><span class="ch">\n</span><span class="st">"</span>)
-  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/stop">stop</a></span>(msg)
-}</code></pre></div>
+                           <span class="kw"><a href="http://lubridate.tidyverse.org/reference/round_date.html">floor_date</a></span>(date_time, <span class="dt">unit =</span> <span class="st">"minutes"</span>))) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">x =</span> date_time, <span class="dt">y =</span> value, <span class="dt">color =</span> variable)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="dt">size =</span> <span class="fl">0.5</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span>(sensor_location <span class="op">~</span><span class="st"> </span>dt_floor, <span class="dt">scales =</span> <span class="st">"free_x"</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="dt">x =</span> <span class="st">"Time [s]"</span>, <span class="dt">y =</span> <span class="st">"Acceleration [g]"</span>, <span class="dt">color =</span> <span class="st">"Accelerometer axis of measurement: "</span>,
+       <span class="dt">title =</span> <span class="st">"Raw accelerometry data (x,y,z)"</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(<span class="dt">legend.position =</span> <span class="st">"top"</span>)</code></pre></div>
 <p><img src="adept-strides-segmentation_files/figure-html/plot_xyz-1.png" width="720"></p>
 <div id="note-on-sensors-desynchronization" class="section level5">
 <h5 class="hasAnchor">
 <a href="#note-on-sensors-desynchronization" class="anchor"></a>Note on sensors desynchronization</h5>
-<p>The two sensors used in experiment were set up to initialize their measurement collection at the same time. However, as discussed in [2], even when simultaneous initialization of the devices is used, measurements might still get desynchronized between devices after hours and/or days of data collection. For that possible reason, one should not expect 0.01 s-level alignment between the data collected form left ankle and left hip on the plots above.</p>
+<ul>
+<li>The two sensors used in experiment were set up to initialize their measurement collection at the same time. However, as discussed in [2], even when simultaneous initialization of the devices is used, measurements might still get desynchronized between devices after hours and/or days of data collection. For that possible reason, one should not expect 0.01 second-level alignment between the data collected form left ankle and left hip on the plots above.</li>
+</ul>
 </div>
 </div>
 <div id="vector-magnitude" class="section level3">
@@ -234,65 +230,81 @@ acc_running_sub <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">x =</span> date_time, <span class="dt">y =</span> vm)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="dt">size =</span> <span class="fl">0.5</span>) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span>(sensor_location <span class="op">~</span><span class="st"> </span>dt_floor, <span class="dt">scales =</span> <span class="st">"free_x"</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(<span class="dt">base_size =</span> <span class="dv">10</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="dt">x =</span> <span class="st">"Time [s]"</span>, <span class="dt">y =</span> <span class="st">"Vector magnitue [g]"</span>, <span class="dt">color =</span> <span class="st">"Axis: "</span>,
-       <span class="dt">title =</span> <span class="st">"Vector magnitude (vm) one-dimensional time-series"</span>) </code></pre></div>
+<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="dt">x =</span> <span class="st">"Time [s]"</span>, <span class="dt">y =</span> <span class="st">"Vector magnitue [g]"</span>, 
+       <span class="dt">title =</span> <span class="st">"Vector magnitude (vm) summary of raw accelerometry data"</span>) </code></pre></div>
 <p><img src="adept-strides-segmentation_files/figure-html/plot_vm-1.png" width="720"></p>
 <div id="observations" class="section level5">
 <h5 class="hasAnchor">
 <a href="#observations" class="anchor"></a>Observations</h5>
-<p>From the <span class="math inline">\((x,y,z)\)</span> and <span class="math inline">\((vm)\)</span> plots we can tell the presence of an asymmetric repetitive pattern associated with each walking stride (stride := two subsequent steps). Also, there are differences in data magnitude and stride duration between the three vertical plot panels:</p>
+<p>From the <span class="math inline">\((x,y,z)\)</span> and <span class="math inline">\((vm)\)</span> plots we can tell the presence of an asymmetric repetitive pattern associated with each walking stride (stride := two subsequent steps):</p>
 <ul>
-<li><p>The left vertical plot panel (<code>time frame start: 2018-10-25 18:00:00</code>) corresponds to relatively fast running on a surface with no elevation changes; <span class="math inline">\((vm)\)</span> time-series exhibits high magnitude. Also, there are more stride pattern occurrences captured within this time frame panel than on the two other panels, which suggests a higher ratio of strides per second performed by a runner in that time window.</p></li>
-<li><p>The middle vertical plot panel (<code>time frame start: 2018-10-25 18:10:00</code>) corresponds to relatively slow running uphill; <span class="math inline">\((vm)\)</span> exhibits relatively low magnitude of a signal and slightly different shape of stride pattern than in the left panel.</p></li>
-<li><p>The right vertical plot panel (<code>time frame start: 2018-10-25 18:22:00</code>) corresponds to moderate-pace run or, possibly, walking.</p></li>
+<li>On the <span class="math inline">\((vm)\)</span> plot, the stride beginning and end are marked with a signal magnitude peak corresponding to a moment when the left feet heel hits the ground; between two such peaks, there are one/two smaller peaks, corresponding to the right feet contacting the ground.</li>
+</ul>
+<p>Also, there are differences in data magnitude and stride duration between the three vertical plot panels:</p>
+<ul>
+<li><p>The left vertical plot panel (<code>time frame start: 2018-10-25 18:07:00</code>) corresponds to a slow/moderate pace running uphill; <span class="math inline">\((vm)\)</span> time-series exhibits relatively high magnitude.</p></li>
+<li><p>The middle vertical plot panel (<code>time frame start: 2018-10-25 18:20:00</code>) corresponds to a relatively fast running; we can observe that <span class="math inline">\((vm)\)</span> time-series exhibits high magnitude. Also, there are more stride patterns captured within this 4-seconds time frame than on the two other 4-seconds time frames, which suggests a higher ratio of strides per second performed by a runner.</p></li>
+<li><p>The right vertical plot panel (<code>time frame start: 2018-10-25 18:22:00</code>) most likely corresponds to walking; we can observe relatively low <span class="math inline">\((vm)\)</span> magnitude and a bit different shape of a stride pattern pronounced.</p></li>
 </ul>
 </div>
 </div>
 <div id="vector-magnitude-count" class="section level3">
 <h3 class="hasAnchor">
 <a href="#vector-magnitude-count" class="anchor"></a>Vector magnitude count</h3>
-<p>Clearly, it might be challenging to make a plot of <em>all</em> data points collected at frequency 100 Hz from 25 minutes-long exercise. A way to summarize accelerometry data of such high density is to use a vector magnitude count (vmc; also known as the mean amplitude deviation). For <span class="math inline">\(\overline{vm}(t,H)\)</span> - average of <span class="math inline">\((vm)\)</span> time-series over time window of length <span class="math inline">\(H\)</span> starting at time <span class="math inline">\(t\)</span>, we define <span class="math display">\[\mathrm { vmc } ( t, H ) = \frac { 1 } { H } \sum _ { h = 0 } ^ { H - 1 } \left| vm ( t + h ) - \overline{vm}(t,H) \right|.\]</span></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Function to compute vmc from vm window vector
+<p>Clearly, it might be challenging to make a plot of <em>all</em> data points collected at frequency 100 Hz from 25 minutes-long exercise. A way to summarize accelerometry data of such high density is to use a <span class="math inline">\((vmc)\)</span> - vector magnitude count (also known as the mean amplitude deviation). For <span class="math inline">\(\overline{vm}(t,H)\)</span> - average of <span class="math inline">\((vm)\)</span> time-series over time window of length <span class="math inline">\(H\)</span> starting at time <span class="math inline">\(t\)</span>, we define <span class="math display">\[\mathrm { vmc } ( t, H ) = \frac { 1 } { H } \sum _ { h = 0 } ^ { H - 1 } \left| vm ( t + h ) - \overline{vm}(t,H) \right|.\]</span></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Function to compute vmc from a vm window vector
 vmc &lt;-<span class="st"> </span><span class="cf">function</span>(vm.win){
   <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">abs</a></span>(vm.win <span class="op">-</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(vm.win)))
 }
 
+## Compute vmc vector in 3-seconds windows 
 vm &lt;-<span class="st"> </span>acc_running<span class="op">$</span>vm
-## vector length of 3 seconds of vm data window
-window.vl &lt;-<span class="st"> </span><span class="dv">100</span> <span class="op">*</span><span class="st"> </span><span class="dv">3</span>
-## Sequence of indexes by which we cut signal into windows
-rn.seq &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">1</span>, <span class="dt">to =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(vm), <span class="dt">by =</span> window.vl)
-## Compute vmc 
+win.vl &lt;-<span class="st"> </span><span class="dv">100</span> <span class="op">*</span><span class="st"> </span><span class="dv">3</span>
+rn.seq &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">1</span>, <span class="dt">to =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(vm), <span class="dt">by =</span> win.vl)
 vmc.vec &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">sapply</a></span>(rn.seq, <span class="cf">function</span>(rn.i){
-  vm.win.idx &lt;-<span class="st"> </span>rn.i <span class="op">:</span><span class="st"> </span>(rn.i <span class="op">+</span><span class="st"> </span>window.vl <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)
+  vm.win.idx &lt;-<span class="st"> </span>rn.i <span class="op">:</span><span class="st"> </span>(rn.i <span class="op">+</span><span class="st"> </span>win.vl <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)
   vm.win &lt;-<span class="st"> </span>vm[vm.win.idx]
   <span class="kw">vmc</span>(vm.win)
 })
 
+vmc.df &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">vmc =</span> vmc.vec,
+                     <span class="dt">date_time =</span> acc_running<span class="op">$</span>date_time[rn.seq],
+                     <span class="dt">rn_seq =</span> rn.seq,
+                     <span class="dt">sensor_location =</span> acc_running<span class="op">$</span>sensor_location[rn.seq]) 
+vmc.df.rest &lt;-<span class="st"> </span>
+<span class="st">  </span>vmc.df <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(sensor_location <span class="op">==</span><span class="st"> "left_ankle"</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">resting =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ifelse">ifelse</a></span>(vmc <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.4</span>, <span class="dv">1</span>, <span class="dv">0</span>),
+         <span class="dt">vmc_tau_i =</span> rn_seq <span class="op">-</span><span class="st"> </span><span class="dv">150000</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(date_time, resting, vmc_tau_i)
+vmc.df &lt;-<span class="st"> </span>vmc.df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(vmc.df.rest, <span class="dt">by =</span> <span class="st">"date_time"</span>)
+
 ## Plot vmc 
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">vmc =</span> vmc.vec,
-           <span class="dt">date_time =</span> acc_running<span class="op">$</span>date_time[rn.seq],
-           <span class="dt">sensor_location =</span> acc_running<span class="op">$</span>sensor_location[rn.seq]) <span class="op">%&gt;%</span>
+vmc.df <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(date_time <span class="op">&lt;</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">max</a></span>(acc_running<span class="op">$</span>date_time) <span class="op">-</span><span class="st"> </span><span class="dv">5</span>, 
          date_time <span class="op">&gt;</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">min</a></span>(acc_running<span class="op">$</span>date_time) <span class="op">+</span><span class="st"> </span><span class="dv">5</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">x =</span> date_time, <span class="dt">y =</span> vmc)) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span>(sensor_location <span class="op">~</span><span class="st"> </span>.) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html">geom_tile</a></span>(<span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">fill =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">factor</a></span>(resting)),  <span class="dt">height =</span> <span class="ot">Inf</span>, <span class="dt">alpha =</span> <span class="fl">0.1</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="dt">size =</span> <span class="fl">0.3</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(<span class="dt">base_size =</span> <span class="dv">10</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="dt">x =</span> <span class="st">"Exercise time [min]"</span>, <span class="dt">y =</span> <span class="st">"Vector magnitue count"</span>,
-       <span class="dt">title =</span> <span class="st">"Vector magnitude count (vmc) computed over 3 second-length windows of (vm)"</span>)</code></pre></div>
+       <span class="dt">title =</span> <span class="st">"Vector magnitude count (vmc) computed over 3 second-length windows of (vm)"</span>,
+       <span class="dt">fill =</span> <span class="st">"Resting: "</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span>(<span class="dt">values =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"white"</span>, <span class="st">"blue"</span>)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(<span class="dt">legend.position =</span> <span class="st">"top"</span>,
+        <span class="dt">legend.background =</span> <span class="kw"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_rect</a></span>(<span class="dt">fill =</span> <span class="st">"grey90"</span>))</code></pre></div>
 <p><img src="adept-strides-segmentation_files/figure-html/plot_vmc-1.png" width="720"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Time percentage when vmc computed from left ankle is below 0.5
-(vmc.low.frac &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(vmc.vec[acc_running<span class="op">$</span>sensor_location[rn.seq] <span class="op">==</span><span class="st"> "left_ankle"</span>] <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.5</span>))
-<span class="co">#&gt; [1] 0.196</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Time percentage when (vmc) computed from left ankle is below 0.4
+(vmc.low.frac &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(vmc.df.rest<span class="op">$</span>resting))
+<span class="co">#&gt; [1] 0.186</span></code></pre></div>
 <div id="observations-1" class="section level5">
 <h5 class="hasAnchor">
 <a href="#observations-1" class="anchor"></a>Observations</h5>
 <ul>
-<li><p>Roughly speaking, values of <span class="math inline">\((vmc)\)</span> which are close to <span class="math inline">\(0\)</span> correspond to time where barely any movement was recorded with a sensor; in this experiment, they may correspond to a runner waiting on the crossroad for a green light to cross (or being tired and making breaks).</p></li>
-<li><p>On the contrary, high values of <span class="math inline">\((vmc)\)</span> correspond to high volumes of physical activity recorded; in this experiment, at approx. 18:21 (6:21 PM) a short (~1 minute) period of a fast downhill run started, corresponding to particularly high values of <span class="math inline">\((vmc)\)</span> recorded with both left ankle and left hip sensors.</p></li>
-<li><p>We see that approx. 20% of the time <span class="math inline">\((vmc)\)</span> computed from left ankle data is below 0.5 value; that part of data likely corresponds to standing and waiting, not: running/walking.</p></li>
+<li><p>We see that approx. 19% of the time <span class="math inline">\((vmc)\)</span> computed from left ankle data is below 0.4 value. Here, that part of data <em>likely</em> corresponds to standing with no walking/running legs movement involved; it may be that the runner was waiting on the crossroad for a green light to cross, or was being tired and hence was making breaks. We use this arbitrarily selected threshold of 0.4 to partition data into time frames of resting (<span class="math inline">\((vmc)&lt;0.4\)</span>; marked with light blue color) and non-resting (<span class="math inline">\((vmc)\geq 0.4\)</span>).</p></li>
+<li><p>On the contrary, high values of <span class="math inline">\((vmc)\)</span> correspond to high volumes of physical activity recorded; in this experiment, at approx. 18:21 (6:21 PM) a short (~1 minute) period of a fast run started, corresponding to particularly high values of <span class="math inline">\((vmc)\)</span> recorded with both left ankle and left hip sensors.</p></li>
 </ul>
 </div>
 </div>
@@ -312,27 +324,27 @@ vmc.vec &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdoc
 <ol style="list-style-type: decimal">
 <li>
 <p>In computation of similarity matrix between pattern template and (possibly smoothed) <span class="math inline">\((vm)\)</span> signal. Here, <code>x.adept.ma.W</code> argument of <code>segmentPattern</code> function defines a length of a window used in moving average smoothing; it is expressed in seconds.</p>
-<p>For this phase, we recommend low/moderate smoothing (<code>x.adept.ma.W = 0.05</code>, <code>x.adept.ma.W = 0.15</code>) so as tiny <span class="math inline">\((vm)\)</span> bumps are smoothed, but the pattern shape features are not lost.</p>
+<p>For this phase, we recommend low/moderate smoothing (<code>x.adept.ma.W = 0.05</code>, <code>x.adept.ma.W = 0.15</code>) so as tiny <span class="math inline">\((vm)\)</span> bumps are smoothed, but the overall <span class="math inline">\((vm)\)</span> shape features are not lost.</p>
 </li>
 <li>
-<p>In “maxima” tuning procedure where local maxima of (possibly smoothed) <span class="math inline">\((vm)\)</span> signal are identified as final beginnings and endings of a stride pattern occurrence. Here, <code>finetune.maxima.ma.W</code> argument of <code>segmentPattern</code> function defines a length of a window used in moving average smoothing; it is expressed in seconds.</p>
+<p>In “maxima” tuning procedure where local maxima of (possibly smoothed) <span class="math inline">\((vm)\)</span> signal are identified as final beginnings and ends of a stride pattern occurrence. Here, <code>finetune.maxima.ma.W</code> argument of <code>segmentPattern</code> function defines a length of a window used in moving average smoothing; it is expressed in seconds.</p>
 <p>For this phase, in case of a very clear signal and distinct signal local maxima, no smoothing may be used (<code>finetune.maxima.ma.W = NULL</code>); in case of low-signal and noisy data (i.e., often the case of data collected with a sensor located at wrist), high levels of smoothing (<code>finetune.maxima.ma.W = 0.3</code> or similar) may be used.</p>
 </li>
 </ol>
-<p>Function <code>windowSmooth {adept}</code> computes moving window average of a time-series <code>x</code> and may be used to experiment with different values of smoothing window length (<code>W</code>; expressed in seconds). Results of exemplary choice of smoothing parameter are presented below.</p>
+<p>Function <code>windowSmooth {adept}</code> computes moving window average of a time-series <code>x</code> and may be used to experiment with different values of smoothing window length <code>W</code> (expressed in seconds). Results of the exemplary choice of smoothing parameter <code>W</code> are presented below.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Use moving window average with a length of a window equal 0.05 s 
 acc_running<span class="op">$</span>vm_smoothed1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/windowSmooth.html">windowSmooth</a></span>(<span class="dt">x =</span> acc_running<span class="op">$</span>vm, <span class="dt">x.fs =</span> <span class="dv">100</span>, <span class="dt">W =</span> <span class="fl">0.05</span>)
 
 acc_running <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>((date_time <span class="op">&gt;=</span><span class="st"> </span>t1 <span class="op">&amp;</span><span class="st"> </span>date_time <span class="op">&lt;</span><span class="st"> </span>t1 <span class="op">+</span><span class="st"> </span><span class="dv">4</span>) <span class="op">|</span><span class="st"> </span>
-<span class="st">           </span>(date_time <span class="op">&gt;=</span><span class="st"> </span>t2 <span class="op">&amp;</span><span class="st"> </span>date_time <span class="op">&lt;</span><span class="st"> </span>t2 <span class="op">+</span><span class="st"> </span><span class="dv">4</span>) <span class="op">|</span><span class="st"> </span>
-<span class="st">           </span>(date_time <span class="op">&gt;=</span><span class="st"> </span>t3 <span class="op">&amp;</span><span class="st"> </span>date_time <span class="op">&lt;</span><span class="st"> </span>t3 <span class="op">+</span><span class="st"> </span><span class="dv">4</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>((date_time <span class="op">&gt;=</span><span class="st"> </span>t1 <span class="op">&amp;</span><span class="st"> </span>date_time <span class="op">&lt;</span><span class="st"> </span>t1 <span class="op">+</span><span class="st"> </span><span class="kw"><a href="http://lubridate.tidyverse.org/reference/as.period.html">as.period</a></span>(<span class="dv">4</span>, <span class="st">"seconds"</span>)) <span class="op">|</span><span class="st"> </span>
+<span class="st">           </span>(date_time <span class="op">&gt;=</span><span class="st"> </span>t2 <span class="op">&amp;</span><span class="st"> </span>date_time <span class="op">&lt;</span><span class="st"> </span>t2 <span class="op">+</span><span class="st"> </span><span class="kw"><a href="http://lubridate.tidyverse.org/reference/as.period.html">as.period</a></span>(<span class="dv">4</span>, <span class="st">"seconds"</span>)) <span class="op">|</span><span class="st"> </span>
+<span class="st">           </span>(date_time <span class="op">&gt;=</span><span class="st"> </span>t3 <span class="op">&amp;</span><span class="st"> </span>date_time <span class="op">&lt;</span><span class="st"> </span>t3 <span class="op">+</span><span class="st"> </span><span class="kw"><a href="http://lubridate.tidyverse.org/reference/as.period.html">as.period</a></span>(<span class="dv">4</span>, <span class="st">"seconds"</span>))) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">dt_floor =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(<span class="st">"time frame start: "</span>, 
                            <span class="kw"><a href="http://lubridate.tidyverse.org/reference/round_date.html">floor_date</a></span>(date_time, <span class="dt">unit =</span> <span class="st">"minutes"</span>))) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">x =</span> date_time, <span class="dt">y =</span> vm_smoothed1)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="dt">size =</span> <span class="fl">0.5</span>) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span>(sensor_location <span class="op">~</span><span class="st"> </span>dt_floor, <span class="dt">scales =</span> <span class="st">"free_x"</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(<span class="dt">base_size =</span> <span class="dv">10</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="dt">x =</span> <span class="st">"Time [s]"</span>, <span class="dt">y =</span> <span class="st">"Vector magnitue [g]"</span>, <span class="dt">color =</span> <span class="st">"Axis: "</span>,
        <span class="dt">title =</span> <span class="st">"Vector magnitude (vm) smoothed, length of smoothing window = 0.05 s"</span>) </code></pre></div>
 <p><img src="adept-strides-segmentation_files/figure-html/plot_vm_smoothed2-1.png" width="672"></p>
@@ -343,14 +355,29 @@ acc_running <span class="op">%&gt;%</span>
 <div id="left-ankle" class="section level5">
 <h5 class="hasAnchor">
 <a href="#left-ankle" class="anchor"></a>Left ankle</h5>
-<p>We first construct a <code>template</code> object; it is a list of left ankle-specific stride templates. Here, we use two precomputed templates (see <code><a href="../reference/stride_template.html">?stride_template</a></code> for details).</p>
+<p>We first construct a <code>template</code> object; it is a list of left ankle-specific stride templates (due to movement symmetry, it could serve for right ankle same well!). Here, we use two precomputed templates (see <code><a href="../reference/stride_template.html">?stride_template</a></code> for details).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">template &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(stride_template<span class="op">$</span>left_ankle[[<span class="dv">2</span>]][<span class="dv">1</span>, ],
                  stride_template<span class="op">$</span>left_ankle[[<span class="dv">2</span>]][<span class="dv">2</span>, ])
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/par">par</a></span>(<span class="dt">mfrow =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">cex =</span> <span class="fl">0.7</span>)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(template[[<span class="dv">1</span>]], <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">xlab =</span> <span class="st">""</span>, <span class="dt">ylab =</span> <span class="st">""</span>, <span class="dt">main =</span> <span class="st">"Left ankle: template 1"</span>)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(template[[<span class="dv">2</span>]], <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">xlab =</span> <span class="st">""</span>, <span class="dt">ylab =</span> <span class="st">""</span>, <span class="dt">main =</span> <span class="st">"Left ankle: template 2"</span>)</code></pre></div>
 <p><img src="adept-strides-segmentation_files/figure-html/segm_la-1.png" width="576"></p>
-<p>We perform strides segmentation from <span class="math inline">\((vm)\)</span> accelerometry signal. See <code><a href="../reference/segmentPattern.html">?segmentPattern</a></code> for details explanation of parameters.</p>
+<p>We perform strides segmentation from <span class="math inline">\((vm)\)</span> accelerometry signal. Explanation of some of parameters used:</p>
+<ul>
+<li>
+<code>x</code> - A <span class="math inline">\((vm)\)</span> vector we segment pattern occurrences from.</li>
+<li>
+<code>x.fs</code> - Frequency at which data is collected, expressed in a number of observations per second.</li>
+<li>
+<code>template</code> - A list of pattern templates.</li>
+<li>
+<code>pattern.dur.seq</code> - A grid of template scales considered in segmentation. Grid values are expressed in seconds of pattern duration time; their range is determined by what we consider plausible duration time for a pattern to take. In case of healthy adult person, 0.5-1.8 seconds range for a stride (:= two subsequent steps) seems reasonable; for data collected in elderly population, 0.5-2.25 seconds could be considered etc. (See: <code>Details</code> in <code><a href="../reference/segmentPattern.html">?segmentPattern</a></code>).</li>
+<li>
+<code>finetune</code> - If set to <code>"maxima"</code>, a procedure is employed to tune preliminarily identified locations of pattern occurrence beginning and end so as they correspond to local maxima of <span class="math inline">\((vm)\)</span>.</li>
+<li>
+<code>run.parallel</code> - Whether or not to use parallel execution in the algorithm. The <code>future</code> package is used to execute code asynchronously.</li>
+</ul>
+<p>See <code><a href="../reference/segmentPattern.html">?segmentPattern</a></code> for detailed explanation of all method parameters.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x.la &lt;-<span class="st"> </span>acc_running<span class="op">$</span>vm[acc_running<span class="op">$</span>sensor_location <span class="op">==</span><span class="st"> "left_ankle"</span>]
 out1.la &lt;-<span class="st"> </span><span class="kw"><a href="../reference/segmentPattern.html">segmentPattern</a></span>(<span class="dt">x =</span> x.la,
                           <span class="dt">x.fs =</span> <span class="dv">100</span>,
@@ -365,29 +392,29 @@ out1.la &lt;-<span class="st"> </span><span class="kw"><a href="../reference/seg
                           <span class="dt">run.parallel =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(out1.la)
 <span class="co">#&gt;   tau_i T_i        sim_i template_i</span>
-<span class="co">#&gt; 1    18  99 4.300014e-08          1</span>
-<span class="co">#&gt; 2   142 115 7.533280e-01          1</span>
-<span class="co">#&gt; 3   256  76 8.841799e-01          1</span>
-<span class="co">#&gt; 4   371  81 9.152038e-01          1</span>
-<span class="co">#&gt; 5   451  78 9.075649e-01          1</span>
-<span class="co">#&gt; 6   528  75 9.132854e-01          1</span></code></pre></div>
+<span class="co">#&gt; 1     3  72 2.060277e-08          2</span>
+<span class="co">#&gt; 2    75  68 7.896056e-08          2</span>
+<span class="co">#&gt; 3   150 107 7.584529e-01          1</span>
+<span class="co">#&gt; 4   257  71 8.864188e-01          1</span>
+<span class="co">#&gt; 5   371  81 7.907753e-01          1</span>
+<span class="co">#&gt; 6   451  78 7.965139e-01          1</span></code></pre></div>
 <p>Each row of the returned <code>data.frame</code> describes one identified pattern occurrence:</p>
 <ul>
 <li>
-<code>tau_i</code> - index of a vector (here: <span class="math inline">\((vm)\)</span> time-series) where an identified pattern occurrence starts,</li>
+<code>tau_i</code> -Index of a vector (here: <span class="math inline">\((vm)\)</span> time-series) where an identified pattern occurrence starts.</li>
 <li>
-<code>T_i</code> - duration of identified pattern occurrence, expressed in a vector length,</li>
+<code>T_i</code> - Duration of identified pattern occurrence, expressed in a vector length.</li>
 <li>
-<code>sim_i</code> - value of similarity statistic between an identified pattern occurrence and corresponding window of a time-series used in similarity matrix computation (see <code><a href="../reference/segmentPattern.html">?segmentPattern</a></code> for details),</li>
+<code>sim_i</code> - Value of similarity statistic between pattern template and a data signal (here: <span class="math inline">\((vm)\)</span> time-series) where the pattern occurrence was identified (see <code><a href="../reference/segmentPattern.html">?segmentPattern</a></code> for details).</li>
 <li>
-<code>template_i</code> - if <code>compute.template.idx</code> equals <code>TRUE</code>: index of pattern template that yielded highest similarity for an identified pattern occurrence; otherwise: <code>NA</code>.</li>
+<code>template_i</code> - If <code>compute.template.idx</code> equals <code>TRUE</code>: index of pattern template that had the best match with a data signal where the pattern occurrence was identified; otherwise: <code>NA</code>.</li>
 </ul>
 <p>We now run segmentation on data collected at left hip. We then compare the results.</p>
 </div>
 <div id="left-hip" class="section level5">
 <h5 class="hasAnchor">
 <a href="#left-hip" class="anchor"></a>Left hip</h5>
-<p>Construct <code>template</code> object; it is a list of left hip-specific stride templates.</p>
+<p>Construct <code>template</code> object; it is a list of left hip-specific stride templates (again: due to movement symmetry, it could serve for right ankle same well!).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">template &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(stride_template<span class="op">$</span>left_hip[[<span class="dv">1</span>]][<span class="dv">1</span>, ],
                  stride_template<span class="op">$</span>left_hip[[<span class="dv">2</span>]][<span class="dv">2</span>, ])
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/par">par</a></span>(<span class="dt">mfrow =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">cex =</span> <span class="fl">0.7</span>)
@@ -420,31 +447,43 @@ out1.lh &lt;-<span class="st"> </span><span class="kw"><a href="../reference/seg
 <div id="results-estimated-stride-duration-time" class="section level4">
 <h4 class="hasAnchor">
 <a href="#results-estimated-stride-duration-time" class="anchor"></a>Results: estimated stride duration time</h4>
-<p>We now plot estimated stride duration in seconds (<code>T_i</code>/100) against estimated stride start in minutes (<code>tau_i</code>/(100*60)). Note:</p>
-<ul>
-<li>From the computed <span class="math inline">\(vmc\)</span>, we inferred that ~19.6% of the data time likely corresponds to standing and waiting (not: walking/running) time. Therefore, for the purposes of visualization, we discard ~19.6% of the strides segmented with the lowest similarity (<code>sim_i</code>) between stride pattern and <span class="math inline">\((vm)\)</span> signal obtained.</li>
-</ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Time percentage when vmc computed from left ankle is below 0.5
-vmc.low.frac
-<span class="co">#&gt; [1] 0.196</span>
-
+<p>We now plot estimated stride duration in seconds (<code>T_i</code>/100) against estimated stride start in minutes (<code>tau_i</code>/(100<em>60)). We firstly filter the results so as to keep only those which are </em>likely* corresponding to walking/running (not: resting). We also mark estimated resting/not-resting labels for subsequent 3-minute time windows which we obtained from <span class="math inline">\((vmc)\)</span> data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Merge results from two sensor locations, add resting/non-resting info
 plt.df.la &lt;-<span class="st"> </span>
-<span class="st">  </span>out1.la <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(sim_i <span class="op">&gt;</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/quantile">quantile</a></span>(out1.la<span class="op">$</span>sim_i, <span class="dt">probs =</span> vmc.low.frac)) <span class="op">%&gt;%</span>
+<span class="st">  </span>out1.la <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/merge">merge</a></span>(vmc.df.rest) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(tau_i <span class="op">&gt;=</span><span class="st"> </span>vmc_tau_i, tau_i <span class="op">&lt;</span><span class="st"> </span>vmc_tau_i <span class="op">+</span><span class="st"> </span><span class="dv">3</span> <span class="op">*</span><span class="st"> </span><span class="dv">100</span>, resting <span class="op">==</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">location =</span> <span class="st">"left_ankle"</span>)
 plt.df.lh &lt;-<span class="st"> </span>
-<span class="st">  </span>out1.lh <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(sim_i <span class="op">&gt;</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/quantile">quantile</a></span>(out1.lh<span class="op">$</span>sim_i, <span class="dt">probs =</span> vmc.low.frac)) <span class="op">%&gt;%</span>
+<span class="st">  </span>out1.lh <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/merge">merge</a></span>(vmc.df.rest) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(tau_i <span class="op">&gt;=</span><span class="st"> </span>vmc_tau_i, tau_i <span class="op">&lt;</span><span class="st"> </span>vmc_tau_i <span class="op">+</span><span class="st"> </span><span class="dv">3</span> <span class="op">*</span><span class="st"> </span><span class="dv">100</span>, resting <span class="op">==</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">location =</span> <span class="st">"left_hip"</span>)
+plt.df &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cbind">rbind</a></span>(plt.df.la, plt.df.lh)
 
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cbind">rbind</a></span>(plt.df.la, plt.df.lh) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">x =</span> tau_i <span class="op">/</span><span class="st"> </span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span><span class="dv">60</span>) , <span class="dt">y =</span> T_i <span class="op">/</span><span class="st"> </span><span class="dv">100</span>)) <span class="op">+</span><span class="st"> </span>
+<span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(plt.df,
+    <span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">x =</span> tau_i <span class="op">/</span><span class="st"> </span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span><span class="dv">60</span>) , <span class="dt">y =</span> T_i <span class="op">/</span><span class="st"> </span><span class="dv">100</span>)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html">geom_tile</a></span>(<span class="dt">data =</span> vmc.df.rest, 
+            <span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">x =</span> vmc_tau_i <span class="op">/</span><span class="st"> </span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span><span class="dv">60</span>), <span class="dt">y =</span> <span class="dv">1</span>, <span class="dt">fill =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">factor</a></span>(resting)), 
+            <span class="dt">height =</span> <span class="ot">Inf</span>, <span class="dt">alpha =</span> <span class="fl">0.1</span>, <span class="dt">inherit.aes =</span> <span class="ot">FALSE</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="dt">alpha =</span> <span class="fl">0.2</span>) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span>(location <span class="op">~</span><span class="st"> </span>.) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(<span class="dt">base_size =</span> <span class="dv">10</span>) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="dt">x =</span> <span class="st">"Exercise time [min]"</span>, <span class="dt">y =</span> <span class="st">"Estimated stride duration time [s]"</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(<span class="dt">legend.position =</span> <span class="st">"none"</span>)</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(<span class="dt">legend.position =</span> <span class="st">"top"</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span>(<span class="dt">values =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"white"</span>, <span class="st">"blue"</span>)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(<span class="dt">legend.position =</span> <span class="st">"top"</span>,
+        <span class="dt">legend.background =</span> <span class="kw"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_rect</a></span>(<span class="dt">fill =</span> <span class="st">"grey90"</span>)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span>(<span class="dt">limits =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">0.5</span>, <span class="fl">1.8</span>))</code></pre></div>
 <p><img src="adept-strides-segmentation_files/figure-html/unnamed-chunk-11-1.png" width="672"></p>
+<div id="observations-2" class="section level5">
+<h5 class="hasAnchor">
+<a href="#observations-2" class="anchor"></a>Observations</h5>
+<ul>
+<li>We observe the estimated stride duration (y-axis) is mostly consistent between the left ankle and left hip data. The small differences we observe between them may result from different <span class="math inline">\((vm)\)</span> smoothing parameters used in tunning procedure for strides beggining and end (left ankle: <code>finetune.maxima.ma.W = 0.05</code>, left hip: <code>finetune.maxima.ma.W = 0.15</code>).</li>
+<li>Intuitively, it makes sense that around the resting periods (light blue shade), we observe strides of longer duration (the runner may be slowing down), or a short duration (the runner may be making short steps) before stopping etc.</li>
+</ul>
+</div>
 </div>
 <div id="results-subject-specific-stride-pattern-left-ankle" class="section level4">
 <h4 class="hasAnchor">
@@ -502,7 +541,7 @@ plt2 &lt;-<span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="dt">x =</span> <span class="st">"Stride pattern phase"</span>, <span class="dt">y =</span> <span class="st">"Vector magnitude (scaled) [g]"</span>,
        <span class="dt">title =</span> <span class="st">"Segmented walking strides, aligned and scaled"</span>) 
 <span class="kw"><a href="https://www.rdocumentation.org/packages/gridExtra/topics/arrangeGrob">grid.arrange</a></span>(plt1, plt2, <span class="dt">nrow =</span> <span class="dv">1</span>)</code></pre></div>
-<p><img src="adept-strides-segmentation_files/figure-html/unnamed-chunk-15-1.png" width="672"></p>
+<p><img src="adept-strides-segmentation_files/figure-html/plot_subject_specific_sp-1.png" width="672"></p>
 <ul>
 <li>From the plot of aligned and scaled strides (right hand side above), it seems there are at least two distinct stride patterns pronounced in data - one with a “spike with a dip” in a middle of a stride pattern phase, and another, less frequent (fewer lines on the plot), with a spike at approx. 2/3 of a stride pattern phase.</li>
 </ul>
@@ -515,13 +554,16 @@ stride_S.dfdc.la &lt;-<span class="st"> </span><span class="kw"><a href="https:/
 data.mat.tau_i &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/numeric">as.numeric</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">colnames</a></span>(stride_S.dfdc.la))
 data.mat &lt;-<span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">as.matrix</a></span>(stride_S.dfdc.la)
 D.mat  &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/dist">dist</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/cor">cor</a></span>(data.mat))
+
 ## Get cluster medoids
-cluster.k &lt;-<span class="st"> </span><span class="dv">2</span>
+cluster.k &lt;-<span class="st"> </span><span class="dv">3</span>
 medoids.idx &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Round">round</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">1</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">ncol</a></span>(stride_S.dfdc.la), <span class="dt">length.out =</span> cluster.k <span class="op">+</span><span class="st"> </span><span class="dv">2</span>))
 medoids.idx &lt;-<span class="st"> </span>medoids.idx[<span class="op">-</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>, medoids.idx <span class="op">+</span><span class="st"> </span><span class="dv">2</span>)]
+
 ## Cluster strides
 pam.out &lt;-<span class="st"> </span>cluster<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/cluster/topics/pam">pam</a></span>(D.mat, cluster.k, <span class="dt">diss =</span> <span class="ot">TRUE</span>, <span class="dt">medoids =</span> medoids.idx)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/table">table</a></span>(pam.out<span class="op">$</span>clustering)
+
 ## Put clustering results into data frame 
 data.df &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/as.data.frame">as.data.frame</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/t">t</a></span>(data.mat))
 <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">colnames</a></span>(data.df) &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">200</span>)
@@ -539,28 +581,35 @@ data.dfm<span class="op">$</span>cluster &lt;-<span class="st"> </span><span cla
 <span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="dt">data =</span> data.dfm.agg,  <span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">x =</span> variable, <span class="dt">y =</span> value, <span class="dt">group =</span> <span class="dv">1</span>),
             <span class="dt">color =</span> <span class="st">"red"</span>, <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">inherit.aes =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st">  </span>
 <span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span>(cluster <span class="op">~</span><span class="st"> </span>.) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(<span class="dt">base_size =</span> <span class="dv">8</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="dt">x =</span> <span class="st">"Stride pattern phase"</span>, <span class="dt">y =</span> <span class="st">"Vector magnitude (scaled) [g]"</span>,
        <span class="dt">title =</span> <span class="st">"Segmented walking strides, aligned, scaled, clustered</span><span class="ch">\n</span><span class="st">Red line: point-wise mean"</span>) </code></pre></div>
-<p><img src="adept-strides-segmentation_files/figure-html/unnamed-chunk-19-1.png" width="384"></p>
-<p>We can further plot the estimated stride duration time over the course of the running exercise, marking the stride cluster assignment with colour.</p>
+<p><img src="adept-strides-segmentation_files/figure-html/plot_correlation_clustering-1.png" width="364.8"></p>
+<p>We can further plot the estimated stride duration time over the course of the running exercise, marking the stride pattern cluster assignment with colour.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data.dfm <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(tau_i, cluster)  <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/distinct.html">distinct</a></span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(plt.df.la, <span class="dt">by =</span> <span class="st">"tau_i"</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">x =</span> tau_i <span class="op">/</span><span class="st"> </span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span><span class="dv">60</span>) , <span class="dt">y =</span> T_i <span class="op">/</span><span class="st"> </span><span class="dv">100</span>, <span class="dt">color =</span> cluster)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html">geom_tile</a></span>(<span class="dt">data =</span> vmc.df.rest, 
+            <span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">x =</span> vmc_tau_i <span class="op">/</span><span class="st"> </span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span><span class="dv">60</span>), <span class="dt">y =</span> <span class="dv">1</span>, <span class="dt">fill =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">factor</a></span>(resting)), 
+            <span class="dt">height =</span> <span class="ot">Inf</span>, <span class="dt">alpha =</span> <span class="fl">0.1</span>, <span class="dt">inherit.aes =</span> <span class="ot">FALSE</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="dt">alpha =</span> <span class="fl">0.4</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(<span class="dt">base_size =</span> <span class="dv">10</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="dt">x =</span> <span class="st">"Exercise time [min]"</span>, <span class="dt">y =</span> <span class="st">"Estimated stride duration time [s]"</span>,
-       <span class="dt">color =</span> <span class="st">"Stride assignment: "</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(<span class="dt">legend.position =</span> <span class="st">"top"</span>)</code></pre></div>
-<p><img src="adept-strides-segmentation_files/figure-html/unnamed-chunk-20-1.png" width="672"></p>
+       <span class="dt">color =</span> <span class="st">"Stride assignment: "</span>,
+       <span class="dt">fill =</span> <span class="st">"Resting: "</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span>(<span class="dt">values =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"white"</span>, <span class="st">"blue"</span>)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(<span class="dt">legend.position =</span> <span class="st">"top"</span>,
+        <span class="dt">legend.background =</span> <span class="kw"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_rect</a></span>(<span class="dt">fill =</span> <span class="st">"grey90"</span>))  <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span>(<span class="dt">limits =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">0.5</span>, <span class="fl">1.8</span>))</code></pre></div>
+<p><img src="adept-strides-segmentation_files/figure-html/correlation_clustering_2-1.png" width="672"></p>
 </div>
-<div id="observations-2" class="section level5">
+<div id="observations-3" class="section level5">
 <h5 class="hasAnchor">
-<a href="#observations-2" class="anchor"></a>Observations</h5>
+<a href="#observations-3" class="anchor"></a>Observations</h5>
 <ul>
-<li>From the plot above we can note that strides of longer estimated stride duration time (blue color) cluster together; they most likely correspond to walking (i.e. crossing the crossroad).</li>
+<li>From the plot above we can note that stride pattern cluster assignment somehow corresponds to performed activity: strides marked with red <em>likely</em> correspond to running, strides marked with green - walking with relatively long stride duration time, strides marked with blue - walking with a moderate stride duration time.</li>
 </ul>
 </div>
 </div>
@@ -570,7 +619,7 @@ data.dfm<span class="op">$</span>cluster &lt;-<span class="st"> </span><span cla
 <a href="#segmentation-with-approach-2-derive-stride-pattern-templates-manually" class="anchor"></a>Segmentation with <em>Approach 2</em>: derive stride pattern templates manually</h3>
 <p>We now demonstrate a way of deriving stride patterns from data in a semi-manual way. The proposed procedure is done separately for data collected at two different locations, and goes as follows:</p>
 <ol style="list-style-type: decimal">
-<li><p>Select short fragments of <span class="math inline">\((vm)\)</span> time-series that are likely to represent data coming from different pace of running/walking. Here, we select three such <span class="math inline">\((vm)\)</span> fragments, each of 6 seconds length, similarly as we did above for <span class="math inline">\((x,y,z)\)</span> and <span class="math inline">\((vm)\)</span> visualization.</p></li>
+<li><p>Select short fragments of <span class="math inline">\((vm)\)</span> time-series that are likely to represent data coming from different pace of running/walking. Here, we select two such <span class="math inline">\((vm)\)</span> fragments, each of 6 seconds length.</p></li>
 <li><p>Within each of three <span class="math inline">\((vm)\)</span> fragments, use a function to automatically identify <em>all</em> local maxima.</p></li>
 <li><p>Within each of three <span class="math inline">\((vm)\)</span> fragments, identify a <em>subset</em> of local maxima that corresponds to <span class="math inline">\((vm)\)</span> peaks of interest via visual inspection (“manual” part).</p></li>
 <li><p>For each of three <span class="math inline">\((vm)\)</span> fragments, cut the <span class="math inline">\((vm)\)</span> fragment into parts at the points of identified local maxima subset. Interpolate parts to common a length and compute their point-wise average. The resulted point-wise average is a newly created pattern template.</p></li>
@@ -605,9 +654,8 @@ cut.and.avg &lt;-<span class="st"> </span><span class="cf">function</span>(x, x.
 ## Make subset of data which has data parts of different speed of running
 acc_running_sub2 &lt;-<span class="st"> </span>
 <span class="st">  </span>acc_running <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>((date_time <span class="op">&gt;=</span><span class="st"> </span>t1 <span class="op">&amp;</span><span class="st"> </span>date_time <span class="op">&lt;</span><span class="st"> </span>t1 <span class="op">+</span><span class="st"> </span><span class="dv">6</span>) <span class="op">|</span><span class="st"> </span>
-<span class="st">           </span>(date_time <span class="op">&gt;=</span><span class="st"> </span>t2 <span class="op">&amp;</span><span class="st"> </span>date_time <span class="op">&lt;</span><span class="st"> </span>t2 <span class="op">+</span><span class="st"> </span><span class="dv">6</span>) <span class="op">|</span><span class="st"> </span>
-<span class="st">           </span>(date_time <span class="op">&gt;=</span><span class="st"> </span>t3 <span class="op">&amp;</span><span class="st"> </span>date_time <span class="op">&lt;</span><span class="st"> </span>t3 <span class="op">+</span><span class="st"> </span><span class="dv">6</span>))  <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>((date_time <span class="op">&gt;=</span><span class="st"> </span>t2 <span class="op">&amp;</span><span class="st"> </span>date_time <span class="op">&lt;</span><span class="st"> </span>t2 <span class="op">+</span><span class="st"> </span><span class="kw"><a href="http://lubridate.tidyverse.org/reference/as.period.html">as.period</a></span>(<span class="dv">6</span>, <span class="st">"seconds"</span>)) <span class="op">|</span><span class="st"> </span>
+<span class="st">           </span>(date_time <span class="op">&gt;=</span><span class="st"> </span>t3 <span class="op">&amp;</span><span class="st"> </span>date_time <span class="op">&lt;</span><span class="st"> </span>t3 <span class="op">+</span><span class="st"> </span><span class="kw"><a href="http://lubridate.tidyverse.org/reference/as.period.html">as.period</a></span>(<span class="dv">6</span>, <span class="st">"seconds"</span>)))  <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">dt_floor =</span> <span class="kw"><a href="http://lubridate.tidyverse.org/reference/round_date.html">floor_date</a></span>(date_time, <span class="dt">unit =</span> <span class="st">"minutes"</span>))
 ## Vector of signatures for data parts of different speed of running
 dt_floor.unique &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/unique">unique</a></span>(acc_running_sub2<span class="op">$</span>dt_floor)</code></pre></div>
@@ -624,11 +672,11 @@ x1.locMax &lt;-<span class="st"> </span><span class="kw">localMaxima</span>(x1)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(x1), x1, <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">main =</span> <span class="st">"(vm) local maxima"</span>, <span class="dt">xlab =</span> <span class="st">"Index"</span>, <span class="dt">ylab =</span> <span class="st">""</span>)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dt">v =</span> x1.locMax, <span class="dt">col =</span> <span class="st">"red"</span>)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(x1), x1, <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">main =</span> <span class="st">"(vm) local maxima subset"</span>, <span class="dt">xlab =</span> <span class="st">"Index"</span>, <span class="dt">ylab =</span> <span class="st">""</span>)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dt">v =</span> x1.locMax[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">2</span>, <span class="dv">8</span>, <span class="dv">11</span>, <span class="dv">14</span>, <span class="dv">17</span>, <span class="dv">22</span>, <span class="dv">25</span>, <span class="dv">29</span>)], <span class="dt">col =</span> <span class="st">"red"</span>)
-template.la.x1 &lt;-<span class="st"> </span><span class="kw">cut.and.avg</span>(x1, x1.locMax[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">2</span>, <span class="dv">8</span>, <span class="dv">11</span>, <span class="dv">14</span>, <span class="dv">17</span>, <span class="dv">22</span>, <span class="dv">25</span>, <span class="dv">29</span>)])
+<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dt">v =</span> x1.locMax[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">3</span>, <span class="dv">6</span>, <span class="dv">9</span>, <span class="dv">13</span>, <span class="dv">16</span>, <span class="dv">19</span>, <span class="dv">23</span>, <span class="dv">26</span>, <span class="dv">29</span>)], <span class="dt">col =</span> <span class="st">"red"</span>)
+template.la.x1 &lt;-<span class="st"> </span><span class="kw">cut.and.avg</span>(x1, x1.locMax[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">3</span>, <span class="dv">6</span>, <span class="dv">9</span>, <span class="dv">13</span>, <span class="dv">16</span>, <span class="dv">19</span>, <span class="dv">23</span>, <span class="dv">26</span>, <span class="dv">29</span>)])
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(template.la.x1), template.la.x1, <span class="dt">type =</span> <span class="st">"l"</span>, 
      <span class="dt">col =</span> <span class="st">"red"</span>, <span class="dt">main =</span> <span class="st">"left ankle: template 1"</span>, <span class="dt">xlab =</span> <span class="st">"Index"</span>, <span class="dt">ylab =</span> <span class="st">""</span>)</code></pre></div>
-<p><img src="adept-strides-segmentation_files/figure-html/unnamed-chunk-22-1.png" width="672"></p>
+<p><img src="adept-strides-segmentation_files/figure-html/semi_manual_la-1.png" width="672"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 ## Left ankle: template 2
 x2 &lt;-<span class="st"> </span>sub.la[sub.la<span class="op">$</span>dt_floor <span class="op">==</span><span class="st"> </span>dt_floor.unique[<span class="dv">2</span>], <span class="st">"vm_smoothed1"</span>]
@@ -636,26 +684,13 @@ x2.locMax &lt;-<span class="st"> </span><span class="kw">localMaxima</span>(x2)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(x2), x2, <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">main =</span> <span class="st">"(vm) local maxima"</span>, <span class="dt">xlab =</span> <span class="st">"Index"</span>, <span class="dt">ylab =</span> <span class="st">""</span>)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dt">v =</span> x2.locMax, <span class="dt">col =</span> <span class="st">"red"</span>)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(x2), x2, <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">main =</span> <span class="st">"(vm) local maxima subset"</span>, <span class="dt">xlab =</span> <span class="st">"Index"</span>, <span class="dt">ylab =</span> <span class="st">""</span>)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dt">v =</span> x2.locMax[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="dv">19</span>, <span class="dv">26</span>, <span class="dv">39</span>)], <span class="dt">col =</span> <span class="st">"red"</span>)
-template.la.x2 &lt;-<span class="st"> </span><span class="kw">cut.and.avg</span>(x2, x2.locMax[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="dv">19</span>, <span class="dv">26</span>, <span class="dv">39</span>)])
+<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dt">v =</span> x2.locMax[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">8</span>, <span class="dv">18</span>, <span class="dv">26</span>, <span class="dv">37</span>, <span class="dv">44</span>)], <span class="dt">col =</span> <span class="st">"red"</span>)
+template.la.x2 &lt;-<span class="st"> </span><span class="kw">cut.and.avg</span>(x2, x2.locMax[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">8</span>, <span class="dv">18</span>, <span class="dv">26</span>, <span class="dv">37</span>, <span class="dv">44</span>)])
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(template.la.x2), template.la.x2, <span class="dt">type =</span> <span class="st">"l"</span>, 
      <span class="dt">col =</span> <span class="st">"red"</span>, <span class="dt">main =</span> <span class="st">"left ankle: template 2"</span>, <span class="dt">xlab =</span> <span class="st">"Index"</span>, <span class="dt">ylab =</span> <span class="st">""</span>)</code></pre></div>
-<p><img src="adept-strides-segmentation_files/figure-html/unnamed-chunk-22-2.png" width="672"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-## Left ankle: template 3
-x3 &lt;-<span class="st"> </span>sub.la[sub.la<span class="op">$</span>dt_floor <span class="op">==</span><span class="st"> </span>dt_floor.unique[<span class="dv">3</span>], <span class="st">"vm_smoothed1"</span>]
-x3.locMax &lt;-<span class="st"> </span><span class="kw">localMaxima</span>(x3)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(x3), x3, <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">main =</span> <span class="st">"(vm) local maxima"</span>, <span class="dt">xlab =</span> <span class="st">"Index"</span>, <span class="dt">ylab =</span> <span class="st">""</span>)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dt">v =</span> x3.locMax, <span class="dt">col =</span> <span class="st">"red"</span>)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(x3), x3, <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">main =</span> <span class="st">"(vm) local maxima subset"</span>, <span class="dt">xlab =</span> <span class="st">"Index"</span>, <span class="dt">ylab =</span> <span class="st">""</span>)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dt">v =</span> x3.locMax[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>, <span class="dv">8</span>, <span class="dv">18</span>, <span class="dv">26</span>, <span class="dv">37</span>, <span class="dv">44</span>)], <span class="dt">col =</span> <span class="st">"red"</span>)
-template.la.x3 &lt;-<span class="st"> </span><span class="kw">cut.and.avg</span>(x3, x3.locMax[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>, <span class="dv">8</span>, <span class="dv">18</span>, <span class="dv">26</span>, <span class="dv">37</span>, <span class="dv">44</span>)])
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(template.la.x3), template.la.x3, <span class="dt">type =</span> <span class="st">"l"</span>, 
-     <span class="dt">col =</span> <span class="st">"red"</span>, <span class="dt">main =</span> <span class="st">"left ankle: template 3"</span>, <span class="dt">xlab =</span> <span class="st">"Index"</span>, <span class="dt">ylab =</span> <span class="st">""</span>)</code></pre></div>
-<p><img src="adept-strides-segmentation_files/figure-html/unnamed-chunk-22-3.png" width="672"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-## Template object
-template.la &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(template.la.x1, template.la.x2, template.la.x3)</code></pre></div>
+<p><img src="adept-strides-segmentation_files/figure-html/semi_manual_la-2.png" width="672"></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Template object
+template.la &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(template.la.x1, template.la.x2)</code></pre></div>
 </div>
 <div id="deriving-stride-patterns-in-a-semi-manual-way-left-hip" class="section level5">
 <h5 class="hasAnchor">
@@ -670,11 +705,11 @@ x1.locMax &lt;-<span class="st"> </span><span class="kw">localMaxima</span>(x1)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(x1), x1, <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">main =</span> <span class="st">"(vm) local maxima"</span>, <span class="dt">xlab =</span> <span class="st">"Index"</span>, <span class="dt">ylab =</span> <span class="st">""</span>)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dt">v =</span> x1.locMax, <span class="dt">col =</span> <span class="st">"red"</span>)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(x1), x1, <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">main =</span> <span class="st">"(vm) local maxima subset"</span>, <span class="dt">xlab =</span> <span class="st">"Index"</span>, <span class="dt">ylab =</span> <span class="st">""</span>)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dt">v =</span> x1.locMax[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">2</span>, <span class="dv">7</span>, <span class="dv">13</span>, <span class="dv">18</span>, <span class="dv">23</span>, <span class="dv">29</span>, <span class="dv">36</span>, <span class="dv">41</span>)], <span class="dt">col =</span> <span class="st">"red"</span>)
-template.lh.x1 &lt;-<span class="st"> </span><span class="kw">cut.and.avg</span>(x1, x1.locMax[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">2</span>, <span class="dv">7</span>, <span class="dv">13</span>, <span class="dv">18</span>, <span class="dv">23</span>, <span class="dv">29</span>, <span class="dv">36</span>, <span class="dv">41</span>)])
+<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dt">v =</span> x1.locMax[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">3</span>, <span class="dv">10</span>, <span class="dv">17</span>, <span class="dv">24</span>, <span class="dv">30</span>, <span class="dv">37</span>, <span class="dv">43</span>, <span class="dv">49</span>, <span class="dv">56</span>)], <span class="dt">col =</span> <span class="st">"red"</span>)
+template.lh.x1 &lt;-<span class="st"> </span><span class="kw">cut.and.avg</span>(x1, x1.locMax[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">3</span>, <span class="dv">10</span>, <span class="dv">17</span>, <span class="dv">24</span>, <span class="dv">30</span>, <span class="dv">37</span>, <span class="dv">43</span>, <span class="dv">49</span>, <span class="dv">56</span>)])
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(template.lh.x1), template.lh.x1, <span class="dt">type =</span> <span class="st">"l"</span>, 
      <span class="dt">col =</span> <span class="st">"red"</span>, <span class="dt">main =</span> <span class="st">"left ankle: template 1"</span>, <span class="dt">xlab =</span> <span class="st">"Index"</span>, <span class="dt">ylab =</span> <span class="st">""</span>)</code></pre></div>
-<p><img src="adept-strides-segmentation_files/figure-html/unnamed-chunk-23-1.png" width="672"></p>
+<p><img src="adept-strides-segmentation_files/figure-html/semi_manual_lh-1.png" width="672"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 ## Left hip: template 2
 x2 &lt;-<span class="st"> </span>sub.lh[sub.lh<span class="op">$</span>dt_floor <span class="op">==</span><span class="st"> </span>dt_floor.unique[<span class="dv">2</span>], <span class="st">"vm_smoothed1"</span>]
@@ -682,26 +717,13 @@ x2.locMax &lt;-<span class="st"> </span><span class="kw">localMaxima</span>(x2)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(x2), x2, <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">main =</span> <span class="st">"(vm) local maxima"</span>, <span class="dt">xlab =</span> <span class="st">"Index"</span>, <span class="dt">ylab =</span> <span class="st">""</span>)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dt">v =</span> x2.locMax, <span class="dt">col =</span> <span class="st">"red"</span>)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(x2), x2, <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">main =</span> <span class="st">"(vm) local maxima subset"</span>, <span class="dt">xlab =</span> <span class="st">"Index"</span>, <span class="dt">ylab =</span> <span class="st">""</span>)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dt">v =</span> x2.locMax[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>, <span class="dv">7</span>, <span class="dv">15</span>, <span class="dv">23</span>, <span class="dv">29</span>)], <span class="dt">col =</span> <span class="st">"red"</span>)
-template.lh.x2 &lt;-<span class="st"> </span><span class="kw">cut.and.avg</span>(x2, x2.locMax[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>, <span class="dv">7</span>, <span class="dv">15</span>, <span class="dv">23</span>, <span class="dv">29</span>)])
+<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dt">v =</span> x2.locMax[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">5</span>, <span class="dv">13</span>, <span class="dv">19</span>, <span class="dv">24</span>, <span class="dv">31</span>)], <span class="dt">col =</span> <span class="st">"red"</span>)
+template.lh.x2 &lt;-<span class="st"> </span><span class="kw">cut.and.avg</span>(x2, x2.locMax[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">5</span>, <span class="dv">13</span>, <span class="dv">19</span>, <span class="dv">24</span>, <span class="dv">31</span>)])
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(template.lh.x2), template.lh.x2, <span class="dt">type =</span> <span class="st">"l"</span>, 
      <span class="dt">col =</span> <span class="st">"red"</span>, <span class="dt">main =</span> <span class="st">"left ankle: template 2"</span>, <span class="dt">xlab =</span> <span class="st">"Index"</span>, <span class="dt">ylab =</span> <span class="st">""</span>)</code></pre></div>
-<p><img src="adept-strides-segmentation_files/figure-html/unnamed-chunk-23-2.png" width="672"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-## Left hip: template 3
-x3 &lt;-<span class="st"> </span>sub.lh[sub.lh<span class="op">$</span>dt_floor <span class="op">==</span><span class="st"> </span>dt_floor.unique[<span class="dv">3</span>], <span class="st">"vm_smoothed1"</span>]
-x3.locMax &lt;-<span class="st"> </span><span class="kw">localMaxima</span>(x3)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(x3), x3, <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">main =</span> <span class="st">"(vm) local maxima"</span>, <span class="dt">xlab =</span> <span class="st">"Index"</span>, <span class="dt">ylab =</span> <span class="st">""</span>)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dt">v =</span> x3.locMax, <span class="dt">col =</span> <span class="st">"red"</span>)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(x3), x3, <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">main =</span> <span class="st">"(vm) local maxima subset"</span>, <span class="dt">xlab =</span> <span class="st">"Index"</span>, <span class="dt">ylab =</span> <span class="st">""</span>)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dt">v =</span> x3.locMax[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">5</span>, <span class="dv">13</span>, <span class="dv">19</span>, <span class="dv">24</span>, <span class="dv">31</span>)], <span class="dt">col =</span> <span class="st">"red"</span>)
-template.lh.x3 &lt;-<span class="st"> </span><span class="kw">cut.and.avg</span>(x3, x3.locMax[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">5</span>, <span class="dv">13</span>, <span class="dv">19</span>, <span class="dv">24</span>, <span class="dv">31</span>)])
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(template.lh.x3), template.lh.x3, <span class="dt">type =</span> <span class="st">"l"</span>, 
-     <span class="dt">col =</span> <span class="st">"red"</span>, <span class="dt">main =</span> <span class="st">"left ankle: template 3"</span>, <span class="dt">xlab =</span> <span class="st">"Index"</span>, <span class="dt">ylab =</span> <span class="st">""</span>)</code></pre></div>
-<p><img src="adept-strides-segmentation_files/figure-html/unnamed-chunk-23-3.png" width="672"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-## Template object
-template.lh &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(template.lh.x1, template.lh.x2, template.lh.x3)</code></pre></div>
+<p><img src="adept-strides-segmentation_files/figure-html/semi_manual_lh-2.png" width="672"></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Template object
+template.lh &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(template.lh.x1, template.lh.x2)</code></pre></div>
 </div>
 <div id="segmentation" class="section level5">
 <h5 class="hasAnchor">
@@ -733,29 +755,39 @@ out2.lh &lt;-<span class="st"> </span><span class="kw"><a href="../reference/seg
 <div id="results-estimated-stride-duration-time-1" class="section level4">
 <h4 class="hasAnchor">
 <a href="#results-estimated-stride-duration-time-1" class="anchor"></a>Results: estimated stride duration time</h4>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plt.df.la &lt;-<span class="st"> </span>
-<span class="st">  </span>out2.la <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(sim_i <span class="op">&gt;</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/quantile">quantile</a></span>(out1.la<span class="op">$</span>sim_i, <span class="dt">probs =</span> vmc.low.frac)) <span class="op">%&gt;%</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Merge results from two sensor locations, add resting/non-resting info
+plt.df.la.<span class="dv">2</span> &lt;-<span class="st"> </span>
+<span class="st">  </span>out2.la <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/merge">merge</a></span>(vmc.df.rest) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(tau_i <span class="op">&gt;=</span><span class="st"> </span>vmc_tau_i, tau_i <span class="op">&lt;</span><span class="st"> </span>vmc_tau_i <span class="op">+</span><span class="st"> </span><span class="dv">3</span> <span class="op">*</span><span class="st"> </span><span class="dv">100</span>, resting <span class="op">==</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">location =</span> <span class="st">"left_ankle"</span>)
-plt.df.lh &lt;-<span class="st"> </span>
-<span class="st">  </span>out2.lh <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(sim_i <span class="op">&gt;</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/quantile">quantile</a></span>(out1.lh<span class="op">$</span>sim_i, <span class="dt">probs =</span> vmc.low.frac)) <span class="op">%&gt;%</span>
+plt.df.lh.<span class="dv">2</span> &lt;-<span class="st"> </span>
+<span class="st">  </span>out2.lh <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/merge">merge</a></span>(vmc.df.rest) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(tau_i <span class="op">&gt;=</span><span class="st"> </span>vmc_tau_i, tau_i <span class="op">&lt;</span><span class="st"> </span>vmc_tau_i <span class="op">+</span><span class="st"> </span><span class="dv">3</span> <span class="op">*</span><span class="st"> </span><span class="dv">100</span>, resting <span class="op">==</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">location =</span> <span class="st">"left_hip"</span>)
+plt.df &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cbind">rbind</a></span>(plt.df.la.<span class="dv">2</span>, plt.df.lh.<span class="dv">2</span>)
 
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cbind">rbind</a></span>(plt.df.la, plt.df.lh) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(<span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">x =</span> tau_i <span class="op">/</span><span class="st"> </span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span><span class="dv">60</span>) , <span class="dt">y =</span> T_i <span class="op">/</span><span class="st"> </span><span class="dv">100</span>)) <span class="op">+</span><span class="st"> </span>
+<span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(plt.df,
+    <span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">x =</span> tau_i <span class="op">/</span><span class="st"> </span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span><span class="dv">60</span>) , <span class="dt">y =</span> T_i <span class="op">/</span><span class="st"> </span><span class="dv">100</span>)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html">geom_tile</a></span>(<span class="dt">data =</span> vmc.df.rest, 
+            <span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">x =</span> vmc_tau_i <span class="op">/</span><span class="st"> </span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span><span class="dv">60</span>), <span class="dt">y =</span> <span class="dv">1</span>, <span class="dt">fill =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">factor</a></span>(resting)), 
+            <span class="dt">height =</span> <span class="ot">Inf</span>, <span class="dt">alpha =</span> <span class="fl">0.1</span>, <span class="dt">inherit.aes =</span> <span class="ot">FALSE</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>(<span class="dt">alpha =</span> <span class="fl">0.2</span>) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html">facet_grid</a></span>(location <span class="op">~</span><span class="st"> </span>.) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(<span class="dt">base_size =</span> <span class="dv">10</span>) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="dt">x =</span> <span class="st">"Exercise time [min]"</span>, <span class="dt">y =</span> <span class="st">"Estimated stride duration time [s]"</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(<span class="dt">legend.position =</span> <span class="st">"none"</span>)</code></pre></div>
-<p><img src="adept-strides-segmentation_files/figure-html/unnamed-chunk-26-1.png" width="672"></p>
-<div id="observations-3" class="section level5">
+<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(<span class="dt">legend.position =</span> <span class="st">"top"</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html">scale_fill_manual</a></span>(<span class="dt">values =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"white"</span>, <span class="st">"blue"</span>)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span>(<span class="dt">legend.position =</span> <span class="st">"top"</span>,
+        <span class="dt">legend.background =</span> <span class="kw"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_rect</a></span>(<span class="dt">fill =</span> <span class="st">"grey90"</span>)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span>(<span class="dt">limits =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">0.5</span>, <span class="fl">1.8</span>))</code></pre></div>
+<p><img src="adept-strides-segmentation_files/figure-html/unnamed-chunk-19-1.png" width="672"></p>
+<div id="observations-4" class="section level5">
 <h5 class="hasAnchor">
-<a href="#observations-3" class="anchor"></a>Observations</h5>
+<a href="#observations-4" class="anchor"></a>Observations</h5>
 <ul>
-<li><p>From the plot above we see that the estimated stride duration times are fairly consistent between the two sensor locations, and also consistent with the estimates we obtained based on external, pre-computed stride pattern templates.</p></li>
-<li><p>In the plot above, we do see discrepancies in a presence of certain points between upper and lower plot panels; recall that the segmentation results were filtered to keep only these estimates for which corresponding similarity between <span class="math inline">\((vm)\)</span> and pattern template was higher than a 19.6th percentile threshold, which might have been different between left ankle and left hip stride segmentation results.</p></li>
+<li>From the plot above we see that the estimated stride duration times are fairly consistent between the two sensor locations, and also consistent with the estimates we obtained based on external, pre-computed stride pattern templates.</li>
 </ul>
 </div>
 </div>
@@ -765,9 +797,8 @@ plt.df.lh &lt;-<span class="st"> </span>
 <h1 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h1>
 <p>References:</p>
-<p>1: Karas, M. <em>“Introduction to <code>adept</code> package”</em> package vignette.</p>
+<p>1: Karas, M., Straczkiewicz, M., Fadel, W., Harezlak, J., Crainiceanu, C., Urbanek, J.K. Adaptive empirical pattern transformation (ADEPT) with application to walking stride segmentation, Submitted to Biostatistics, 2018.</p>
 <p>2: Karas, M., Bai, J., Straczkiewicz, M., Harezlak, J., Glynn, N W., Harris, T., Zipunnikov, V., Crainiceanu, C., Urbanek, J.K. Accelerometry data in health research: challenges and opportunities. Review and examples, Statistics in Biosciences, 2018. (<a href="https://rdcu.be/bgLtM">link</a>)</p>
-<p>3: Karas, M., Straczkiewicz, M., Fadel, W., Harezlak, J., Crainiceanu, C., Urbanek, J.K. Adaptive empirical pattern transformation (ADEPT) with application to walking stride segmentation, Submitted to Biostatistics, 2018.</p>
 </div>
   </div>
 
@@ -788,7 +819,7 @@ plt.df.lh &lt;-<span class="st"> </span>
 
 
       <footer><div class="copyright">
-  <p>Developed by Marta Karas, Jacek Urbanek.</p>
+  <p>Developed by Marta Karas, Jacek Urbanek, Ciprian Crainiceanu.</p>
 </div>
 
 <div class="pkgdown">

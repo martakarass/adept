@@ -3,9 +3,13 @@ Type: Package
 Title: Adaptive Empirical Pattern Transformation 
 Version: 0.2.1
 Authors@R: c(
-  person("Marta", "Karas", email = "marta.karass@gmail.com", role = c("aut", "cre")),
-  person("Jacek", "Urbanek", role = c("aut")),
-  person("John", "Muschelli", role = c("ctb")),
+  person("Marta", "Karas", email = "marta.karass@gmail.com", role = c("aut", "cre"), 
+      comment = c(ORCID = "0000-0001-5889-3970")),
+  person("Jacek", "Urbanek", role = c("aut"), 
+      comment = c(ORCID = "0000-0002-1890-8899")),
+  person("Ciprian", "Crainiceanu", role = c("aut")),
+  person("John", "Muschelli", role = c("ctb"), 
+      comment = c(ORCID = "0000-0001-6469-1750")),
   person("Adi", "Gherman", role = c("ctb"))
   )
 Description: Designed for optimal use in performing fast, 
