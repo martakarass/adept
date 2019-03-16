@@ -1,5 +1,7 @@
 ---
-output: github_document
+output:
+  github_document:
+    fig_width: 3
 ---
 
 [![Travis build status](https://travis-ci.com/martakarass/adept.svg?branch=master)](https://travis-ci.com/martakarass/adept)
@@ -26,7 +28,7 @@ knitr::opts_chunk$set(
 
 ```{r, eval = FALSE}
 # install.packages("devtools")
-devtools::install_github("martakarass/runstats")
+devtools::install_github("martakarass/adept")
 ```
 
 
@@ -36,28 +38,35 @@ Vignettes are available to better explain package methods functionality.
 
 #### Vignette 1. Introduction to adept package
 
-Vignette [Introduction to adept package](https://martakarass.github.io/adept/articles/adept-intro.html) intends to introduce a reader to the ADEPT method and demonstrate the usage of the `segmentPattern` function which implements ADEPT method. Here, we focus on illustrating `segmentPattern` functionality with a comprehesive set of simulated data examples.
+Vignette [Introduction to adept package](https://martakarass.github.io/adept/articles/adept-intro.html) intends to introduce a reader to the ADEPT method and demonstrate the usage of the `segmentPattern {adept}` function which implements ADEPT method. Here, we focus on illustrating `segmentPattern {adept}` functionality with a comprehesive set of simulated data examples. 
 
-![](https://imgur.com/Z45aaTf.jpg){ width=75% }  
+Specifically, we show how to use `adept` segment pattern occurrences from a (noisy) signal in the presence of: 
+
+- different shapes of pattern in a time-series,
+- various lengths of pattern occurrences in a time-series.
+
+![](https://imgur.com/bnHdiHR.jpg)
+
 
 #### Vignette 2. Walking strides segmentation with adept
 
 Vignette [Walking strides segmentation with adept](https://martakarass.github.io/adept/articles/adept-strides-segmentation.html) provides an example of walking stride segmentation from subsecond accelerometry data with `adept` package. We demonstrate that ADEPT method can be used to perform automatic and precise walking stride segmentation from data collected during a combination of running, walking and resting exercise. We demonstrate how to segment stride pattern: 
 
-  (a) with the use of stride templates that were pre-computed based on data from an external study, 
-  (b) by deriving new stride templates in a semi-manual manner.
+1. with the use of stride templates that were pre-computed based on data from an external study, 
+2. by deriving new stride templates in a semi-manual manner.
   
 ##### Accelerometry data collection 
 
-![](https://imgur.com/7P6KB0G.jpg){ width=75% }  
+![](https://imgur.com/j1mIz0N.jpg)
 
 #####  Accelerometry data visualization
 
-![](https://imgur.com/2hrUomw.jpg){ width=75% }  
+![](https://imgur.com/Z0j1qLc.jpg)
+
 
 #####  Segmentation results
 
-![](https://imgur.com/YhguNLb.jpg){ width=75% } 
+![](https://imgur.com/ic3gQvG.jpg)
 
 
 

@@ -34,11 +34,10 @@ Suggests:
     spelling
 VignetteBuilder: knitr
 Imports: 
+    runstats,
     tibble,
     dplyr,
     runstats,
     future,
     magrittr
-Remotes: 
-  martakarass/runstats
 Language: en-US

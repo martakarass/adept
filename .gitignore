@@ -3,7 +3,9 @@
 .RData
 .Ruserdata
 inst/doc
+inst/segmentation_results
 .DS_Store
 vignettes/.DS_Store
 vignettes/adept-intro.pdf
 vignettes/adept-strides-segmentation.html
+vignettes/static
