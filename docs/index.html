@@ -95,8 +95,8 @@
 <div id="installation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages("devtools")</span>
-devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"martakarass/runstats"</span>)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co"># install.packages("devtools")</span></a>
+<a class="sourceLine" id="cb1-2" title="2">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"martakarass/adept"</span>)</a></code></pre></div>
 </div>
 <div id="vignettes" class="section level2">
 <h2 class="hasAnchor">
@@ -105,39 +105,36 @@ devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumen
 <div id="vignette-1--introduction-to-adept-package" class="section level4">
 <h4 class="hasAnchor">
 <a href="#vignette-1--introduction-to-adept-package" class="anchor"></a>Vignette 1. Introduction to adept package</h4>
-<p>Vignette <a href="https://martakarass.github.io/adept/articles/adept-intro.html">Introduction to adept package</a> intends to introduce a reader to the ADEPT method and demonstrate the usage of the <code>segmentPattern</code> function which implements ADEPT method. Here, we focus on illustrating <code>segmentPattern</code> functionality with a comprehesive set of simulated data examples.</p>
-<div class="figure">
-<img src="https://imgur.com/Z45aaTf.jpg" style="width:75.0%">
-</div>
+<p>Vignette <a href="https://martakarass.github.io/adept/articles/adept-intro.html">Introduction to adept package</a> intends to introduce a reader to the ADEPT method and demonstrate the usage of the <code>segmentPattern {adept}</code> function which implements ADEPT method. Here, we focus on illustrating <code>segmentPattern {adept}</code> functionality with a comprehesive set of simulated data examples.</p>
+<p>Specifically, we show how to use <code>adept</code> segment pattern occurrences from a (noisy) signal in the presence of:</p>
+<ul>
+<li>different shapes of pattern in a time-series,</li>
+<li>various lengths of pattern occurrences in a time-series.</li>
+</ul>
+<p><img src="https://imgur.com/bnHdiHR.jpg"></p>
 </div>
 <div id="vignette-2--walking-strides-segmentation-with-adept" class="section level4">
 <h4 class="hasAnchor">
 <a href="#vignette-2--walking-strides-segmentation-with-adept" class="anchor"></a>Vignette 2. Walking strides segmentation with adept</h4>
 <p>Vignette <a href="https://martakarass.github.io/adept/articles/adept-strides-segmentation.html">Walking strides segmentation with adept</a> provides an example of walking stride segmentation from subsecond accelerometry data with <code>adept</code> package. We demonstrate that ADEPT method can be used to perform automatic and precise walking stride segmentation from data collected during a combination of running, walking and resting exercise. We demonstrate how to segment stride pattern:</p>
-<ol style="list-style-type: lower-alpha">
+<ol style="list-style-type: decimal">
 <li>with the use of stride templates that were pre-computed based on data from an external study,</li>
 <li>by deriving new stride templates in a semi-manual manner.</li>
 </ol>
 <div id="accelerometry-data-collection" class="section level5">
 <h5 class="hasAnchor">
 <a href="#accelerometry-data-collection" class="anchor"></a>Accelerometry data collection</h5>
-<div class="figure">
-<img src="https://imgur.com/7P6KB0G.jpg" style="width:75.0%">
-</div>
+<p><img src="https://imgur.com/j1mIz0N.jpg"></p>
 </div>
 <div id="accelerometry-data-visualization" class="section level5">
 <h5 class="hasAnchor">
 <a href="#accelerometry-data-visualization" class="anchor"></a>Accelerometry data visualization</h5>
-<div class="figure">
-<img src="https://imgur.com/2hrUomw.jpg" style="width:75.0%">
-</div>
+<p><img src="https://imgur.com/Z0j1qLc.jpg"></p>
 </div>
 <div id="segmentation-results" class="section level5">
 <h5 class="hasAnchor">
 <a href="#segmentation-results" class="anchor"></a>Segmentation results</h5>
-<div class="figure">
-<img src="https://imgur.com/YhguNLb.jpg" style="width:75.0%">
-</div>
+<p><img src="https://imgur.com/ic3gQvG.jpg"></p>
 </div>
 </div>
 </div>

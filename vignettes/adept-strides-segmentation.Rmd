@@ -21,8 +21,8 @@ knitr::opts_chunk$set(
   global.par = TRUE
 )
 ## Label to whether or not run code from local 
-run_local = TRUE
-print(getwd())
+run_local = FALSE
+# print(getwd())
 # wd.tmp <- "/Users/martakaras/Dropbox/_PROJECTS/R/adept/vignettes/"
 # run_local = FALSE
 ```
@@ -534,11 +534,12 @@ data.mat <-  as.matrix(stride_S.dfdc.la)
 D.mat  <- dist(cor(data.mat))
 
 ## Get cluster medoids
-cluster.k <- 3
+cluster.k <- 2
 medoids.idx <- round(seq(1, ncol(stride_S.dfdc.la), length.out = cluster.k + 2))
 medoids.idx <- medoids.idx[-c(1, medoids.idx + 2)]
 
 ## Cluster strides
+set.seed(1)
 pam.out <- cluster::pam(D.mat, cluster.k, diss = TRUE, medoids = medoids.idx)
 table(pam.out$clustering)
 

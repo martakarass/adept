@@ -226,6 +226,27 @@ segmentPattern <- function(x,
                            x.cut.vl = 6000,
                            compute.template.idx = FALSE){
 
+
+  ## Check if correct objects were passed to the function
+  x.cut.vl <- as.integer(x.cut.vl)
+  if(!is.null(run.parallel.cores)) run.parallel.cores <-  as.integer(run.parallel.cores)
+  if (!(all(is.numeric(x)) & is.atomic(x))) stop("x must be a numeric (atomic) vector.")
+  if (!(length(x.fs) == 1 & is.numeric(x.fs) & x.fs > 0 & is.atomic(x.fs))) stop("x.fs must be a positive numeric scalar.")
+  template.cond1 <- all(is.numeric(template)) & is.atomic(template)
+  template.cond2 <- is.list(template) & all(sapply(template, function(vec) all(is.numeric(vec)) & is.atomic(vec)))
+  if (!(template.cond1 || template.cond2)) stop("template must be a numeric (atomic) vector, or a list of numeric (atomic) vectors.")
+  if (!(all(is.numeric(pattern.dur.seq)) & is.atomic(pattern.dur.seq) & all(pattern.dur.seq > 0))) stop("x must be a numeric (atomic) vector of positive values.")
+  if (!(similarity.measure %in% c("cov", "cor"))) stop("similarity.measure must be one of: 'cov', 'cor'.")
+  if (!(is.null(x.adept.ma.W) || (length(x.adept.ma.W) == 1 & is.numeric(x.adept.ma.W) & x.adept.ma.W > 0))) stop("x.adept.ma.W must be NULL or a positive numeric scalar.")
+  if (!(is.null(finetune) || finetune == "maxima")) stop("finetune must be NULL or 'maxima'.")
+  if (!(is.null(finetune.maxima.ma.W) || (length(finetune.maxima.ma.W) == 1 & is.numeric(finetune.maxima.ma.W) & finetune.maxima.ma.W > 0))) stop("finetune.maxima.ma.W must be NULL or a positive numeric scalar.")
+  if (!(is.null(finetune.maxima.nbh.W) || (length(finetune.maxima.nbh.W) == 1 & is.numeric(finetune.maxima.nbh.W) & finetune.maxima.nbh.W > 0))) stop("finetune.maxima.nbh.W must be NULL or a positive numeric scalar.")
+  if (!(run.parallel %in% c(TRUE, FALSE))) stop("run.parallel must be a logical scalar.")
+  if (!(is.null(run.parallel.cores) || (length(run.parallel.cores) == 1 & is.integer(run.parallel.cores) & run.parallel.cores > 0))) stop("run.parallel.cores must me NULL or a positive integer scalar")
+  if (!(length(x.cut) == 1 & x.cut %in% c(TRUE, FALSE))) stop("x.cut must be a logical scalar.")
+  if (!(is.null(x.cut.vl) || (length(x.cut.vl) == 1 & is.integer(x.cut.vl) & x.cut.vl > 0))) stop("x.cut.vl must me NULL or a positive integer scalar")
+  if (!(length(compute.template.idx) == 1 & compute.template.idx %in% c(TRUE, FALSE))) stop("compute.template.idx must be a logical scalar.")
+
   ## ---------------------------------------------------------------------------
   ## Compute a list of rescaled template(s)
 
