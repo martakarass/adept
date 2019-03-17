@@ -76,3 +76,15 @@ test_that("Test get.x.smoothed, a wrapper for windowSmooth", {
 })
 
 
+
+test_that("Testing that errors are thrown if invalid objects are passed to the function", {
+
+  set.seed(20190317)
+
+  ## Generate data
+  x <- sin(seq(0, 2 * pi, length.out = 1000)) + rnorm(1000, sd = 0.2)
+
+  expect_error(windowSmooth(x = rep("A", 1000), W = 1))
+  expect_error(windowSmooth(x, "a"))
+  expect_error(windowSmooth(x, 10, "a"))
+})

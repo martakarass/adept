@@ -54,11 +54,9 @@
 windowSmooth <- function(x, W, x.fs = 1){
 
   ## Check function arguments for correctness
-  if ((!(is.vector(x))) || (!(is.vector(x)))) stop("x must be a numeric vector.")
-  if (!is.numeric(W)) stop("W must be a numeric scalar")
-  if (length(W) > 1) stop("W must be a numeric scalar (1-element numeric vector)")
-  if (!is.numeric(x.fs)) stop("x.fs must be a numeric scalar")
-  if (length(x.fs) > 1) stop("x.fs must be a numeric scalar (1-element numeric vector)")
+  if (!(is.numeric(x) & is.atomic(x))) stop("x must be a numeric (atomic) vector.")
+  if (!(is.numeric(W) & is.atomic(W) & length(W) == 1))  stop("W must be a numeric scalar.")
+  if (!(is.numeric(x.fs) & is.atomic(x.fs) & length(x.fs) == 1))  stop("x.fs must be a numeric scalar.")
 
   W.vl <- round(W * x.fs)
   if (W.vl < 3) stop("W.vl (refer to function's details description) must not be smaller than 3 vector indices. Define wider W averaging window length")
