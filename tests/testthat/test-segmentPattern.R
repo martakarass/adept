@@ -757,6 +757,45 @@ test_that("Example 6(a): test returning template index matrix", {
 
 
 
+############################################
+############################################
+############################################
+###   Technical checking A   ###############
+############################################
+############################################
+############################################
+
+
+
+
+test_that("Testing that errors are thrown if invalid objects are passed to the function", {
+
+  ## Generate signal and template
+  x0 <- cos(seq(0, 2 * pi * 10, length.out = 1001))
+  x  <- x0
+  template <- x0[1:101]
+  pattern.dur.seq <- c(90, 100, 110)
+
+  suppressWarnings({
+    expect_error(segmentPattern(c(x, "a"), 1, template, pattern.dur.seq))
+    expect_error(segmentPattern(x, 1:2, template, pattern.dur.seq))
+    expect_error(segmentPattern(x, 1, list(template, list("a")), pattern.dur.seq))
+    expect_error(segmentPattern(x, 1, rep("A", 10), pattern.dur.seq))
+    expect_error(segmentPattern(x, 1, template, c(1, "a")))
+    expect_error(segmentPattern(x, 1, template, pattern.dur.seq, "corr"))
+    expect_error(segmentPattern(x, 1, template, pattern.dur.seq, x.adept.ma.W = c(1,2)))
+    expect_error(segmentPattern(x, 1, template, pattern.dur.seq, finetune = "maxima2"))
+    expect_error(segmentPattern(x, 1, template, pattern.dur.seq, finetune.maxima.ma.W = -1))
+    expect_error(segmentPattern(x, 1, template, pattern.dur.seq, finetune.maxima.nbh.W = -1))
+    expect_error(segmentPattern(x, 1, template, pattern.dur.seq, run.parallel = 3))
+    expect_error(segmentPattern(x, 1, template, pattern.dur.seq, run.parallel.cores = 0))
+    expect_error(segmentPattern(x, 1, template, pattern.dur.seq, x.cut = NA))
+    expect_error(segmentPattern(x, 1, template, pattern.dur.seq, x.cut.vl = -1))
+    expect_error(segmentPattern(x, 1, template, pattern.dur.seq, compute.template.idx = 3))
+  })
+})
+
+
 
 
 

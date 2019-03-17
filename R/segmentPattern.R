@@ -235,7 +235,7 @@ segmentPattern <- function(x,
   template.cond1 <- all(is.numeric(template)) & is.atomic(template)
   template.cond2 <- is.list(template) & all(sapply(template, function(vec) all(is.numeric(vec)) & is.atomic(vec)))
   if (!(template.cond1 || template.cond2)) stop("template must be a numeric (atomic) vector, or a list of numeric (atomic) vectors.")
-  if (!(all(is.numeric(pattern.dur.seq)) & is.atomic(pattern.dur.seq) & all(pattern.dur.seq > 0))) stop("x must be a numeric (atomic) vector of positive values.")
+  if (!(all(is.numeric(pattern.dur.seq)) & is.atomic(pattern.dur.seq) & all(pattern.dur.seq > 0))) stop("pattern.dur.seq must be a numeric (atomic) vector of positive values.")
   if (!(similarity.measure %in% c("cov", "cor"))) stop("similarity.measure must be one of: 'cov', 'cor'.")
   if (!(is.null(x.adept.ma.W) || (length(x.adept.ma.W) == 1 & is.numeric(x.adept.ma.W) & x.adept.ma.W > 0))) stop("x.adept.ma.W must be NULL or a positive numeric scalar.")
   if (!(is.null(finetune) || finetune == "maxima")) stop("finetune must be NULL or 'maxima'.")
