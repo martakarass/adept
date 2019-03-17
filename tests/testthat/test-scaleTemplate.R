@@ -64,3 +64,22 @@ test_that("Testing correctness of ordering of elements in output list", {
 
 })
 
+
+
+
+test_that("Testing that errors are thrown if invalid objects are passed to the function", {
+
+  set.seed(20180927)
+
+  ## Simulate data
+  template    <- list(rnorm(100), rnorm(110), rnorm(120), rnorm(130), rnorm(140))
+  template.vl <- seq(100, 200, length.out = 10)
+  template.vl <- sort(unique(round(template.vl)))
+
+  expect_error(scaleTemplate(template[[1]], template.vl))
+  expect_error(scaleTemplate(list("a"), template.vl))
+  expect_error(scaleTemplate(template, c(1:10, "a")))
+})
+
+
+

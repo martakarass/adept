@@ -52,10 +52,8 @@ scaleTemplate <- function(template, template.vl){
 
   ## Check function arguments for correctness
   if (!(is.list(template))) stop("template must be a list.")
-  if (!(all(sapply(template, is.vector)))) stop("template must be a list of numeric vectors")
-  if (!(all(sapply(template, is.numeric)))) stop("template must be a list of numeric vectors")
-  if (!(is.vector(template.vl))) stop("template.vl must be a numeric vector")
-  if (!(is.numeric(template.vl))) stop("template.vl must be a numeric vector")
+  if (!(all(sapply(template, is.numeric)) & all(sapply(template, is.atomic)))) stop("template must be a list of numeric (atomic) vectors.")
+  if (!(is.numeric(template.vl) & is.atomic(template.vl))) stop("template.vl must be a numeric (atomic) vector.")
 
   ## Outer lapply: iterate over vector lengths;
   ## in each lapply iteration, empirical pattern(s) are linearly interpolated
