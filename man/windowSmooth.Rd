@@ -40,19 +40,15 @@ N <- 100
 W  <- 20
 x <- 1:N
 x.smoothed <- windowSmooth(x, W)
-\dontrun{
 plot(x, type = "l")
 points(x.smoothed, col = "red")
-}
 
 ## Time-series defined as a function f(x) = sin(x) + noise
 N <-  1000
 W  <- 100
 x <- sin(seq(0, 4 * pi, length.out = N)) + rnorm(N, sd = 0.1)
 x.smoothed <- windowSmooth(x, W)
-\dontrun{
 plot(x, type = "l")
 points(x.smoothed, col = "red")
-}
 
 }

@@ -1,7 +1,7 @@
 Package: adept
 Type: Package
 Title: Adaptive Empirical Pattern Transformation 
-Version: 0.2.1
+Version: 1.0.1
 Authors@R: c(
   person("Marta", "Karas", email = "marta.karass@gmail.com", role = c("aut", "cre"), 
       comment = c(ORCID = "0000-0001-5889-3970")),
@@ -38,7 +38,6 @@ Imports:
     runstats,
     tibble,
     dplyr,
-    runstats,
     future,
     magrittr
 Language: en-US

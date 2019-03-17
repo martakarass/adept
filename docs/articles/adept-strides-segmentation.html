@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adept</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -60,6 +60,9 @@
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
@@ -83,7 +86,7 @@
       <h1>Walking strides segmentation with adept</h1>
                         <h4 class="author">Marta Karas</h4>
             
-            <h4 class="date">2019-03-16</h4>
+            <h4 class="date">2019-03-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/martakarass/adept/blob/master/vignettes/adept-strides-segmentation.Rmd"><code>vignettes/adept-strides-segmentation.Rmd</code></a></small>
       <div class="hidden name"><code>adept-strides-segmentation.Rmd</code></div>
@@ -482,7 +485,7 @@
 <h5 class="hasAnchor">
 <a href="#observations-2" class="anchor"></a>Observations</h5>
 <ul>
-<li>We observe the estimated stride duration (y-axis) is mostly consistent between the left ankle and left hip data. The small differences we observe between them may result from different <span class="math inline">\((vm)\)</span> smoothing parameters used in tunning procedure for strides beggining and end (left ankle: <code>finetune.maxima.ma.W = 0.05</code>, left hip: <code>finetune.maxima.ma.W = 0.15</code>).</li>
+<li>We observe the estimated stride duration (y-axis) is mostly consistent between the left ankle and left hip data. The small differences we observe between them may result from different <span class="math inline">\((vm)\)</span> smoothing parameters used in tuning procedure for strides beginning and end (left ankle: <code>finetune.maxima.ma.W = 0.05</code>, left hip: <code>finetune.maxima.ma.W = 0.15</code>).</li>
 <li>Intuitively, it makes sense that around the resting periods (light blue shade), we observe strides of longer duration (the runner may be slowing down), or a short duration (the runner may be making short steps) before stopping etc.</li>
 </ul>
 </div>
@@ -590,7 +593,7 @@
 <a class="sourceLine" id="cb18-10" title="10"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb18-11" title="11"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span>(<span class="dt">x =</span> <span class="st">"Stride pattern phase"</span>, <span class="dt">y =</span> <span class="st">"Vector magnitude (scaled) [g]"</span>,</a>
 <a class="sourceLine" id="cb18-12" title="12">       <span class="dt">title =</span> <span class="st">"Segmented walking strides, aligned, scaled, clustered</span><span class="ch">\n</span><span class="st">Red line: point-wise mean"</span>) </a></code></pre></div>
-<p><img src="adept-strides-segmentation_files/figure-html/plot_correlation_clustering-1.png" width="364.8"></p>
+<p><img src="adept-strides-segmentation_files/figure-html/plot_correlation_clustering-1.png" width="384"></p>
 <p>We can further plot the estimated stride duration time over the course of the running exercise, marking the stride pattern cluster assignment with colour.</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1">data.dfm <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb19-2" title="2"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(tau_i, cluster)  <span class="op">%&gt;%</span></a>
@@ -615,7 +618,7 @@
 <h5 class="hasAnchor">
 <a href="#observations-3" class="anchor"></a>Observations</h5>
 <ul>
-<li>From the plot above we can note that stride pattern cluster assignment somehow corresponds to performed activity: strides marked with red <em>likely</em> correspond to running, strides marked with green - walking with relatively long stride duration time, strides marked with blue - walking with a moderate stride duration time.</li>
+<li>From the plot above we can note that stride pattern cluster assignment somehow corresponds to performed activity: strides marked with red <em>likely</em> correspond to running, strides marked with green - walking.</li>
 </ul>
 </div>
 </div>

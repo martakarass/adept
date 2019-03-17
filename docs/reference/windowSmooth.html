@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adept</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -92,6 +92,9 @@
       <a href="../articles/adept-strides-segmentation.html">Walking strides segmentation with adept</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       
@@ -169,18 +172,14 @@ Note: <code>W.vl</code> must be equal or greater than <code>3</code>.</p><ul>
 <span class='no'>N</span> <span class='kw'>&lt;-</span> <span class='fl'>100</span>
 <span class='no'>W</span>  <span class='kw'>&lt;-</span> <span class='fl'>20</span>
 <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fl'>1</span>:<span class='no'>N</span>
-<span class='no'>x.smoothed</span> <span class='kw'>&lt;-</span> <span class='fu'>windowSmooth</span>(<span class='no'>x</span>, <span class='no'>W</span>)</div><span class='co'># NOT RUN {</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>x</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"l"</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/points'>points</a></span>(<span class='no'>x.smoothed</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"red"</span>)
-<span class='co'># }</span><div class='input'>
+<span class='no'>x.smoothed</span> <span class='kw'>&lt;-</span> <span class='fu'>windowSmooth</span>(<span class='no'>x</span>, <span class='no'>W</span>)
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>x</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"l"</span>)</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/points'>points</a></span>(<span class='no'>x.smoothed</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><div class='img'><img src='windowSmooth-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>## Time-series defined as a function f(x) = sin(x) + noise</span>
 <span class='no'>N</span> <span class='kw'>&lt;-</span>  <span class='fl'>1000</span>
 <span class='no'>W</span>  <span class='kw'>&lt;-</span> <span class='fl'>100</span>
 <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Trig'>sin</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>0</span>, <span class='fl'>4</span> * <span class='no'>pi</span>, <span class='kw'>length.out</span> <span class='kw'>=</span> <span class='no'>N</span>)) + <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='no'>N</span>, <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>0.1</span>)
-<span class='no'>x.smoothed</span> <span class='kw'>&lt;-</span> <span class='fu'>windowSmooth</span>(<span class='no'>x</span>, <span class='no'>W</span>)</div><span class='co'># NOT RUN {</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>x</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"l"</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/points'>points</a></span>(<span class='no'>x.smoothed</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"red"</span>)
-<span class='co'># }</span><div class='input'>
+<span class='no'>x.smoothed</span> <span class='kw'>&lt;-</span> <span class='fu'>windowSmooth</span>(<span class='no'>x</span>, <span class='no'>W</span>)
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>x</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"l"</span>)</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/points'>points</a></span>(<span class='no'>x.smoothed</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><div class='img'><img src='windowSmooth-2.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

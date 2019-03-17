@@ -53,7 +53,6 @@ template.scaled <- scaleTemplate(template, template.vl)
 ## Compute ADEPT similarity matrix
 out <- similarityMatrix(x, template.scaled, "cov")
 
-\dontrun{
 ## Visualize
 par(mfrow = c(1,1))
 image(t(out),
@@ -65,7 +64,6 @@ xaxis <- c(1, seq(1000, length(x0), by = 1000))
 yaxis <- template.vl
 axis(1, at = xaxis/max(xaxis), labels = xaxis)
 axis(2, at = (yaxis - min(yaxis))/(max(yaxis) - min(yaxis)), labels = yaxis)
-}
 
 }
 \seealso{

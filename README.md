@@ -69,4 +69,4 @@ pattern:
 
 ##### Segmentation results
 
-![](https://imgur.com/ic3gQvG.jpg)
+![](https://imgur.com/5qZg53t.jpg)

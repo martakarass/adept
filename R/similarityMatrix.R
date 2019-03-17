@@ -50,7 +50,6 @@
 #' ## Compute ADEPT similarity matrix
 #' out <- similarityMatrix(x, template.scaled, "cov")
 #'
-#' \dontrun{
 #' ## Visualize
 #' par(mfrow = c(1,1))
 #' image(t(out),
@@ -62,7 +61,6 @@
 #' yaxis <- template.vl
 #' axis(1, at = xaxis/max(xaxis), labels = xaxis)
 #' axis(2, at = (yaxis - min(yaxis))/(max(yaxis) - min(yaxis)), labels = yaxis)
-#' }
 #'
 similarityMatrix <- function(x,
                             template.scaled,
@@ -125,48 +123,6 @@ similarityMatrix <- function(x,
 #' of scaled pattern templates. Precisely, the number
 #' is the order in which particular pattern template was provided in
 #' the \code{template} list in \code{segmentPattern}.
-#'
-#' @examples
-#' ## Grid of different true pattern occurence durations
-#' set.seed(1)
-#' s.grid <- sample(60:120, size = 5)
-#' template1 <- cos(seq(0, 2 * pi, length.out = 200))
-#' template2 <- c(rev(seq(-1, 1, length.out = 100)), seq(-1, 1, length.out = 100))
-#'
-#' ## Generate signal x that consists of "glued" pattern occurrences of different length
-#' x <- numeric()
-#' for (ss in s.grid){
-#'   ## Add piece from template1
-#'   templ0 <- approx(seq(0, 1, length.out = 200), template1, xout = seq(0, 1, length.out = ss))$y
-#'   if (length(x)>0) x <- x[-length(x)]
-#'   x <- c(x, templ0)
-#'   ## Add piece from template2
-#'   templ0 <- approx(seq(0, 1, length.out = 200), template2, xout = seq(0, 1, length.out = ss))$y
-#'   if (length(x)>0) x <- x[-length(x)]
-#'   x <- c(x, templ0)
-#'
-#' }
-#'
-#' ## Run ADEPT
-#' template <- list(template1, template2)
-#' template.vl <- sort(s.grid)
-#' template.scaled <- scaleTemplate(template, template.vl)
-#' similarity.measure <- "cor"
-#' out <- templateIdxMatrix(x, template.scaled, similarity.measure)
-#'
-#' \dontrun{
-#' ## Visualize
-#' par(mfrow = c(1,1))
-#' image(t(out),
-#'       main = "ADEPT template index matrix\nfor time-series x and scaled versions of pattern templates",
-#'       xlab = "Time index",
-#'       ylab = "Pattern vector length",
-#'       xaxt = "n", yaxt = "n")
-#' xaxis <- c(1, seq(100, length(x), by = 100), length(x))
-#' yaxis <- template.vl
-#' axis(1, at = xaxis/max(xaxis), labels = xaxis)
-#' axis(2, at = seq(0, 1, length.out = length(yaxis)), labels = yaxis)
-#' }
 #'
 #' @import runstats
 #'

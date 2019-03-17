@@ -66,7 +66,7 @@ Vignette [Walking strides segmentation with adept](https://martakarass.github.io
 
 #####  Segmentation results
 
-![](https://imgur.com/ic3gQvG.jpg)
+![](https://imgur.com/5qZg53t.jpg)
 
 
 

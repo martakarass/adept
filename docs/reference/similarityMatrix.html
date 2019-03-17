@@ -64,7 +64,7 @@ of scaled pattern templates." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adept</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -93,6 +93,9 @@ of scaled pattern templates." />
       <a href="../articles/adept-strides-segmentation.html">Walking strides segmentation with adept</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       
@@ -185,19 +188,17 @@ and scaled pattern templates.</p><ul>
 <span class='no'>template.scaled</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='scaleTemplate.html'>scaleTemplate</a></span>(<span class='no'>template</span>, <span class='no'>template.vl</span>)
 
 <span class='co'>## Compute ADEPT similarity matrix</span>
-<span class='no'>out</span> <span class='kw'>&lt;-</span> <span class='fu'>similarityMatrix</span>(<span class='no'>x</span>, <span class='no'>template.scaled</span>, <span class='st'>"cov"</span>)</div><span class='co'># NOT RUN {</span>
+<span class='no'>out</span> <span class='kw'>&lt;-</span> <span class='fu'>similarityMatrix</span>(<span class='no'>x</span>, <span class='no'>template.scaled</span>, <span class='st'>"cov"</span>)
+
 <span class='co'>## Visualize</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/par'>par</a></span>(<span class='kw'>mfrow</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>1</span>))
 <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/image'>image</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/t'>t</a></span>(<span class='no'>out</span>),
       <span class='kw'>main</span> <span class='kw'>=</span> <span class='st'>"ADEPT similarity matrix\nfor time-series x and scaled versions of pattern templates"</span>,
       <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='st'>"Time index"</span>,
       <span class='kw'>ylab</span> <span class='kw'>=</span> <span class='st'>"Pattern vector length"</span>,
-      <span class='kw'>xaxt</span> <span class='kw'>=</span> <span class='st'>"n"</span>, <span class='kw'>yaxt</span> <span class='kw'>=</span> <span class='st'>"n"</span>)
-<span class='no'>xaxis</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>1000</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/length'>length</a></span>(<span class='no'>x0</span>), <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>1000</span>))
+      <span class='kw'>xaxt</span> <span class='kw'>=</span> <span class='st'>"n"</span>, <span class='kw'>yaxt</span> <span class='kw'>=</span> <span class='st'>"n"</span>)</div><div class='input'><span class='no'>xaxis</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>1000</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/length'>length</a></span>(<span class='no'>x0</span>), <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>1000</span>))
 <span class='no'>yaxis</span> <span class='kw'>&lt;-</span> <span class='no'>template.vl</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/axis'>axis</a></span>(<span class='fl'>1</span>, <span class='kw'>at</span> <span class='kw'>=</span> <span class='no'>xaxis</span>/<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Extremes'>max</a></span>(<span class='no'>xaxis</span>), <span class='kw'>labels</span> <span class='kw'>=</span> <span class='no'>xaxis</span>)
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/axis'>axis</a></span>(<span class='fl'>2</span>, <span class='kw'>at</span> <span class='kw'>=</span> (<span class='no'>yaxis</span> - <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Extremes'>min</a></span>(<span class='no'>yaxis</span>))/(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Extremes'>max</a></span>(<span class='no'>yaxis</span>) - <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Extremes'>min</a></span>(<span class='no'>yaxis</span>)), <span class='kw'>labels</span> <span class='kw'>=</span> <span class='no'>yaxis</span>)
-<span class='co'># }</span><div class='input'>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/axis'>axis</a></span>(<span class='fl'>1</span>, <span class='kw'>at</span> <span class='kw'>=</span> <span class='no'>xaxis</span>/<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Extremes'>max</a></span>(<span class='no'>xaxis</span>), <span class='kw'>labels</span> <span class='kw'>=</span> <span class='no'>xaxis</span>)</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/axis'>axis</a></span>(<span class='fl'>2</span>, <span class='kw'>at</span> <span class='kw'>=</span> (<span class='no'>yaxis</span> - <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Extremes'>min</a></span>(<span class='no'>yaxis</span>))/(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Extremes'>max</a></span>(<span class='no'>yaxis</span>) - <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Extremes'>min</a></span>(<span class='no'>yaxis</span>)), <span class='kw'>labels</span> <span class='kw'>=</span> <span class='no'>yaxis</span>)</div><div class='img'><img src='similarityMatrix-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
