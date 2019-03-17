@@ -21,10 +21,9 @@ knitr::opts_chunk$set(
   global.par = TRUE
 )
 ## Label to whether or not run code from local 
-run_local = FALSE
-# print(getwd())
+run_local <- FALSE
+# run_local <- FALSE
 # wd.tmp <- "/Users/martakaras/Dropbox/_PROJECTS/R/adept/vignettes/"
-# run_local = FALSE
 ```
 
 This vignette provides an example of walking stride segmentation from subsecond accelerometry data with `adept` package. We demonstrate that ADEPT method ([1]) can be used to perform automatic and precise walking stride segmentation from data collected during a combination of running, walking and resting exercise. We demonstrate how to segment data: 
@@ -431,7 +430,7 @@ ggplot(plt.df,
 
 ##### Observations
 
-* We observe the estimated stride duration (y-axis) is mostly consistent between the left ankle and left hip data. The small differences we observe between them may result from different $(vm)$ smoothing parameters used in tunning procedure for strides beggining and end  (left ankle: `finetune.maxima.ma.W = 0.05`, left hip: `finetune.maxima.ma.W = 0.15`). 
+* We observe the estimated stride duration (y-axis) is mostly consistent between the left ankle and left hip data. The small differences we observe between them may result from different $(vm)$ smoothing parameters used in tuning procedure for strides beginning and end  (left ankle: `finetune.maxima.ma.W = 0.05`, left hip: `finetune.maxima.ma.W = 0.15`). 
 * Intuitively, it makes sense that around the resting periods (light blue shade), we observe strides of longer duration (the runner may be slowing down), or a short duration (the runner may be making short steps) before stopping etc. 
 
 
@@ -566,7 +565,7 @@ data.dfm <- read.csv(path.tmp)
 ```
 
 
-```{r plot_correlation_clustering, fig.width=3.8, fig.height=5.7}
+```{r plot_correlation_clustering, fig.width=4, fig.height=5.5}
 data.dfm.agg <- 
   data.dfm %>%
   group_by(variable, cluster) %>% 
@@ -605,7 +604,7 @@ data.dfm %>%
 
 ##### Observations
 
-* From the plot above we can note that stride pattern cluster assignment somehow corresponds to performed activity: strides marked with red *likely*  correspond to running, strides marked with green - walking with relatively long stride duration time, strides marked with blue - walking with a moderate stride duration time. 
+* From the plot above we can note that stride pattern cluster assignment somehow corresponds to performed activity: strides marked with red *likely*  correspond to running, strides marked with green - walking.
 
 ### Segmentation with *Approach 2*: derive stride pattern templates manually
 

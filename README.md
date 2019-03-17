@@ -34,7 +34,7 @@ package](https://martakarass.github.io/adept/articles/adept-intro.html)
 intends to introduce a reader to the ADEPT method and demonstrate the
 usage of the `segmentPattern {adept}` function which implements ADEPT
 method. Here, we focus on illustrating `segmentPattern {adept}`
-functionality with a comprehesive set of simulated data examples.
+functionality with a comprehensive set of simulated data examples.
 
 Specifically, we show how to use `adept` segment pattern occurrences
 from a (noisy) signal in the presence of:
