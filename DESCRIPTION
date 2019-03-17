@@ -31,7 +31,8 @@ Suggests:
     lubridate,
     reshape2,
     gridExtra,
-    spelling
+    spelling,
+    cluster
 VignetteBuilder: knitr
 Imports: 
     runstats,
