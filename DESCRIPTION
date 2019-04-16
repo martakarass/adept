@@ -32,7 +32,8 @@ Suggests:
     reshape2,
     gridExtra,
     spelling,
-    cluster
+    cluster,
+    adeptdata
 VignetteBuilder: knitr
 Imports: 
     runstats,

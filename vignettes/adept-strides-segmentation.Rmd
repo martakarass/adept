@@ -74,6 +74,7 @@ The sample accelerometry data is attached to the package as `acc_running` data f
 # install.packages("devtools")
 # devtools::install_github("martakarass/adept")
 library(adept)
+library(adeptdata)
 library(lubridate)
 options(digits.secs = 2)
 head(acc_running)
@@ -87,7 +88,7 @@ tz(acc_running$date_time)
 * `x` - acceleration measurement time series collected from a $z$-axis of the sensor accelerometer,
 * `vm` - vector magnitude of $(x,y,z)$ vector of measurements, computed as $vm = \sqrt{x^2+y^2+z^2}$,
 * `date_time` - date and time of acceleration measurement collection stored as `POSIXct`,
-* `sensor_location` - sensor location label, one of: `"left_hip"`, `"left_ankle"`.
+* `loc_id` - sensor location label, one of: `"left_hip"`, `"left_ankle"`.
 
 
 ##### Note on `date_time` column values
@@ -97,7 +98,7 @@ tz(acc_running$date_time)
 Time collection spans 25 minutes. It agrees with a number of observations per sensor we have (`150000`), given the data was collected at frequency 100 observations per second. 
 ```{r}
 range(acc_running$date_time)
-table(acc_running$sensor_location)
+table(acc_running$loc_id)
 150000 / (100 * 60)  
 ```
 
@@ -113,11 +114,15 @@ library(dplyr)
 library(ggplot2)
 library(reshape2)
 library(gridExtra)
+library(magrittr)
 
 ## Define time frame start values for data subset
 t1 <- ymd_hms("2018-10-25 18:07:00", tz = "UTC") 
 t2 <- ymd_hms("2018-10-25 18:20:30", tz = "UTC") 
 t3 <- ymd_hms("2018-10-25 18:22:00", tz = "UTC") 
+
+## Mutate data: generate vector magnitude variable
+acc_running %<>% mutate(vm = sqrt(x^2 + y^2 + z^2))
 
 ## Subset data 
 acc_running_sub <- 
@@ -129,12 +134,12 @@ acc_running_sub <-
 ## Plot (x,y,z) values 
 acc_running_sub %>%
   select(-vm) %>%
-  melt(id.vars = c("date_time", "sensor_location")) %>%
+  melt(id.vars = c("date_time", "loc_id")) %>%
   mutate(dt_floor = paste0("time frame start: ", 
                            floor_date(date_time, unit = "minutes"))) %>%
   ggplot(aes(x = date_time, y = value, color = variable)) + 
   geom_line(size = 0.5) + 
-  facet_grid(sensor_location ~ dt_floor, scales = "free_x") + 
+  facet_grid(loc_id ~ dt_floor, scales = "free_x") + 
   theme_bw(base_size = 9) + 
   labs(x = "Time [s]", y = "Acceleration [g]", color = "Accelerometer axis of measurement: ",
        title = "Raw accelerometry data (x,y,z)") + 
@@ -154,11 +159,11 @@ Using vector magnitude $(vm)$ is a way to summarize a three-dimensional time-ser
 ```{r plot_vm, fig.width=7.5, fig.height=4.1}
 ## Plot vector magnitude values 
 acc_running_sub %>%
-  mutate(dt_floor = paste0("time frame start: ", 
-                           floor_date(date_time, unit = "minutes"))) %>%
+  mutate(dt_floor = paste0(
+    "time frame start: ",  floor_date(date_time, unit = "minutes"))) %>%
   ggplot(aes(x = date_time, y = vm)) + 
   geom_line(size = 0.5) + 
-  facet_grid(sensor_location ~ dt_floor, scales = "free_x") + 
+  facet_grid(loc_id ~ dt_floor, scales = "free_x") + 
   theme_bw(base_size = 9) + 
   labs(x = "Time [s]", y = "Vector magnitue [g]", 
        title = "Vector magnitude (vm) summary of raw accelerometry data") 
@@ -203,10 +208,10 @@ vmc.vec <- sapply(rn.seq, function(rn.i){
 vmc.df <- data.frame(vmc = vmc.vec,
                      date_time = acc_running$date_time[rn.seq],
                      rn_seq = rn.seq,
-                     sensor_location = acc_running$sensor_location[rn.seq]) 
+                     loc_id = acc_running$loc_id[rn.seq]) 
 vmc.df.rest <- 
   vmc.df %>% 
-  filter(sensor_location == "left_ankle") %>%
+  filter(loc_id == "left_ankle") %>%
   mutate(resting = ifelse(vmc < 0.4, 1, 0),
          vmc_tau_i = rn_seq - 150000) %>%
   select(date_time, resting, vmc_tau_i)
@@ -217,7 +222,7 @@ vmc.df %>%
   filter(date_time < max(acc_running$date_time) - 5, 
          date_time > min(acc_running$date_time) + 5) %>%
   ggplot(aes(x = date_time, y = vmc)) +
-  facet_grid(sensor_location ~ .) + 
+  facet_grid(loc_id ~ .) + 
   geom_tile(aes(fill = factor(resting)),  height = Inf, alpha = 0.1) +
   geom_line(size = 0.3) +
   theme_bw(base_size = 9) + 
@@ -271,7 +276,7 @@ acc_running %>%
                            floor_date(date_time, unit = "minutes"))) %>%
   ggplot(aes(x = date_time, y = vm_smoothed1)) + 
   geom_line(size = 0.5) + 
-  facet_grid(sensor_location ~ dt_floor, scales = "free_x") + 
+  facet_grid(loc_id ~ dt_floor, scales = "free_x") + 
   theme_bw(base_size = 9) + 
   labs(x = "Time [s]", y = "Vector magnitue [g]", color = "Axis: ",
        title = "Vector magnitude (vm) smoothed, length of smoothing window = 0.05 s") 
@@ -306,7 +311,7 @@ See `?segmentPattern` for detailed explanation of all method parameters.
 
 ```{r segm_la2, eval = !run_local}
 # ```{r segm_la2, eval = FALSE}
-x.la <- acc_running$vm[acc_running$sensor_location == "left_ankle"]
+x.la <- acc_running$vm[acc_running$loc_id == "left_ankle"]
 out1.la <- segmentPattern(x = x.la,
                           x.fs = 100,
                           template = template,
@@ -331,7 +336,7 @@ write.csv(out1.la, path.tmp, row.names = FALSE)
 ```{r,  include = FALSE, eval = run_local}
 ## Run only when executed locally
 path.tmp <- "static/results/out1_la.csv"
-x.la <- acc_running$vm[acc_running$sensor_location == "left_ankle"]
+x.la <- acc_running$vm[acc_running$loc_id == "left_ankle"]
 out1.la <- read.csv(path.tmp)
 ```
 
@@ -362,7 +367,7 @@ plot(template[[2]], type = "l", xlab = "", ylab = "", main = "Left hip: template
 ```{r segm_lh2, eval = !run_local}
 template <- list(stride_template$left_hip[[1]][1, ],
                  stride_template$left_hip[[2]][2, ])
-x.lh <- acc_running$vm[acc_running$sensor_location == "left_hip"]
+x.lh <- acc_running$vm[acc_running$loc_id == "left_hip"]
 out1.lh <- segmentPattern(x = x.lh,
                           x.fs = 100,
                           template = template,
@@ -383,7 +388,7 @@ write.csv(out1.lh, path.tmp, row.names = FALSE)
 ```
 
 ```{r, eval = run_local, include = FALSE}
-x.lh <- acc_running$vm[acc_running$sensor_location == "left_hip"]
+x.lh <- acc_running$vm[acc_running$loc_id == "left_hip"]
 path.tmp <- "static/results/out1_lh.csv"
 out1.lh <- read.csv(path.tmp)
 ```
@@ -662,7 +667,7 @@ dt_floor.unique <- unique(acc_running_sub2$dt_floor)
 
 ```{r semi_manual_la, fig.width = 7, fig.height=2.3}
 ## Left ankle-specific subset of data  
-sub.la <- acc_running_sub2[acc_running_sub2$sensor_location == "left_ankle", ]
+sub.la <- acc_running_sub2[acc_running_sub2$loc_id == "left_ankle", ]
 par(mfrow = c(1,3), cex = 0.6)
 
 ## Left ankle: template 1
@@ -695,7 +700,7 @@ template.la <- list(template.la.x1, template.la.x2)
 
 ```{r semi_manual_lh, fig.width = 7, fig.height=2.3}
 ## Left hip-specific subset of data  
-sub.lh <- acc_running_sub2[acc_running_sub2$sensor_location == "left_hip", ]
+sub.lh <- acc_running_sub2[acc_running_sub2$loc_id == "left_hip", ]
 par(mfrow = c(1,3), cex = 0.6)
 
 ## Left hip: template 1 
