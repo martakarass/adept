@@ -86,7 +86,7 @@
       <h1>Introduction to adept package</h1>
                         <h4 class="author">Marta Karas</h4>
             
-            <h4 class="date">2019-04-06</h4>
+            <h4 class="date">2019-04-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/martakarass/adept/blob/master/vignettes/adept-intro.Rmd"><code>vignettes/adept-intro.Rmd</code></a></small>
       <div class="hidden name"><code>adept-intro.Rmd</code></div>
@@ -98,20 +98,20 @@
 <div id="intro" class="section level1">
 <h1 class="hasAnchor">
 <a href="#intro" class="anchor"></a>Intro</h1>
-<p><code>adept</code> package implements ADaptive Empirical Pattern Transformation (ADEPT) <strong>for pattern segmentation in a time-series <code>x</code></strong>. ADEPT was designed for identification of walking strides in sub-second level data collected with wearable accelerometers. The ADEPT has been tested ([1]) for data collected with sensors worn at left wrist, left hip and both ankles.</p>
-<p>This vignette introduces ADEPT algorithm and demonstrates the usage of <code>segmentPattern</code> function which implements ADEPT approach. Here, we focus on examples with simulated data; see the <a href="file://localhost/Users/martakaras/Dropbox/_PROJECTS/R/adept/docs/articles/adept-strides-segmentation.html">Walking strides segmentation with adept</a> vignette for an example of walking stride segmentation in real-life data.</p>
+<p><code>adept</code> package implements ADaptive Empirical Pattern Transformation (ADEPT) <strong>for pattern segmentation in a time-series <code>x</code></strong>. ADEPT is designed for identification of walking strides in sub-second level data collected with wearable accelerometers. ADEPT was validated ([1]) using data collected with sensors worn at left wrist, left hip and both ankles.</p>
+<p>This vignette introduces ADEPT algorithm and demonstrates the usage of <code>segmentPattern</code> function which implements ADEPT approach. Here, we focus on examples with simulated data; see the <a href="file://localhost/Users/martakaras/Dropbox/_PROJECTS/R/adept/docs/articles/adept-strides-segmentation.html">Walking strides segmentation with adept</a> vignette for the example of walking stride segmentation in real-life data.</p>
 </div>
 <div id="adept-method" class="section level1">
 <h1 class="hasAnchor">
 <a href="#adept-method" class="anchor"></a>ADEPT method</h1>
-<p>ADEPT identifies patterns in a time-series <code>x</code> via maximization of chosen similarity statistic (correlation, covariance etc.) between a time-series <code>x</code> and a pattern template(s). It accounts for a variability in both (1) pattern duration and (2) pattern shape.</p>
+<p>ADEPT identifies patterns in a time-series <code>x</code> via maximization of chosen similarity statistic (correlation, covariance etc.) between a time-series <code>x</code> and a pattern template(s). It accounts for variability in both (1) pattern duration and (2) pattern shape.</p>
 <div id="pattern-template" class="section level2">
 <h2 class="hasAnchor">
 <a href="#pattern-template" class="anchor"></a>Pattern template</h2>
-<p>We define pattern template as a 1-dimensional numeric vector which values represent the pattern of interest (e.g. accelerometry data of a human stride). In practice, a pattern template may be derived based on some pre-segmented small part of the data.</p>
+<p>We define pattern template as a 1-dimensional numeric vector which values represent the pattern of interest (e.g. accelerometry data of a human stride).</p>
 <ul>
 <li>See [1] where we show a way to derive walking stride templates from accelerometry data collected at left wrist, left hip and both ankles.</li>
-<li>See [2] where we employed templates derived in [1] to segment stride pattern from a another accelerometry data set.</li>
+<li>See [2] where we employed templates derived in [1] to segment stride pattern from another accelerometry data set.</li>
 </ul>
 <p>In this vignette, a pattern template is a simulated data vector.</p>
 </div>
@@ -119,7 +119,7 @@
 <div id="install-and-load-adept-package" class="section level1">
 <h1 class="hasAnchor">
 <a href="#install-and-load-adept-package" class="anchor"></a>Install and load <code>adept</code> package</h1>
-<p>If not installed yet, install <code>adept</code> package from GitHub (<code>devtools</code> package is needed to install a package from a GitHub repository).</p>
+<p>If not installed yet, install <code>adept</code> package from GitHub.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co"># install.packages("devtools")      </span></a>
 <a class="sourceLine" id="cb1-2" title="2">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"martakarass/adept"</span>)</a></code></pre></div>
 <p>Load <code>adept</code>.</p>
@@ -130,17 +130,17 @@
 <div id="pattern-segmentation-with-adept-package" class="section level1">
 <h1 class="hasAnchor">
 <a href="#pattern-segmentation-with-adept-package" class="anchor"></a>Pattern segmentation with <code>adept</code> package</h1>
-<p>The examples below are organized into suites. Examples within one suite share data generation settings, for example: <em>Examples 1: signals simulated with no noise, same-length pattern</em>.</p>
-<div id="examples-1-signal-with-no-noise-same-length-of-pattern-occurrences" class="section level2">
+<p>The examples below are organized into suites. Examples within one suite share data simulation settings, for example: <em>Examples 1: signal with no noise, same-length pattern</em>.</p>
+<div id="examples-1-signal-with-no-noise-same-length-pattern" class="section level2">
 <h2 class="hasAnchor">
-<a href="#examples-1-signal-with-no-noise-same-length-of-pattern-occurrences" class="anchor"></a>Examples 1: signal with no noise, same length of pattern occurrences</h2>
+<a href="#examples-1-signal-with-no-noise-same-length-pattern" class="anchor"></a>Examples 1: signal with no noise, same-length pattern</h2>
 <div id="simulate-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#simulate-data" class="anchor"></a>Simulate data</h3>
 <p>Simulate data:</p>
 <ul>
 <li>no noise in a simulated time-series <code>x</code>,</li>
-<li>all pattern occurrences of the same length (vector length: <code>101</code>).</li>
+<li>all patterns in a simulated time-series <code>x</code> of the same length (vector length: <code>101</code>).</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="co">## Generate signal and pattern template</span></a>
 <a class="sourceLine" id="cb3-2" title="2">x0 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Trig">cos</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="dv">2</span> <span class="op">*</span><span class="st"> </span>pi <span class="op">*</span><span class="st"> </span><span class="dv">10</span>, <span class="dt">length.out =</span> <span class="dv">1001</span>))</a>
@@ -152,7 +152,7 @@
 <a class="sourceLine" id="cb3-8" title="8"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>() <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/geom_path">geom_line</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> x, <span class="dt">y =</span> y)) <span class="op">+</span><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/ggtheme">theme_bw</a></span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb3-9" title="9"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/labs">labs</a></span>(<span class="dt">x =</span> <span class="st">"Time [s]"</span>, <span class="dt">y =</span> <span class="st">"Value"</span>, <span class="dt">title =</span> <span class="st">"Time-series x"</span>)</a></code></pre></div>
 <p><img src="adept-intro_files/figure-html/unnamed-chunk-3-1.png" width="672"></p>
-<p>Plot pattern template. We shall use <code>template</code> object in the segmentation algorithm.</p>
+<p>Plot pattern template.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">x =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">101</span>), <span class="dt">y =</span> template) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb4-2" title="2"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>() <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb4-3" title="3"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/geom_path">geom_line</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> x, <span class="dt">y =</span> y), <span class="dt">color =</span> <span class="st">"red"</span>) <span class="op">+</span><span class="st"> </span></a>
@@ -163,7 +163,7 @@
 <div id="example-1a-segment-pattern" class="section level3">
 <h3 class="hasAnchor">
 <a href="#example-1a-segment-pattern" class="anchor"></a>Example 1(a): segment pattern</h3>
-<p>Use <code>segmentPattern</code> function to identify pattern occurrences within a time-series <code>x</code>.</p>
+<p>We use <code>segmentPattern</code> function to segment patterns within a time-series <code>x</code>.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">pattern.dur.seq &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">90</span>, <span class="dv">100</span>, <span class="dv">110</span>)</a>
 <a class="sourceLine" id="cb5-2" title="2">out &lt;-<span class="st"> </span><span class="kw"><a href="../reference/segmentPattern.html">segmentPattern</a></span>(</a>
 <a class="sourceLine" id="cb5-3" title="3">  <span class="dt">x =</span> x,</a>
@@ -187,23 +187,24 @@
 <div id="segmentpattern-output" class="section level4">
 <h4 class="hasAnchor">
 <a href="#segmentpattern-output" class="anchor"></a><code>segmentPattern</code> output</h4>
-<p>Each row of the output data frame describes one identified pattern occurrence. See Details in <code>segmentPattern</code> documentation.</p>
+<p>Each row of the output data frame describes one identified pattern. E.g. the <span class="math inline">\(i\)</span>-th row contains values of:</p>
 <ul>
 <li>
-<code>tau_i</code> - pattern occurrence start, expressed as a time-series <code>x</code> index,</li>
+<code>tau_i</code> - start of the <span class="math inline">\(i\)</span>-th pattern in the data, expressed as a time-series <code>x</code> index,</li>
 <li>
-<code>T_i</code> - pattern occurrence duration, expressed as a time-series <code>x</code> vector length,</li>
+<code>T_i</code> - <span class="math inline">\(i\)</span>-th pattern duration, expressed as a time-series <code>x</code> vector length,</li>
 <li>
-<code>sim_i</code> - similarity (here: correlation) between a pattern template and a time-series <code>x</code> window,</li>
+<code>sim_i</code> - similarity (here: correlation) between a pattern template and a time-series <code>x</code>,</li>
 <li>
-<code>template_i</code> - index of a pattern template to which a time-series <code>x</code> window was matched (here: one pattern template was used, hence all <code>template_i</code>’s equal 1).</li>
+<code>template_i</code> - index of a pattern template best matched to a pattern in the time-series <code>x</code> (here: one pattern template was used, hence all <code>template_i</code>’s equal 1).</li>
 </ul>
+<p>See Details in <code>segmentPattern</code> documentation.</p>
 </div>
 </div>
 <div id="example-1b-use-pattern-dur-seq-to-modify-a-grid-of-pattern-duration" class="section level3">
 <h3 class="hasAnchor">
 <a href="#example-1b-use-pattern-dur-seq-to-modify-a-grid-of-pattern-duration" class="anchor"></a>Example 1(b): use <code>pattern.dur.seq</code> to modify a grid of pattern duration</h3>
-<p>Use dense grid of pattern duration, including value <code>101</code> used in signal simulation. Observe that perfect match (<code>sim_i = 1</code>) between template time-series <code>x</code> windows is obtained.</p>
+<p>We next generate a dense grid of potential pattern durations, including value <code>101</code> used in signal simulation to obtain a perfect match (<code>sim_i = 1</code>).</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">pattern.dur.seq &lt;-<span class="st"> </span><span class="dv">90</span><span class="op">:</span><span class="dv">110</span>  <span class="co">## Assume dense pattern duration grid ranging 90-110 seconds</span></a>
 <a class="sourceLine" id="cb6-2" title="2">out &lt;-<span class="st"> </span><span class="kw"><a href="../reference/segmentPattern.html">segmentPattern</a></span>(</a>
 <a class="sourceLine" id="cb6-3" title="3">  <span class="dt">x =</span> x,</a>
@@ -228,7 +229,7 @@
 <div id="example-1c-use-x-fs-to-modify-x-time-series-frequency" class="section level3">
 <h3 class="hasAnchor">
 <a href="#example-1c-use-x-fs-to-modify-x-time-series-frequency" class="anchor"></a>Example 1(c): use <code>x.fs</code> to modify <code>x</code> time-series frequency</h3>
-<p>Use <code>x.fs</code> to modify <code>x</code> time-series frequency, expressed in a number of observations in seconds. Adjust <code>pattern.dur.seq</code> accordingly. Observe that results stay the same as in Example 1(b).</p>
+<p>We use <code>x.fs</code> to modify <code>x</code> time-series frequency, expressed in a number of observations in seconds, and we adjust <code>pattern.dur.seq</code> accordingly. We observe that results stay the same as in Example 1(b).</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">pattern.dur.seq &lt;-<span class="st"> </span><span class="dv">90</span><span class="op">:</span><span class="dv">110</span> <span class="op">*</span><span class="st"> </span><span class="fl">0.01</span>   <span class="co">## Assume pattern duration grid ranging 0.9-1.1 seconds</span></a>
 <a class="sourceLine" id="cb7-2" title="2">out &lt;-<span class="st"> </span><span class="kw"><a href="../reference/segmentPattern.html">segmentPattern</a></span>(</a>
 <a class="sourceLine" id="cb7-3" title="3">  <span class="dt">x =</span> x,</a>
@@ -251,16 +252,16 @@
 <a class="sourceLine" id="cb7-20" title="20"><span class="co">#&gt; 10   901 101     1          1</span></a></code></pre></div>
 </div>
 </div>
-<div id="examples-2-signal-with-no-noise-length-of-pattern-occurrences-varies" class="section level2">
+<div id="examples-2-signal-with-no-noise-length-of-pattern-varies" class="section level2">
 <h2 class="hasAnchor">
-<a href="#examples-2-signal-with-no-noise-length-of-pattern-occurrences-varies" class="anchor"></a>Examples 2: signal with no noise, length of pattern occurrences varies</h2>
+<a href="#examples-2-signal-with-no-noise-length-of-pattern-varies" class="anchor"></a>Examples 2: signal with no noise, length of pattern varies</h2>
 <div id="simulate-data-1" class="section level3">
 <h3 class="hasAnchor">
 <a href="#simulate-data-1" class="anchor"></a>Simulate data</h3>
 <p>Simulate data:</p>
 <ul>
 <li>no noise in a simulated time-series <code>x</code>,</li>
-<li>length of simulated pattern occurrences vary.</li>
+<li>length of patterns in a simulated time-series <code>x</code> varies.</li>
 </ul>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">1</span>)</a>
 <a class="sourceLine" id="cb8-2" title="2"><span class="co">## Simulate x as concatenated pattern occurrences of different length </span></a>
@@ -329,7 +330,7 @@
 <div id="example-2a-segment-pattern" class="section level3">
 <h3 class="hasAnchor">
 <a href="#example-2a-segment-pattern" class="anchor"></a>Example 2(a): segment pattern</h3>
-<p>Use a dense grid of pattern duration, including all values used in signal simulation. Observe that perfect match (<code>sim_i = 1</code>) between template time-series <code>x</code> windows is obtained. In this example, the start and end points of identified pattern occurrences (marked with red vertical lines in the plot below) do overlap.</p>
+<p>We use a dense grid of potential pattern duration, including all values used in signal simulation to again obtain the perfect match (<code>sim_i = 1</code>). In this example, the start and the end points of identified patterns are connected (see figure below).</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">pattern.dur.seq &lt;-<span class="st"> </span><span class="dv">60</span><span class="op">:</span><span class="dv">120</span></a>
 <a class="sourceLine" id="cb12-2" title="2">out &lt;-<span class="st"> </span><span class="kw"><a href="../reference/segmentPattern.html">segmentPattern</a></span>(</a>
 <a class="sourceLine" id="cb12-3" title="3">  <span class="dt">x =</span> x,</a>
@@ -358,9 +359,9 @@
 <div id="example-2b-use-pattern-dur-seq-to-modify-a-grid-of-pattern-duration" class="section level3">
 <h3 class="hasAnchor">
 <a href="#example-2b-use-pattern-dur-seq-to-modify-a-grid-of-pattern-duration" class="anchor"></a>Example 2(b): use <code>pattern.dur.seq</code> to modify a grid of pattern duration</h3>
-<p>Use less dense grid of pattern duration and observe that perfect match (<code>sim_i = 1</code>) between template time-series <code>x</code> windows is no longer obtained. Note:</p>
+<p>Next, we use a less dense grid of potential pattern duration. We observe that perfect match (<code>sim_i = 1</code>) between a template and time-series <code>x</code> is no longer obtained. Note:</p>
 <ul>
-<li>A less dense <code>pattern.dur.seq</code> grid yields shorter time of method execution.</li>
+<li>A less dense <code>pattern.dur.seq</code> grid yields a shorter time of method execution.</li>
 <li>As explained later, when peak detection tuning is used, having a “maximally dense” pattern duration grid does not contribute much.</li>
 </ul>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">pattern.dur.seq &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">60</span>, <span class="dv">90</span>, <span class="dv">120</span>)</a>
@@ -389,7 +390,7 @@
 <div id="example-2c-use-similarity-measure-to-modify-similarity-statistic" class="section level3">
 <h3 class="hasAnchor">
 <a href="#example-2c-use-similarity-measure-to-modify-similarity-statistic" class="anchor"></a>Example 2(c): use <code>similarity.measure</code> to modify similarity statistic</h3>
-<p>Use <code>similarity.measure</code> to modify similarity statistic. Observe that <code>sim_i</code> values in the result data frame do change and the segmentation results change slightly too (explanation: a change of similarity statistic affects ADEPT iterative maximization procedure).</p>
+<p>We use <code>similarity.measure</code> to modify the similarity statistic. We observe that <code>sim_i</code> values in the result data frame change and the segmentation results change slightly too. The explanation is that a change of similarity statistic takes an effect on ADEPT iterative maximization procedure.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1">pattern.dur.seq &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">60</span>, <span class="dv">90</span>, <span class="dv">120</span>)</a>
 <a class="sourceLine" id="cb15-2" title="2">  out &lt;-<span class="st"> </span><span class="kw"><a href="../reference/segmentPattern.html">segmentPattern</a></span>(</a>
 <a class="sourceLine" id="cb15-3" title="3">  <span class="dt">x =</span> x,</a>
@@ -414,17 +415,17 @@
 <p><img src="adept-intro_files/figure-html/unnamed-chunk-16-1.png" width="672"></p>
 </div>
 </div>
-<div id="examples-3-signal-with-no-noise-length-of-pattern-occurrences-and-pattern-shape-vary" class="section level2">
+<div id="examples-3-signal-with-no-noise-length-of-pattern-and-pattern-shape-vary" class="section level2">
 <h2 class="hasAnchor">
-<a href="#examples-3-signal-with-no-noise-length-of-pattern-occurrences-and-pattern-shape-vary" class="anchor"></a>Examples 3: signal with no noise, length of pattern occurrences and pattern shape vary</h2>
+<a href="#examples-3-signal-with-no-noise-length-of-pattern-and-pattern-shape-vary" class="anchor"></a>Examples 3: signal with no noise, length of pattern and pattern shape vary</h2>
 <div id="simulate-data-2" class="section level3">
 <h3 class="hasAnchor">
 <a href="#simulate-data-2" class="anchor"></a>Simulate data</h3>
 <p>Simulate data:</p>
 <ul>
 <li>no noise in simulated time-series <code>x</code>,</li>
-<li>length of simulated pattern occurrences varies (vector length ranges between <code>60</code> and <code>120</code>),</li>
-<li>two different patterns used to simulate a time-series <code>x</code>.</li>
+<li>length of patterns in a simulated time-series <code>x</code> varies,</li>
+<li>two different shape patterns used to simulate a time-series <code>x</code>.</li>
 </ul>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="co">## Simulate x as concatenated pattern occurrences of </span></a>
 <a class="sourceLine" id="cb17-2" title="2"><span class="co">## different length and different shape</span></a>
@@ -457,7 +458,7 @@
 <a class="sourceLine" id="cb18-3" title="3"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>() <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/geom_path">geom_line</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> x, <span class="dt">y =</span> y)) <span class="op">+</span><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/ggtheme">theme_bw</a></span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb18-4" title="4"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/labs">labs</a></span>(<span class="dt">x =</span> <span class="st">"Time [s]"</span>, <span class="dt">y =</span> <span class="st">"Value"</span>, <span class="dt">title =</span> <span class="st">"Time-series x"</span>)</a></code></pre></div>
 <p><img src="adept-intro_files/figure-html/unnamed-chunk-18-1.png" width="672"></p>
-<p>Plot two vectors that were used in time-series <code>x</code> simulation.</p>
+<p>Plot two vectors that were used in a time-series <code>x</code> simulation.</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1">plt1 &lt;-<span class="st"> </span></a>
 <a class="sourceLine" id="cb19-2" title="2"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">x =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length.out =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(true.pattern<span class="fl">.1</span>)), <span class="dt">y =</span> true.pattern<span class="fl">.1</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb19-3" title="3"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>() <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/geom_path">geom_line</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> x, <span class="dt">y =</span> y), <span class="dt">color =</span> <span class="st">"red"</span>) <span class="op">+</span><span class="st"> </span></a>
@@ -474,9 +475,9 @@
 <div id="example-3a-segment-pattern" class="section level3">
 <h3 class="hasAnchor">
 <a href="#example-3a-segment-pattern" class="anchor"></a>Example 3(a): segment pattern</h3>
-<p>Use a dense grid of pattern duration. Use <code>template</code> object consisting of only one out of two “true” patterns used in <code>x</code> simulation.</p>
+<p>We use a dense grid of potential pattern duration. We use a <code>template</code> object consisting of one out of two patterns used in a time-series <code>x</code> simulation.</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1">pattern.dur.seq &lt;-<span class="st"> </span><span class="dv">60</span><span class="op">:</span><span class="dv">120</span></a>
-<a class="sourceLine" id="cb20-2" title="2">template &lt;-<span class="st"> </span>true.pattern<span class="fl">.1</span> <span class="co">## Template consisting of one out of two "true" patterns</span></a>
+<a class="sourceLine" id="cb20-2" title="2">template &lt;-<span class="st"> </span>true.pattern<span class="fl">.1</span> <span class="co">## Template consisting of one out of two patterns</span></a>
 <a class="sourceLine" id="cb20-3" title="3">out &lt;-<span class="st"> </span><span class="kw"><a href="../reference/segmentPattern.html">segmentPattern</a></span>(</a>
 <a class="sourceLine" id="cb20-4" title="4">  <span class="dt">x =</span> x,</a>
 <a class="sourceLine" id="cb20-5" title="5">  <span class="dt">x.fs =</span> <span class="dv">1</span>,</a>
@@ -504,7 +505,7 @@
 <div id="example-3b-use-similarity-measure-thresh-to-modify-threshold-of-minimal-similarity" class="section level3">
 <h3 class="hasAnchor">
 <a href="#example-3b-use-similarity-measure-thresh-to-modify-threshold-of-minimal-similarity" class="anchor"></a>Example 3(b): use <code>similarity.measure.thresh</code> to modify threshold of minimal similarity</h3>
-<p>Use similarity threshold so as all identified pattern occurrences have similarity (here: covariance) greater than the threshold value. Using threshold may substantially speed up method execution.</p>
+<p>We use similarity threshold to segment only these patterns which have similarity <code>sim_i</code> (here: covariance) greater than the threshold value. Note that using the threshold may substantially speed up method execution.</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1">pattern.dur.seq &lt;-<span class="st"> </span><span class="dv">60</span><span class="op">:</span><span class="dv">120</span></a>
 <a class="sourceLine" id="cb21-2" title="2">template &lt;-<span class="st"> </span>true.pattern<span class="fl">.1</span></a>
 <a class="sourceLine" id="cb21-3" title="3">out &lt;-<span class="st"> </span><span class="kw"><a href="../reference/segmentPattern.html">segmentPattern</a></span>(</a>
@@ -530,7 +531,7 @@
 <div id="example-3c-use-multiple-templates-simultaneously" class="section level3">
 <h3 class="hasAnchor">
 <a href="#example-3c-use-multiple-templates-simultaneously" class="anchor"></a>Example 3(c): use multiple templates simultaneously</h3>
-<p>Use two templates simultaneously in segmentation. Observe that the index of a pattern template to which a time-series <code>x</code> window was matched is <code>1</code> and <code>2</code> interchangeably, as displayed in <code>template_i</code> column of the output data frame.</p>
+<p>Use two templates simultaneously in segmentation. We observe that index of a pattern template best matched to a pattern in the time-series <code>x</code> is <code>1</code> and <code>2</code> interchangeably.</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1">pattern.dur.seq &lt;-<span class="st"> </span><span class="dv">60</span><span class="op">:</span><span class="dv">120</span></a>
 <a class="sourceLine" id="cb22-2" title="2"><span class="co">## Use two templates simultaneously in segmentation</span></a>
 <a class="sourceLine" id="cb22-3" title="3">template &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(true.pattern<span class="fl">.1</span>,</a>
@@ -569,14 +570,14 @@
 <p>Simulate data:</p>
 <ul>
 <li>add noise to a simulated time-series <code>x</code>,</li>
-<li>length of simulated pattern occurrences varies (vector length ranges between <code>60</code> and <code>120</code>),</li>
-<li>two different true pattern shapes within a time-series <code>x</code>.</li>
+<li>length of patterns in a simulated time-series <code>x</code> varies,</li>
+<li>two different shape patterns used to simulate a time-series <code>x</code>.</li>
 </ul>
-<p>Here, we use <code>x</code> generated above in Examples 3.</p>
+<p>Here, we use a time-series <code>x</code> generated above in Examples 3.</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1"><span class="co">## Add noise to x generated in Examples 3</span></a>
 <a class="sourceLine" id="cb23-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">1</span>)</a>
 <a class="sourceLine" id="cb23-3" title="3">x2 &lt;-<span class="st"> </span>x <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(x), <span class="dt">sd =</span> <span class="fl">0.5</span>)</a></code></pre></div>
-<p>Plot time-series <code>x</code>.</p>
+<p>Plot a time-series <code>x</code>.</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(x2), <span class="dt">y =</span> x2) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb24-2" title="2"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>() <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/geom_path">geom_line</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> x, <span class="dt">y =</span> y), <span class="dt">size =</span> <span class="fl">0.3</span>) <span class="op">+</span><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/ggtheme">theme_bw</a></span>(<span class="dt">base_size =</span> <span class="dv">9</span>) <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb24-3" title="3"><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/ggplot2/topics/labs">labs</a></span>(<span class="dt">x =</span> <span class="st">"Time [s]"</span>, <span class="dt">y =</span> <span class="st">"Value"</span>, <span class="dt">title =</span> <span class="st">"Time-series x"</span>)</a></code></pre></div>
@@ -585,7 +586,7 @@
 <div id="example-4a-segment-pattern" class="section level3">
 <h3 class="hasAnchor">
 <a href="#example-4a-segment-pattern" class="anchor"></a>Example 4(a): segment pattern</h3>
-<p>Use two templates simultaneously in segmentation.</p>
+<p>We use two pattern templates simultaneously in segmentation.</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1">pattern.dur.seq &lt;-<span class="st"> </span><span class="dv">60</span><span class="op">:</span><span class="dv">120</span></a>
 <a class="sourceLine" id="cb25-2" title="2">template &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(true.pattern<span class="fl">.1</span>,</a>
 <a class="sourceLine" id="cb25-3" title="3">                 true.pattern<span class="fl">.2</span>)</a>
@@ -617,9 +618,9 @@
 <div id="example-4b-use-x-adept-ma-w-to-smooth-x-for-similarity-matrix-computation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#example-4b-use-x-adept-ma-w-to-smooth-x-for-similarity-matrix-computation" class="anchor"></a>Example 4(b): use <code>x.adept.ma.W</code> to smooth <code>x</code> for similarity matrix computation</h3>
-<p>Use <code>x.adept.ma.W</code> to define a length of a smoothing window to smooth <code>x</code> for similarity matrix computation; <code>x.adept.ma.W</code> is expressed in seconds and the default is <code>NULL</code> (no smoothing applied).</p>
+<p>We use <code>x.adept.ma.W</code> to define a length of a smoothing window to smooth <code>x</code> for similarity matrix computation; <code>x.adept.ma.W</code> is expressed in seconds and the default is <code>NULL</code> (no smoothing applied).</p>
 <p><strong>Smoothing of a time-series <code>x</code></strong></p>
-<p>Function <code>windowSmooth</code> allows to observe the effect of smoothing for different values of smoothing window length <code>W</code>. <code>W</code> is expressed in seconds.</p>
+<p>Function <code>windowSmooth</code> allows observing the effect of smoothing for different values of smoothing window length <code>W</code>. <code>W</code> is expressed in seconds.</p>
 <ul>
 <li>Here, <code>W = 10</code> seems to be a plausible choice.</li>
 </ul>
@@ -661,7 +662,7 @@
 <a href="#example-4c-use-fine-tune-procedure-for-peak-detection" class="anchor"></a>Example 4(c): use fine-tune procedure for peak detection</h3>
 <p>Employ a fine-tuning procedure for stride identification. See <code>segmentPattern</code> documentation for more details.</p>
 <p><strong>Fine-tune procedure <code>"maxima"</code></strong></p>
-<p>Fine-tune procedure <code>"maxima"</code> tunes preliminarily identified start and end of a pattern occurrence so as they correspond to local maxima of <code>x</code> found within neighbourhoods of the preliminary locations.</p>
+<p>Fine-tune procedure <code>"maxima"</code> tunes preliminarily identified start and end of a pattern occurrence so as they correspond to local maxima of <code>x</code> found within neighborhoods of the preliminary locations.</p>
 <ul>
 <li>The parameter <code>finetune.maxima.nbh.W</code>, expressed in seconds, defines a length of the two neighborhoods within which we search for local maxima.</li>
 <li>Smoothed version of <code>x</code> may be used for local maxima search (as presented later).</li>
@@ -691,14 +692,14 @@
 <a class="sourceLine" id="cb28-23" title="23"><span class="co">## Plot segmetation results</span></a>
 <a class="sourceLine" id="cb28-24" title="24"><span class="kw">out.plot1</span>(x2, out)</a></code></pre></div>
 <p><img src="adept-intro_files/figure-html/unnamed-chunk-28-1.png" width="672"></p>
-<p>Observe that almost all identified pattern occurrence start/end points are hitting the time point which our eyes identify as local <code>x</code> maxima. The exception happens around time point <code>600</code>; explanation: it originates from the restriction that identified pattern occurrence is no longer than <code>120</code> seconds given we used pattern duration grid ranging from <code>60</code> to <code>120</code> seconds.</p>
+<p>We observe that almost all identified pattern occurrence start/end points are hitting the time point which our eyes identify as local <code>x</code> maxima. The exception takes place around time point <code>600</code>; the explanation for it is that an identified pattern cannot be longer than <code>120</code> seconds given we used potential pattern duration grid ranging from <code>60</code> to <code>120</code> seconds.</p>
 </div>
 <div id="example-4d-use-fine-tune-procedure-and-smooth-signal-for-peak-detection" class="section level3">
 <h3 class="hasAnchor">
 <a href="#example-4d-use-fine-tune-procedure-and-smooth-signal-for-peak-detection" class="anchor"></a>Example 4(d): use fine-tune procedure and smooth signal for peak detection</h3>
-<p>Smooth <code>x</code> for both similarity matrix computation (set <code>x.adept.ma.W = 10</code>) and for fine-tune peak detection procedure (set <code>finetune.maxima.nbh.W = 30</code>).</p>
+<p>We smooth <code>x</code> for both similarity matrix computation (set <code>x.adept.ma.W = 10</code>) and for fine-tune peak detection procedure (set <code>finetune.maxima.nbh.W = 30</code>).</p>
 <ul>
-<li>Here, <code>W = 50</code> seems like a plausible choice for fine-tune peak detection procedure as it removes (“smooth together”) multiple local maxima of <code>x</code>, leaving out a single one.</li>
+<li>Here, <code>W = 50</code> seems to be a plausible choice for fine-tune peak detection procedure as it removes (“smooth together”) multiple local maxima of <code>x</code>, leaving out a single one.</li>
 </ul>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" title="1">x2.smoothed &lt;-<span class="st"> </span><span class="kw"><a href="../reference/windowSmooth.html">windowSmooth</a></span>(<span class="dt">x =</span> x2, <span class="dt">x.fs =</span> <span class="dv">1</span>, <span class="dt">W =</span> <span class="dv">50</span>)</a>
 <a class="sourceLine" id="cb29-2" title="2"></a>
@@ -801,9 +802,9 @@
       <li><a href="#install-and-load-adept-package">Install and load <code>adept</code> package</a></li>
       <li>
 <a href="#pattern-segmentation-with-adept-package">Pattern segmentation with <code>adept</code> package</a><ul class="nav nav-pills nav-stacked">
-<li><a href="#examples-1-signal-with-no-noise-same-length-of-pattern-occurrences">Examples 1: signal with no noise, same length of pattern occurrences</a></li>
-      <li><a href="#examples-2-signal-with-no-noise-length-of-pattern-occurrences-varies">Examples 2: signal with no noise, length of pattern occurrences varies</a></li>
-      <li><a href="#examples-3-signal-with-no-noise-length-of-pattern-occurrences-and-pattern-shape-vary">Examples 3: signal with no noise, length of pattern occurrences and pattern shape vary</a></li>
+<li><a href="#examples-1-signal-with-no-noise-same-length-pattern">Examples 1: signal with no noise, same-length pattern</a></li>
+      <li><a href="#examples-2-signal-with-no-noise-length-of-pattern-varies">Examples 2: signal with no noise, length of pattern varies</a></li>
+      <li><a href="#examples-3-signal-with-no-noise-length-of-pattern-and-pattern-shape-vary">Examples 3: signal with no noise, length of pattern and pattern shape vary</a></li>
       <li><a href="#examples-4-signal-with-noise-length-of-pattern-occurrences-and-pattern-shape-vary">Examples 4: signal with noise, length of pattern occurrences and pattern shape vary</a></li>
       </ul>
 </li>
