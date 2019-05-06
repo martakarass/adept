@@ -1,6 +1,9 @@
 ---
 title: "Introduction to adept package"
-author: "Marta Karas"
+author:
+- Marta Karas
+- Ciprian Crainiceanu
+- Jacek Urbanek
 date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:
@@ -22,8 +25,7 @@ knitr::opts_chunk$set(
 ```
 
 
-
-# Intro
+# Introduction
 
 `adept` package implements ADaptive Empirical Pattern Transformation (ADEPT) **for pattern segmentation in a time-series `x`**. ADEPT is designed for identification of walking strides in sub-second level data collected with wearable accelerometers. ADEPT was validated ([1]) using data collected with sensors worn at left wrist, left hip and both ankles.  
 
@@ -31,14 +33,14 @@ This vignette introduces ADEPT algorithm and demonstrates the usage of `segmentP
 
 # ADEPT method   
 
-ADEPT identifies patterns in a time-series `x` via maximization of chosen similarity statistic (correlation, covariance etc.) between a time-series `x` and a pattern template(s). It accounts for variability in both (1) pattern duration and (2) pattern shape.
+ADEPT identifies patterns in a time-series `x` via maximization of chosen similarity statistic (correlation, covariance, etc.) between a time-series `x` and a pattern template(s). It accounts for variability in both (1) pattern duration and (2) pattern shape.
 
 ## Pattern template
 
 We define pattern template as a 1-dimensional numeric vector which values represent the pattern of interest (e.g. accelerometry data of a human stride).
 
 - See [1] where we show a way to derive walking stride templates from accelerometry data collected at left wrist, left hip and both ankles.
-- See [2] where we employed templates derived in [1] to segment stride pattern from  another accelerometry data set. 
+- See [2] where we employed templates derived in [1] to segment stride pattern from another accelerometry data set. 
 
 In this vignette, a pattern template is a simulated data vector. 
 
@@ -124,7 +126,7 @@ See Details in `segmentPattern` documentation.
 
 ### Example 1(b): use `pattern.dur.seq` to modify a grid of pattern duration 
 
-We next generate a dense grid of potential pattern durations, including value `101` used in signal simulation to obtain a perfect match (`sim_i = 1`).
+We next generate a dense grid of potential pattern durations, including value `101` used in the `x` simulation to obtain a perfect match (`sim_i = 1`).
 
 ```{r}
 pattern.dur.seq <- 90:110  ## Assume dense pattern duration grid ranging 90-110 seconds
@@ -243,7 +245,7 @@ out.plot1 <- function(val, out){
 
 ### Example 2(a): segment pattern
 
-We use a dense grid of potential pattern duration, including all values used in signal simulation to again obtain the perfect match (`sim_i = 1`). In this example, the start and the end points of identified patterns are connected (see figure below).
+We use a dense grid of potential pattern duration, including all values used in the `x` simulation to again obtain the perfect match (`sim_i = 1`). In this example, the start and the end points of identified patterns are connected (see figure below).
 
 ```{r, fig.width=7, fig.height=2.3}
 pattern.dur.seq <- 60:120
@@ -373,7 +375,7 @@ plt1;plt2
 
 ### Example 3(a): segment pattern
 
-We use a dense grid of potential pattern duration. We use a `template` object consisting of  one out of two patterns used in a time-series `x` simulation.   
+We use a dense grid of potential pattern duration. We use a `template` object consisting of one out of two patterns used in a time-series `x` simulation.   
 
 ```{r, fig.width=7, fig.height=2.3}
 pattern.dur.seq <- 60:120
@@ -392,7 +394,7 @@ out.plot1(x, out)
 ```
 
 
-### Example 3(b): use `similarity.measure.thresh` to modify threshold of minimal similarity 
+### Example 3(b): use `similarity.measure.thresh` to modify the threshold of minimal similarity 
 
 We use similarity threshold to segment only these patterns which have similarity `sim_i` (here: covariance) greater than the threshold value. Note that using the threshold may substantially speed up method execution. 
 
@@ -416,7 +418,7 @@ out.plot1(x, out)
 
 ### Example 3(c): use multiple templates simultaneously
 
-Use two templates simultaneously in segmentation. We observe that index of a pattern template best matched to a pattern in the time-series `x` is `1` and `2` interchangeably.
+Use two templates simultaneously in segmentation. We observe that the index of a pattern template best matched to a pattern in the time-series `x` is `1` and `2` interchangeably.
 
 ```{r, fig.width=7, fig.height=2.3}
 pattern.dur.seq <- 60:120

@@ -85,8 +85,10 @@
     <div class="page-header toc-ignore">
       <h1>Introduction to adept package</h1>
                         <h4 class="author">Marta Karas</h4>
+                        <h4 class="author">Ciprian Crainiceanu</h4>
+                        <h4 class="author">Jacek Urbanek</h4>
             
-            <h4 class="date">2019-04-16</h4>
+            <h4 class="date">2019-05-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/martakarass/adept/blob/master/vignettes/adept-intro.Rmd"><code>vignettes/adept-intro.Rmd</code></a></small>
       <div class="hidden name"><code>adept-intro.Rmd</code></div>
@@ -95,16 +97,16 @@
 
     
     
-<div id="intro" class="section level1">
+<div id="introduction" class="section level1">
 <h1 class="hasAnchor">
-<a href="#intro" class="anchor"></a>Intro</h1>
+<a href="#introduction" class="anchor"></a>Introduction</h1>
 <p><code>adept</code> package implements ADaptive Empirical Pattern Transformation (ADEPT) <strong>for pattern segmentation in a time-series <code>x</code></strong>. ADEPT is designed for identification of walking strides in sub-second level data collected with wearable accelerometers. ADEPT was validated ([1]) using data collected with sensors worn at left wrist, left hip and both ankles.</p>
 <p>This vignette introduces ADEPT algorithm and demonstrates the usage of <code>segmentPattern</code> function which implements ADEPT approach. Here, we focus on examples with simulated data; see the <a href="file://localhost/Users/martakaras/Dropbox/_PROJECTS/R/adept/docs/articles/adept-strides-segmentation.html">Walking strides segmentation with adept</a> vignette for the example of walking stride segmentation in real-life data.</p>
 </div>
 <div id="adept-method" class="section level1">
 <h1 class="hasAnchor">
 <a href="#adept-method" class="anchor"></a>ADEPT method</h1>
-<p>ADEPT identifies patterns in a time-series <code>x</code> via maximization of chosen similarity statistic (correlation, covariance etc.) between a time-series <code>x</code> and a pattern template(s). It accounts for variability in both (1) pattern duration and (2) pattern shape.</p>
+<p>ADEPT identifies patterns in a time-series <code>x</code> via maximization of chosen similarity statistic (correlation, covariance, etc.) between a time-series <code>x</code> and a pattern template(s). It accounts for variability in both (1) pattern duration and (2) pattern shape.</p>
 <div id="pattern-template" class="section level2">
 <h2 class="hasAnchor">
 <a href="#pattern-template" class="anchor"></a>Pattern template</h2>
@@ -177,7 +179,7 @@
 <a class="sourceLine" id="cb5-11" title="11"><span class="co">#&gt; 1      1 100 0.9994793          1</span></a>
 <a class="sourceLine" id="cb5-12" title="12"><span class="co">#&gt; 2    101 100 0.9994793          1</span></a>
 <a class="sourceLine" id="cb5-13" title="13"><span class="co">#&gt; 3    201 100 0.9994793          1</span></a>
-<a class="sourceLine" id="cb5-14" title="14"><span class="co">#&gt; 4    301 100 0.9994793          1</span></a>
+<a class="sourceLine" id="cb5-14" title="14"><span class="co">#&gt; 4    302 100 0.9994793          1</span></a>
 <a class="sourceLine" id="cb5-15" title="15"><span class="co">#&gt; 5    401 100 0.9994793          1</span></a>
 <a class="sourceLine" id="cb5-16" title="16"><span class="co">#&gt; 6    501 100 0.9994793          1</span></a>
 <a class="sourceLine" id="cb5-17" title="17"><span class="co">#&gt; 7    601 100 0.9994793          1</span></a>
@@ -204,7 +206,7 @@
 <div id="example-1b-use-pattern-dur-seq-to-modify-a-grid-of-pattern-duration" class="section level3">
 <h3 class="hasAnchor">
 <a href="#example-1b-use-pattern-dur-seq-to-modify-a-grid-of-pattern-duration" class="anchor"></a>Example 1(b): use <code>pattern.dur.seq</code> to modify a grid of pattern duration</h3>
-<p>We next generate a dense grid of potential pattern durations, including value <code>101</code> used in signal simulation to obtain a perfect match (<code>sim_i = 1</code>).</p>
+<p>We next generate a dense grid of potential pattern durations, including value <code>101</code> used in the <code>x</code> simulation to obtain a perfect match (<code>sim_i = 1</code>).</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">pattern.dur.seq &lt;-<span class="st"> </span><span class="dv">90</span><span class="op">:</span><span class="dv">110</span>  <span class="co">## Assume dense pattern duration grid ranging 90-110 seconds</span></a>
 <a class="sourceLine" id="cb6-2" title="2">out &lt;-<span class="st"> </span><span class="kw"><a href="../reference/segmentPattern.html">segmentPattern</a></span>(</a>
 <a class="sourceLine" id="cb6-3" title="3">  <span class="dt">x =</span> x,</a>
@@ -330,7 +332,7 @@
 <div id="example-2a-segment-pattern" class="section level3">
 <h3 class="hasAnchor">
 <a href="#example-2a-segment-pattern" class="anchor"></a>Example 2(a): segment pattern</h3>
-<p>We use a dense grid of potential pattern duration, including all values used in signal simulation to again obtain the perfect match (<code>sim_i = 1</code>). In this example, the start and the end points of identified patterns are connected (see figure below).</p>
+<p>We use a dense grid of potential pattern duration, including all values used in the <code>x</code> simulation to again obtain the perfect match (<code>sim_i = 1</code>). In this example, the start and the end points of identified patterns are connected (see figure below).</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">pattern.dur.seq &lt;-<span class="st"> </span><span class="dv">60</span><span class="op">:</span><span class="dv">120</span></a>
 <a class="sourceLine" id="cb12-2" title="2">out &lt;-<span class="st"> </span><span class="kw"><a href="../reference/segmentPattern.html">segmentPattern</a></span>(</a>
 <a class="sourceLine" id="cb12-3" title="3">  <span class="dt">x =</span> x,</a>
@@ -376,9 +378,9 @@
 <a class="sourceLine" id="cb13-10" title="10"><span class="co">#&gt;    tau_i T_i     sim_i template_i</span></a>
 <a class="sourceLine" id="cb13-11" title="11"><span class="co">#&gt; 1      9  60 0.9913537          1</span></a>
 <a class="sourceLine" id="cb13-12" title="12"><span class="co">#&gt; 2     87  60 0.9875419          1</span></a>
-<a class="sourceLine" id="cb13-13" title="13"><span class="co">#&gt; 3    158  90 0.9991040          1</span></a>
+<a class="sourceLine" id="cb13-13" title="13"><span class="co">#&gt; 3    159  90 0.9991040          1</span></a>
 <a class="sourceLine" id="cb13-14" title="14"><span class="co">#&gt; 4    260  90 0.9925351          1</span></a>
-<a class="sourceLine" id="cb13-15" title="15"><span class="co">#&gt; 5    365  60 0.9933033          1</span></a>
+<a class="sourceLine" id="cb13-15" title="15"><span class="co">#&gt; 5    366  60 0.9933033          1</span></a>
 <a class="sourceLine" id="cb13-16" title="16"><span class="co">#&gt; 6    425 120 0.9967502          1</span></a>
 <a class="sourceLine" id="cb13-17" title="17"><span class="co">#&gt; 7    549  90 0.9923207          1</span></a>
 <a class="sourceLine" id="cb13-18" title="18"><span class="co">#&gt; 8    651  90 0.9986598          1</span></a>
@@ -403,9 +405,9 @@
 <a class="sourceLine" id="cb15-10" title="10"><span class="co">#&gt;    tau_i T_i     sim_i template_i</span></a>
 <a class="sourceLine" id="cb15-11" title="11"><span class="co">#&gt; 1      9  60 0.5918631          1</span></a>
 <a class="sourceLine" id="cb15-12" title="12"><span class="co">#&gt; 2     72  90 0.7339804          1</span></a>
-<a class="sourceLine" id="cb15-13" title="13"><span class="co">#&gt; 3    173  60 0.4559175          1</span></a>
+<a class="sourceLine" id="cb15-13" title="13"><span class="co">#&gt; 3    174  60 0.4559175          1</span></a>
 <a class="sourceLine" id="cb15-14" title="14"><span class="co">#&gt; 4    245 120 0.7289255          1</span></a>
-<a class="sourceLine" id="cb15-15" title="15"><span class="co">#&gt; 5    365  60 0.6348018          1</span></a>
+<a class="sourceLine" id="cb15-15" title="15"><span class="co">#&gt; 5    366  60 0.6348018          1</span></a>
 <a class="sourceLine" id="cb15-16" title="16"><span class="co">#&gt; 6    440  90 0.6108531          1</span></a>
 <a class="sourceLine" id="cb15-17" title="17"><span class="co">#&gt; 7    534 120 0.7306629          1</span></a>
 <a class="sourceLine" id="cb15-18" title="18"><span class="co">#&gt; 8    653  90 0.6897910          1</span></a>
@@ -502,9 +504,9 @@
 <a class="sourceLine" id="cb20-24" title="24"><span class="kw">out.plot1</span>(x, out)</a></code></pre></div>
 <p><img src="adept-intro_files/figure-html/unnamed-chunk-20-1.png" width="672"></p>
 </div>
-<div id="example-3b-use-similarity-measure-thresh-to-modify-threshold-of-minimal-similarity" class="section level3">
+<div id="example-3b-use-similarity-measure-thresh-to-modify-the-threshold-of-minimal-similarity" class="section level3">
 <h3 class="hasAnchor">
-<a href="#example-3b-use-similarity-measure-thresh-to-modify-threshold-of-minimal-similarity" class="anchor"></a>Example 3(b): use <code>similarity.measure.thresh</code> to modify threshold of minimal similarity</h3>
+<a href="#example-3b-use-similarity-measure-thresh-to-modify-the-threshold-of-minimal-similarity" class="anchor"></a>Example 3(b): use <code>similarity.measure.thresh</code> to modify the threshold of minimal similarity</h3>
 <p>We use similarity threshold to segment only these patterns which have similarity <code>sim_i</code> (here: covariance) greater than the threshold value. Note that using the threshold may substantially speed up method execution.</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1">pattern.dur.seq &lt;-<span class="st"> </span><span class="dv">60</span><span class="op">:</span><span class="dv">120</span></a>
 <a class="sourceLine" id="cb21-2" title="2">template &lt;-<span class="st"> </span>true.pattern<span class="fl">.1</span></a>
@@ -531,7 +533,7 @@
 <div id="example-3c-use-multiple-templates-simultaneously" class="section level3">
 <h3 class="hasAnchor">
 <a href="#example-3c-use-multiple-templates-simultaneously" class="anchor"></a>Example 3(c): use multiple templates simultaneously</h3>
-<p>Use two templates simultaneously in segmentation. We observe that index of a pattern template best matched to a pattern in the time-series <code>x</code> is <code>1</code> and <code>2</code> interchangeably.</p>
+<p>Use two templates simultaneously in segmentation. We observe that the index of a pattern template best matched to a pattern in the time-series <code>x</code> is <code>1</code> and <code>2</code> interchangeably.</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1">pattern.dur.seq &lt;-<span class="st"> </span><span class="dv">60</span><span class="op">:</span><span class="dv">120</span></a>
 <a class="sourceLine" id="cb22-2" title="2"><span class="co">## Use two templates simultaneously in segmentation</span></a>
 <a class="sourceLine" id="cb22-3" title="3">template &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(true.pattern<span class="fl">.1</span>,</a>
@@ -793,7 +795,7 @@
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li><a href="#intro">Intro</a></li>
+<li><a href="#introduction">Introduction</a></li>
       <li>
 <a href="#adept-method">ADEPT method</a><ul class="nav nav-pills nav-stacked">
 <li><a href="#pattern-template">Pattern template</a></li>
