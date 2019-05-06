@@ -27,7 +27,7 @@ test_that("Example 1(a): no noise in signal, all pattern occurences of the same
                         similarity.measure = "cor")
 
   res <- sort(out$tau_i)
-  res.exp <- c(1, 101, 201, 301, 401, 501, 601, 701, 801, 901)
+  res.exp <- c(1, 101, 201, 302, 401, 501, 601, 701, 801, 901)
   expect_equal(res, res.exp)
 
   res <- sort(out$T_i)
@@ -192,7 +192,7 @@ test_that("Example 2(b): no noise in signal (no peak fine-tuning employed),
                         similarity.measure = "cor")
 
   res <- out$tau_i
-  res.exp <-c(9, 77, 163, 245, 365, 435, 534, 656, 742, 861)
+  res.exp <- c(9, 77, 163, 245, 366, 435, 534, 656, 742, 861)
   expect_equal(res, res.exp)
 
   res <- out$T_i

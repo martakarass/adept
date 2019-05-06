@@ -34,7 +34,7 @@ test_that("Sute 1. Test if maxAndTune works correctly. Case: no noise in signal,
                     finetune.maxima.nbh.vl)
 
   expect_equal(sort(out$tau_i),
-               c(1, 101, 201, 301, 401, 501, 601, 701, 801, 901))
+               c(1, 101, 201, 302, 401, 501, 601, 701, 801, 901))
   expect_equal(sort(out$T_i),
                c(100, 100, 100, 100, 100, 100, 100, 100, 100, 100))
 
