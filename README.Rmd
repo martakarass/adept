@@ -19,54 +19,138 @@ knitr::opts_chunk$set(
 )
 ```
 
-
-# adept
-
-`adept` package implements ADaptive Empirical Pattern Transformation (ADEPT) method for pattern segmentation from a time-series. ADEPT was designed for optimal use in performing fast, accurate walking strides segmentation from high-density data collected from a wearable accelerometer worn during continuous walking activity. 
+The `adept` package implements ADaptive Empirical Pattern Transformation (ADEPT) method^[Karas, M., Straczkiewicz, M., Fadel, W., Harezlak, J., Crainiceanu, C., Urbanek, J.K. *Adaptive empirical pattern transformation (ADEPT) with application to walking stride segmentation*, Submitted to *Biostatistics*, 2018.] for pattern segmentation from a time-series. ADEPT is designed to perform fast, accurate walking strides segmentation from high-density data collected with a wearable accelerometer during walking. 
 
 ### Installation
+
+Install `adept` package from GitHub. 
 
 ```{r, eval = FALSE}
 # install.packages("devtools")
 devtools::install_github("martakarass/adept")
 ```
 
+### Example 1
 
-## Vignettes 
+Simulate a time-series `x`; assume that `x` is collected frequency of 100 Hz, there is one pattern of a fixed duration 1.01 seconds present in `x`, and there is no noise in collected data. 
 
-Vignettes are available to better explain package methods functionality. 
+```{r, fig.width=10, fig.height=4}
+library(adept)
 
-#### Vignette 1. Introduction to adept package
+x <- cos(seq(0, 2 * pi * 10, length.out = 1001))
+true.pattern <- x[1:101]
 
-Vignette [Introduction to adept package](https://martakarass.github.io/adept/articles/adept-intro.html) intends to introduce a reader to the ADEPT method and demonstrate the usage of the `segmentPattern {adept}` function which implements ADEPT method. Here, we focus on illustrating `segmentPattern {adept}` functionality with a comprehensive set of simulated data examples. 
+par(mfrow = c(1,2), cex = 1)
+plot(true.pattern, type = "l", xlab = "", ylab = "", main = "Pattern")
+plot(x, type = "l", xlab = "", ylab = "", main = "Time-series x")
+```
 
-Specifically, we show how to use `adept` segment pattern occurrences from a (noisy) signal in the presence of: 
+Segment pattern from data. Assume perfect template is available. Use grid of potential pattern durations of {0.9, 1, 1.1} seconds.
 
-- different shapes of pattern in a time-series,
-- various lengths of pattern occurrences in a time-series.
+```{r, fig.width=2.5, fig.height=2.3}
+segmentPattern(
+  x = x,
+  x.fs = 100,
+  template = true.pattern,
+  pattern.dur.seq = c(0.9, 1, 1.1),
+  similarity.measure = "cor",
+  compute.template.idx = TRUE)
+```
 
-![](https://imgur.com/bnHdiHR.jpg)
+Assume grid of potential pattern durations of {0.9, 1.01, 1.1} seconds (the grid is now "perfect" in a sense it contains duration of the true pattern used in data simulation). 
+
+```{r, fig.width=2.5, fig.height=2.3}
+segmentPattern(
+  x = x,
+  x.fs = 100,
+  template = true.pattern,
+  pattern.dur.seq = c(0.9, 1.01, 1.1),
+  similarity.measure = "cor",
+  compute.template.idx = TRUE)
+```
+
+### Example 2
+
+Simulate a time-series `x`; assume that time-series is collected frequency of 100 Hz, there are two patterns of various duration present in `x`, and there is noise in collected data. 
+
+Then, generate `x2` as a noisy version of `x`. 
+
+```{r, fig.width=10, fig.height=4}
+true.pattern.1 <- cos(seq(0, 2 * pi, length.out = 200))
+true.pattern.2 <- true.pattern.1
+true.pattern.2[70:130] <- 2 * true.pattern.2[min(70:130)] + abs(true.pattern.2[70:130])
+x <- numeric()
+for (vl in seq(70, 130, by = 10)){
+  true.pattern.1.s <- approx(
+    seq(0, 1, length.out = 200), 
+    true.pattern.1, xout = seq(0, 1, length.out = vl))$y
+  true.pattern.2.s <- approx(
+    seq(0, 1, length.out = 200), 
+    true.pattern.2, xout = seq(0, 1, length.out = vl))$y
+  x <- c(x, true.pattern.1.s[-1], true.pattern.2.s[-1])
+  if (vl == 70) x <- c(true.pattern.1.s[1], x)
+}
+set.seed(1)
+x2 <- x + rnorm(length(x), sd = 0.5)
+
+par(mfrow = c(1,2), cex = 1)
+plot(true.pattern.1, type = "l", xlab = "", ylab = "", main = "Pattern 1")
+plot(true.pattern.2, type = "l", xlab = "", ylab = "", main = "Pattern 2")
+par(mfrow = c(1,1), cex = 1)
+plot(x, type = "l", xlab = "", ylab = "", main = "Time-series x")
+plot(x2, type = "l", xlab = "", ylab = "", main = "Time-series x2")
+```
+
+Assume perfect grid of potential pattern duration, {0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3} seconds. Segment `x`. 
+
+```{r}
+segmentPattern(
+  x = x,
+  x.fs = 100,
+  template = list(true.pattern.1, true.pattern.2),
+  pattern.dur.seq = seq(70, 130, by = 10) * 0.01,
+  similarity.measure = "cor",
+  compute.template.idx = TRUE)
+```
+
+Segment `x2`.  
+
+```{r}
+segmentPattern(
+  x = x2,
+  x.fs = 100,
+  template = list(true.pattern.1, true.pattern.2),
+  pattern.dur.seq = seq(70, 130, by = 10) * 0.01,
+  similarity.measure = "cor",
+  compute.template.idx = TRUE)
+```
+
+Segment `x2`; smooth data time-series before similarity matrix computation.  Assume more dense grid of potential pattern duration. 
+
+```{r, fig.width=10, fig.height=4}
+par(mfrow = c(1,1), cex = 1)
+plot(windowSmooth(x = x2, x.fs = 100, W = 0.1), 
+     type = "l", xlab = "", ylab = "", main = "Time-series x2 smoothed")
+segmentPattern(
+  x = x2,
+  x.fs = 100,
+  template = list(true.pattern.1, true.pattern.2),
+  pattern.dur.seq = 70:130 * 0.01,
+  similarity.measure = "cor",
+  x.adept.ma.W = 0.1,
+  compute.template.idx = TRUE)
+```
 
 
-#### Vignette 2. Walking strides segmentation with adept
+### Vignettes 
 
-Vignette [Walking strides segmentation with adept](https://martakarass.github.io/adept/articles/adept-strides-segmentation.html) provides an example of walking stride segmentation from subsecond accelerometry data with `adept` package. We demonstrate that ADEPT method can be used to perform automatic and precise walking stride segmentation from data collected during a combination of running, walking and resting exercise. We demonstrate how to segment stride pattern: 
+Vignettes are available to better demonstrate package methods usgae. 
 
-1. with the use of stride templates that were pre-computed based on data from an external study, 
-2. by deriving new stride templates in a semi-manual manner.
-  
-##### Accelerometry data collection 
+1. Vignette [Introduction to adept package](https://martakarass.github.io/adept/articles/adept-intro.html) introduces ADEPT algorithm and demonstrates the usage of `segmentPattern` function which implements ADEPT approach. Here, we focus on examples with simulated data.
 
-![](https://imgur.com/j1mIz0N.jpg)
+2. Vignette [Walking strides segmentation with adept](https://martakarass.github.io/adept/articles/adept-strides-segmentation.html) provides an example of segmentation of walking strides (two consecutive steps) in sub-second accelerometry data with `adept` package. The exemplary dataset is a part of the `adeptdata` package. We demonstrate that ADEPT can be used to perform automatic and precise walking stride segmentation from data collected during a combination of running, walking and resting exercises. We introduce how to segment data: 
 
-#####  Accelerometry data visualization
-
-![](https://imgur.com/Z0j1qLc.jpg)
-
-
-#####  Segmentation results
-
-![](https://imgur.com/5qZg53t.jpg)
-
-
-
+    1. with the use of stride templates that were pre-computed based on data from an external study (attached to `adeptdata` package), 
+    2. by deriving new stride templates in a semi-manual manner. 
+    
+References

@@ -91,56 +91,192 @@
     
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-<div id="adept" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#adept" class="anchor"></a>adept</h1></div>
-<p><code>adept</code> package implements ADaptive Empirical Pattern Transformation (ADEPT) method for pattern segmentation from a time-series. ADEPT was designed for optimal use in performing fast, accurate walking strides segmentation from high-density data collected from a wearable accelerometer worn during continuous walking activity.</p>
+<p>The <code>adept</code> package implements ADaptive Empirical Pattern Transformation (ADEPT) method<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> for pattern segmentation from a time-series. ADEPT is designed to perform fast, accurate walking strides segmentation from high-density data collected with a wearable accelerometer during walking.</p>
 <div id="installation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h3>
+<p>Install <code>adept</code> package from GitHub.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co"># install.packages("devtools")</span></a>
 <a class="sourceLine" id="cb1-2" title="2">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"martakarass/adept"</span>)</a></code></pre></div>
 </div>
-<div id="vignettes" class="section level2">
-<h2 class="hasAnchor">
-<a href="#vignettes" class="anchor"></a>Vignettes</h2>
-<p>Vignettes are available to better explain package methods functionality.</p>
-<div id="vignette-1--introduction-to-adept-package" class="section level4">
-<h4 class="hasAnchor">
-<a href="#vignette-1--introduction-to-adept-package" class="anchor"></a>Vignette 1. Introduction to adept package</h4>
-<p>Vignette <a href="https://martakarass.github.io/adept/articles/adept-intro.html">Introduction to adept package</a> intends to introduce a reader to the ADEPT method and demonstrate the usage of the <code>segmentPattern {adept}</code> function which implements ADEPT method. Here, we focus on illustrating <code>segmentPattern {adept}</code> functionality with a comprehensive set of simulated data examples.</p>
-<p>Specifically, we show how to use <code>adept</code> segment pattern occurrences from a (noisy) signal in the presence of:</p>
-<ul>
-<li>different shapes of pattern in a time-series,</li>
-<li>various lengths of pattern occurrences in a time-series.</li>
-</ul>
-<p><img src="https://imgur.com/bnHdiHR.jpg"></p>
+<div id="example-1" class="section level3">
+<h3 class="hasAnchor">
+<a href="#example-1" class="anchor"></a>Example 1</h3>
+<p>Simulate a time-series <code>x</code>; assume that <code>x</code> is collected frequency of 100 Hz, there is one pattern of a fixed duration 1.01 seconds present in <code>x</code>, and there is no noise in collected data.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(adept)</a>
+<a class="sourceLine" id="cb2-2" title="2"></a>
+<a class="sourceLine" id="cb2-3" title="3">x &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Trig">cos</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="dv">2</span> <span class="op">*</span><span class="st"> </span>pi <span class="op">*</span><span class="st"> </span><span class="dv">10</span>, <span class="dt">length.out =</span> <span class="dv">1001</span>))</a>
+<a class="sourceLine" id="cb2-4" title="4">true.pattern &lt;-<span class="st"> </span>x[<span class="dv">1</span><span class="op">:</span><span class="dv">101</span>]</a>
+<a class="sourceLine" id="cb2-5" title="5"></a>
+<a class="sourceLine" id="cb2-6" title="6"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/par">par</a></span>(<span class="dt">mfrow =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">cex =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb2-7" title="7"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(true.pattern, <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">xlab =</span> <span class="st">""</span>, <span class="dt">ylab =</span> <span class="st">""</span>, <span class="dt">main =</span> <span class="st">"Pattern"</span>)</a>
+<a class="sourceLine" id="cb2-8" title="8"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(x, <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">xlab =</span> <span class="st">""</span>, <span class="dt">ylab =</span> <span class="st">""</span>, <span class="dt">main =</span> <span class="st">"Time-series x"</span>)</a></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-2-1.png" width="100%"></p>
+<p>Segment pattern from data. Assume perfect template is available. Use grid of potential pattern durations of {0.9, 1, 1.1} seconds.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw"><a href="reference/segmentPattern.html">segmentPattern</a></span>(</a>
+<a class="sourceLine" id="cb3-2" title="2">  <span class="dt">x =</span> x,</a>
+<a class="sourceLine" id="cb3-3" title="3">  <span class="dt">x.fs =</span> <span class="dv">100</span>,</a>
+<a class="sourceLine" id="cb3-4" title="4">  <span class="dt">template =</span> true.pattern,</a>
+<a class="sourceLine" id="cb3-5" title="5">  <span class="dt">pattern.dur.seq =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">0.9</span>, <span class="dv">1</span>, <span class="fl">1.1</span>),</a>
+<a class="sourceLine" id="cb3-6" title="6">  <span class="dt">similarity.measure =</span> <span class="st">"cor"</span>,</a>
+<a class="sourceLine" id="cb3-7" title="7">  <span class="dt">compute.template.idx =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb3-8" title="8"><span class="co">#&gt;    tau_i T_i     sim_i template_i</span></a>
+<a class="sourceLine" id="cb3-9" title="9"><span class="co">#&gt; 1      1 100 0.9994793          1</span></a>
+<a class="sourceLine" id="cb3-10" title="10"><span class="co">#&gt; 2    101 100 0.9994793          1</span></a>
+<a class="sourceLine" id="cb3-11" title="11"><span class="co">#&gt; 3    201 100 0.9994793          1</span></a>
+<a class="sourceLine" id="cb3-12" title="12"><span class="co">#&gt; 4    302 100 0.9994793          1</span></a>
+<a class="sourceLine" id="cb3-13" title="13"><span class="co">#&gt; 5    401 100 0.9994793          1</span></a>
+<a class="sourceLine" id="cb3-14" title="14"><span class="co">#&gt; 6    501 100 0.9994793          1</span></a>
+<a class="sourceLine" id="cb3-15" title="15"><span class="co">#&gt; 7    601 100 0.9994793          1</span></a>
+<a class="sourceLine" id="cb3-16" title="16"><span class="co">#&gt; 8    701 100 0.9994793          1</span></a>
+<a class="sourceLine" id="cb3-17" title="17"><span class="co">#&gt; 9    801 100 0.9994793          1</span></a>
+<a class="sourceLine" id="cb3-18" title="18"><span class="co">#&gt; 10   901 100 0.9994793          1</span></a></code></pre></div>
+<p>Assume grid of potential pattern durations of {0.9, 1.01, 1.1} seconds (the grid is now “perfect” in a sense it contains duration of the true pattern used in data simulation).</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw"><a href="reference/segmentPattern.html">segmentPattern</a></span>(</a>
+<a class="sourceLine" id="cb4-2" title="2">  <span class="dt">x =</span> x,</a>
+<a class="sourceLine" id="cb4-3" title="3">  <span class="dt">x.fs =</span> <span class="dv">100</span>,</a>
+<a class="sourceLine" id="cb4-4" title="4">  <span class="dt">template =</span> true.pattern,</a>
+<a class="sourceLine" id="cb4-5" title="5">  <span class="dt">pattern.dur.seq =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">0.9</span>, <span class="fl">1.01</span>, <span class="fl">1.1</span>),</a>
+<a class="sourceLine" id="cb4-6" title="6">  <span class="dt">similarity.measure =</span> <span class="st">"cor"</span>,</a>
+<a class="sourceLine" id="cb4-7" title="7">  <span class="dt">compute.template.idx =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb4-8" title="8"><span class="co">#&gt;    tau_i T_i sim_i template_i</span></a>
+<a class="sourceLine" id="cb4-9" title="9"><span class="co">#&gt; 1      1 101     1          1</span></a>
+<a class="sourceLine" id="cb4-10" title="10"><span class="co">#&gt; 2    101 101     1          1</span></a>
+<a class="sourceLine" id="cb4-11" title="11"><span class="co">#&gt; 3    201 101     1          1</span></a>
+<a class="sourceLine" id="cb4-12" title="12"><span class="co">#&gt; 4    301 101     1          1</span></a>
+<a class="sourceLine" id="cb4-13" title="13"><span class="co">#&gt; 5    401 101     1          1</span></a>
+<a class="sourceLine" id="cb4-14" title="14"><span class="co">#&gt; 6    501 101     1          1</span></a>
+<a class="sourceLine" id="cb4-15" title="15"><span class="co">#&gt; 7    601 101     1          1</span></a>
+<a class="sourceLine" id="cb4-16" title="16"><span class="co">#&gt; 8    701 101     1          1</span></a>
+<a class="sourceLine" id="cb4-17" title="17"><span class="co">#&gt; 9    801 101     1          1</span></a>
+<a class="sourceLine" id="cb4-18" title="18"><span class="co">#&gt; 10   901 101     1          1</span></a></code></pre></div>
 </div>
-<div id="vignette-2--walking-strides-segmentation-with-adept" class="section level4">
-<h4 class="hasAnchor">
-<a href="#vignette-2--walking-strides-segmentation-with-adept" class="anchor"></a>Vignette 2. Walking strides segmentation with adept</h4>
-<p>Vignette <a href="https://martakarass.github.io/adept/articles/adept-strides-segmentation.html">Walking strides segmentation with adept</a> provides an example of walking stride segmentation from subsecond accelerometry data with <code>adept</code> package. We demonstrate that ADEPT method can be used to perform automatic and precise walking stride segmentation from data collected during a combination of running, walking and resting exercise. We demonstrate how to segment stride pattern:</p>
+<div id="example-2" class="section level3">
+<h3 class="hasAnchor">
+<a href="#example-2" class="anchor"></a>Example 2</h3>
+<p>Simulate a time-series <code>x</code>; assume that time-series is collected frequency of 100 Hz, there are two patterns of various duration present in <code>x</code>, and there is noise in collected data.</p>
+<p>Then, generate <code>x2</code> as a noisy version of <code>x</code>.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">true.pattern<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Trig">cos</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="dv">2</span> <span class="op">*</span><span class="st"> </span>pi, <span class="dt">length.out =</span> <span class="dv">200</span>))</a>
+<a class="sourceLine" id="cb5-2" title="2">true.pattern<span class="fl">.2</span> &lt;-<span class="st"> </span>true.pattern<span class="fl">.1</span></a>
+<a class="sourceLine" id="cb5-3" title="3">true.pattern<span class="fl">.2</span>[<span class="dv">70</span><span class="op">:</span><span class="dv">130</span>] &lt;-<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>true.pattern<span class="fl">.2</span>[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">min</a></span>(<span class="dv">70</span><span class="op">:</span><span class="dv">130</span>)] <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">abs</a></span>(true.pattern<span class="fl">.2</span>[<span class="dv">70</span><span class="op">:</span><span class="dv">130</span>])</a>
+<a class="sourceLine" id="cb5-4" title="4">x &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/numeric">numeric</a></span>()</a>
+<a class="sourceLine" id="cb5-5" title="5"><span class="cf">for</span> (vl <span class="cf">in</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">70</span>, <span class="dv">130</span>, <span class="dt">by =</span> <span class="dv">10</span>)){</a>
+<a class="sourceLine" id="cb5-6" title="6">  true.pattern.<span class="fl">1.</span>s &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/approxfun">approx</a></span>(</a>
+<a class="sourceLine" id="cb5-7" title="7">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">200</span>), </a>
+<a class="sourceLine" id="cb5-8" title="8">    true.pattern<span class="fl">.1</span>, <span class="dt">xout =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length.out =</span> vl))<span class="op">$</span>y</a>
+<a class="sourceLine" id="cb5-9" title="9">  true.pattern.<span class="fl">2.</span>s &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/approxfun">approx</a></span>(</a>
+<a class="sourceLine" id="cb5-10" title="10">    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">200</span>), </a>
+<a class="sourceLine" id="cb5-11" title="11">    true.pattern<span class="fl">.2</span>, <span class="dt">xout =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length.out =</span> vl))<span class="op">$</span>y</a>
+<a class="sourceLine" id="cb5-12" title="12">  x &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(x, true.pattern.<span class="fl">1.</span>s[<span class="op">-</span><span class="dv">1</span>], true.pattern.<span class="fl">2.</span>s[<span class="op">-</span><span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb5-13" title="13">  <span class="cf">if</span> (vl <span class="op">==</span><span class="st"> </span><span class="dv">70</span>) x &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(true.pattern.<span class="fl">1.</span>s[<span class="dv">1</span>], x)</a>
+<a class="sourceLine" id="cb5-14" title="14">}</a>
+<a class="sourceLine" id="cb5-15" title="15"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb5-16" title="16">x2 &lt;-<span class="st"> </span>x <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(x), <span class="dt">sd =</span> <span class="fl">0.5</span>)</a>
+<a class="sourceLine" id="cb5-17" title="17"></a>
+<a class="sourceLine" id="cb5-18" title="18"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/par">par</a></span>(<span class="dt">mfrow =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">cex =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb5-19" title="19"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(true.pattern<span class="fl">.1</span>, <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">xlab =</span> <span class="st">""</span>, <span class="dt">ylab =</span> <span class="st">""</span>, <span class="dt">main =</span> <span class="st">"Pattern 1"</span>)</a>
+<a class="sourceLine" id="cb5-20" title="20"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(true.pattern<span class="fl">.2</span>, <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">xlab =</span> <span class="st">""</span>, <span class="dt">ylab =</span> <span class="st">""</span>, <span class="dt">main =</span> <span class="st">"Pattern 2"</span>)</a></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-5-1.png" width="100%"></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/par">par</a></span>(<span class="dt">mfrow =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">1</span>), <span class="dt">cex =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb6-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(x, <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">xlab =</span> <span class="st">""</span>, <span class="dt">ylab =</span> <span class="st">""</span>, <span class="dt">main =</span> <span class="st">"Time-series x"</span>)</a></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-5-2.png" width="100%"></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(x2, <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">xlab =</span> <span class="st">""</span>, <span class="dt">ylab =</span> <span class="st">""</span>, <span class="dt">main =</span> <span class="st">"Time-series x2"</span>)</a></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-5-3.png" width="100%"></p>
+<p>Assume perfect grid of potential pattern duration, {0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3} seconds. Segment <code>x</code>.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="kw"><a href="reference/segmentPattern.html">segmentPattern</a></span>(</a>
+<a class="sourceLine" id="cb8-2" title="2">  <span class="dt">x =</span> x,</a>
+<a class="sourceLine" id="cb8-3" title="3">  <span class="dt">x.fs =</span> <span class="dv">100</span>,</a>
+<a class="sourceLine" id="cb8-4" title="4">  <span class="dt">template =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(true.pattern<span class="fl">.1</span>, true.pattern<span class="fl">.2</span>),</a>
+<a class="sourceLine" id="cb8-5" title="5">  <span class="dt">pattern.dur.seq =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">70</span>, <span class="dv">130</span>, <span class="dt">by =</span> <span class="dv">10</span>) <span class="op">*</span><span class="st"> </span><span class="fl">0.01</span>,</a>
+<a class="sourceLine" id="cb8-6" title="6">  <span class="dt">similarity.measure =</span> <span class="st">"cor"</span>,</a>
+<a class="sourceLine" id="cb8-7" title="7">  <span class="dt">compute.template.idx =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb8-8" title="8"><span class="co">#&gt;    tau_i T_i sim_i template_i</span></a>
+<a class="sourceLine" id="cb8-9" title="9"><span class="co">#&gt; 1      1  70     1          1</span></a>
+<a class="sourceLine" id="cb8-10" title="10"><span class="co">#&gt; 2     70  70     1          2</span></a>
+<a class="sourceLine" id="cb8-11" title="11"><span class="co">#&gt; 3    139  80     1          1</span></a>
+<a class="sourceLine" id="cb8-12" title="12"><span class="co">#&gt; 4    218  80     1          2</span></a>
+<a class="sourceLine" id="cb8-13" title="13"><span class="co">#&gt; 5    297  90     1          1</span></a>
+<a class="sourceLine" id="cb8-14" title="14"><span class="co">#&gt; 6    386  90     1          2</span></a>
+<a class="sourceLine" id="cb8-15" title="15"><span class="co">#&gt; 7    475 100     1          1</span></a>
+<a class="sourceLine" id="cb8-16" title="16"><span class="co">#&gt; 8    574 100     1          2</span></a>
+<a class="sourceLine" id="cb8-17" title="17"><span class="co">#&gt; 9    673 110     1          1</span></a>
+<a class="sourceLine" id="cb8-18" title="18"><span class="co">#&gt; 10   782 110     1          2</span></a>
+<a class="sourceLine" id="cb8-19" title="19"><span class="co">#&gt; 11   891 120     1          1</span></a>
+<a class="sourceLine" id="cb8-20" title="20"><span class="co">#&gt; 12  1010 120     1          2</span></a>
+<a class="sourceLine" id="cb8-21" title="21"><span class="co">#&gt; 13  1129 130     1          1</span></a>
+<a class="sourceLine" id="cb8-22" title="22"><span class="co">#&gt; 14  1258 130     1          2</span></a></code></pre></div>
+<p>Segment <code>x2</code>.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw"><a href="reference/segmentPattern.html">segmentPattern</a></span>(</a>
+<a class="sourceLine" id="cb9-2" title="2">  <span class="dt">x =</span> x2,</a>
+<a class="sourceLine" id="cb9-3" title="3">  <span class="dt">x.fs =</span> <span class="dv">100</span>,</a>
+<a class="sourceLine" id="cb9-4" title="4">  <span class="dt">template =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(true.pattern<span class="fl">.1</span>, true.pattern<span class="fl">.2</span>),</a>
+<a class="sourceLine" id="cb9-5" title="5">  <span class="dt">pattern.dur.seq =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">70</span>, <span class="dv">130</span>, <span class="dt">by =</span> <span class="dv">10</span>) <span class="op">*</span><span class="st"> </span><span class="fl">0.01</span>,</a>
+<a class="sourceLine" id="cb9-6" title="6">  <span class="dt">similarity.measure =</span> <span class="st">"cor"</span>,</a>
+<a class="sourceLine" id="cb9-7" title="7">  <span class="dt">compute.template.idx =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb9-8" title="8"><span class="co">#&gt;    tau_i T_i     sim_i template_i</span></a>
+<a class="sourceLine" id="cb9-9" title="9"><span class="co">#&gt; 1      1  70 0.8585451          1</span></a>
+<a class="sourceLine" id="cb9-10" title="10"><span class="co">#&gt; 2    138  80 0.7624002          1</span></a>
+<a class="sourceLine" id="cb9-11" title="11"><span class="co">#&gt; 3    218  80 0.7025577          2</span></a>
+<a class="sourceLine" id="cb9-12" title="12"><span class="co">#&gt; 4    297  90 0.8500864          1</span></a>
+<a class="sourceLine" id="cb9-13" title="13"><span class="co">#&gt; 5    390  80 0.6931671          2</span></a>
+<a class="sourceLine" id="cb9-14" title="14"><span class="co">#&gt; 6    469 110 0.8286013          1</span></a>
+<a class="sourceLine" id="cb9-15" title="15"><span class="co">#&gt; 7    579  90 0.6373846          2</span></a>
+<a class="sourceLine" id="cb9-16" title="16"><span class="co">#&gt; 8    668 120 0.8027177          1</span></a>
+<a class="sourceLine" id="cb9-17" title="17"><span class="co">#&gt; 9    787 100 0.6666713          2</span></a>
+<a class="sourceLine" id="cb9-18" title="18"><span class="co">#&gt; 10   888 130 0.7894766          1</span></a>
+<a class="sourceLine" id="cb9-19" title="19"><span class="co">#&gt; 11  1017 110 0.6599280          1</span></a>
+<a class="sourceLine" id="cb9-20" title="20"><span class="co">#&gt; 12  1129 130 0.7938183          1</span></a>
+<a class="sourceLine" id="cb9-21" title="21"><span class="co">#&gt; 13  1267 120 0.7655408          2</span></a></code></pre></div>
+<p>Segment <code>x2</code>; smooth data time-series before similarity matrix computation. Assume more dense grid of potential pattern duration.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/par">par</a></span>(<span class="dt">mfrow =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">1</span>), <span class="dt">cex =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb10-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="kw"><a href="reference/windowSmooth.html">windowSmooth</a></span>(<span class="dt">x =</span> x2, <span class="dt">x.fs =</span> <span class="dv">100</span>, <span class="dt">W =</span> <span class="fl">0.1</span>), </a>
+<a class="sourceLine" id="cb10-3" title="3">     <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">xlab =</span> <span class="st">""</span>, <span class="dt">ylab =</span> <span class="st">""</span>, <span class="dt">main =</span> <span class="st">"Time-series x2 smoothed"</span>)</a></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-8-1.png" width="100%"></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="kw"><a href="reference/segmentPattern.html">segmentPattern</a></span>(</a>
+<a class="sourceLine" id="cb11-2" title="2">  <span class="dt">x =</span> x2,</a>
+<a class="sourceLine" id="cb11-3" title="3">  <span class="dt">x.fs =</span> <span class="dv">100</span>,</a>
+<a class="sourceLine" id="cb11-4" title="4">  <span class="dt">template =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(true.pattern<span class="fl">.1</span>, true.pattern<span class="fl">.2</span>),</a>
+<a class="sourceLine" id="cb11-5" title="5">  <span class="dt">pattern.dur.seq =</span> <span class="dv">70</span><span class="op">:</span><span class="dv">130</span> <span class="op">*</span><span class="st"> </span><span class="fl">0.01</span>,</a>
+<a class="sourceLine" id="cb11-6" title="6">  <span class="dt">similarity.measure =</span> <span class="st">"cor"</span>,</a>
+<a class="sourceLine" id="cb11-7" title="7">  <span class="dt">x.adept.ma.W =</span> <span class="fl">0.1</span>,</a>
+<a class="sourceLine" id="cb11-8" title="8">  <span class="dt">compute.template.idx =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb11-9" title="9"><span class="co">#&gt;    tau_i T_i     sim_i template_i</span></a>
+<a class="sourceLine" id="cb11-10" title="10"><span class="co">#&gt; 1      1  70 0.9865778          1</span></a>
+<a class="sourceLine" id="cb11-11" title="11"><span class="co">#&gt; 2     70  70 0.9533684          2</span></a>
+<a class="sourceLine" id="cb11-12" title="12"><span class="co">#&gt; 3    139  79 0.9683054          1</span></a>
+<a class="sourceLine" id="cb11-13" title="13"><span class="co">#&gt; 4    217  80 0.9748040          2</span></a>
+<a class="sourceLine" id="cb11-14" title="14"><span class="co">#&gt; 5    296  94 0.9802473          1</span></a>
+<a class="sourceLine" id="cb11-15" title="15"><span class="co">#&gt; 6    391  82 0.9462213          2</span></a>
+<a class="sourceLine" id="cb11-16" title="16"><span class="co">#&gt; 7    472 106 0.9855837          1</span></a>
+<a class="sourceLine" id="cb11-17" title="17"><span class="co">#&gt; 8    578  93 0.9608881          2</span></a>
+<a class="sourceLine" id="cb11-18" title="18"><span class="co">#&gt; 9    670 115 0.9887225          1</span></a>
+<a class="sourceLine" id="cb11-19" title="19"><span class="co">#&gt; 10   784 107 0.9562694          2</span></a>
+<a class="sourceLine" id="cb11-20" title="20"><span class="co">#&gt; 11   896 113 0.9734575          1</span></a>
+<a class="sourceLine" id="cb11-21" title="21"><span class="co">#&gt; 12  1008 127 0.9703118          1</span></a>
+<a class="sourceLine" id="cb11-22" title="22"><span class="co">#&gt; 13  1134 116 0.9606235          1</span></a>
+<a class="sourceLine" id="cb11-23" title="23"><span class="co">#&gt; 14  1266 122 0.9593345          2</span></a></code></pre></div>
+</div>
+<div id="vignettes" class="section level3">
+<h3 class="hasAnchor">
+<a href="#vignettes" class="anchor"></a>Vignettes</h3>
+<p>Vignettes are available to better demonstrate package methods usgae.</p>
 <ol style="list-style-type: decimal">
-<li>with the use of stride templates that were pre-computed based on data from an external study,</li>
+<li><p>Vignette <a href="https://martakarass.github.io/adept/articles/adept-intro.html">Introduction to adept package</a> introduces ADEPT algorithm and demonstrates the usage of <code>segmentPattern</code> function which implements ADEPT approach. Here, we focus on examples with simulated data.</p></li>
+<li>
+<p>Vignette <a href="https://martakarass.github.io/adept/articles/adept-strides-segmentation.html">Walking strides segmentation with adept</a> provides an example of segmentation of walking strides (two consecutive steps) in sub-second accelerometry data with <code>adept</code> package. The exemplary dataset is a part of the <code>adeptdata</code> package. We demonstrate that ADEPT can be used to perform automatic and precise walking stride segmentation from data collected during a combination of running, walking and resting exercises. We introduce how to segment data:</p>
+<ol style="list-style-type: decimal">
+<li>with the use of stride templates that were pre-computed based on data from an external study (attached to <code>adeptdata</code> package),</li>
 <li>by deriving new stride templates in a semi-manual manner.</li>
 </ol>
-<div id="accelerometry-data-collection" class="section level5">
-<h5 class="hasAnchor">
-<a href="#accelerometry-data-collection" class="anchor"></a>Accelerometry data collection</h5>
-<p><img src="https://imgur.com/j1mIz0N.jpg"></p>
+</li>
+</ol>
+<p>References</p>
 </div>
-<div id="accelerometry-data-visualization" class="section level5">
-<h5 class="hasAnchor">
-<a href="#accelerometry-data-visualization" class="anchor"></a>Accelerometry data visualization</h5>
-<p><img src="https://imgur.com/Z0j1qLc.jpg"></p>
-</div>
-<div id="segmentation-results" class="section level5">
-<h5 class="hasAnchor">
-<a href="#segmentation-results" class="anchor"></a>Segmentation results</h5>
-<p><img src="https://imgur.com/5qZg53t.jpg"></p>
-</div>
-</div>
-</div>
+<div class="footnotes">
+<hr>
+<ol>
+<li id="fn1"><p>Karas, M., Straczkiewicz, M., Fadel, W., Harezlak, J., Crainiceanu, C., Urbanek, J.K. <em>Adaptive empirical pattern transformation (ADEPT) with application to walking stride segmentation</em>, Submitted to <em>Biostatistics</em>, 2018.<a href="#fnref1" class="footnote-back">↩</a></p></li>
+</ol>
 </div>
   </div>
 
