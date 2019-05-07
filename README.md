@@ -8,9 +8,11 @@ status](https://codecov.io/gh/martakarass/adept/branch/master/graph/badge.svg)](
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+### Overview
+
 The `adept` package implements ADaptive Empirical Pattern Transformation
 (ADEPT) method\[1\] for pattern segmentation from a time-series. ADEPT
-is designed to perform fast, accurate walking strides segmentation from
+is optimized to perform fast, accurate walking strides segmentation from
 high-density data collected with a wearable accelerometer during
 walking.
 
@@ -26,14 +28,12 @@ devtools::install_github("martakarass/adept")
 ### Example 1
 
 Simulate a time-series `x`; assume that `x` is collected frequency of
-100 Hz, there is one pattern of a fixed duration 1.01 seconds present in
-`x`, and there is no noise in collected data.
+100 Hz, there is one pattern of a fixed duration of 1.0 seconds present
+in `x`, and there is no noise in collected data.
 
 ``` r
-library(adept)
-
-x <- cos(seq(0, 2 * pi * 10, length.out = 1001))
-true.pattern <- x[1:101]
+true.pattern <- cos(seq(0, 2 * pi, length.out = 100))
+x <- c(true.pattern[1], replicate(10, true.pattern[-1]))
 
 par(mfrow = c(1,2), cex = 1)
 plot(true.pattern, type = "l", xlab = "", ylab = "", main = "Pattern")
@@ -42,60 +42,65 @@ plot(x, type = "l", xlab = "", ylab = "", main = "Time-series x")
 
 <img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
 
-Segment pattern from data. Assume perfect template is available. Use
-grid of potential pattern durations of {0.9, 1, 1.1} seconds.
+Segment pattern from data. Assume that a perfect template is available.
+Use grid of potential pattern durations of {0.9, 0.95, 1.03, 1.1}
+seconds; the grid is imperfect in a sense it does not contain duration
+of the true pattern used in time-series `x` simulation.
 
 ``` r
+library(adept)
+
 segmentPattern(
   x = x,
   x.fs = 100,
   template = true.pattern,
-  pattern.dur.seq = c(0.9, 1, 1.1),
+  pattern.dur.seq = c(0.9, 0.95, 1.03, 1.1),
   similarity.measure = "cor",
   compute.template.idx = TRUE)
 #>    tau_i T_i     sim_i template_i
-#> 1      1 100 0.9994793          1
-#> 2    101 100 0.9994793          1
-#> 3    201 100 0.9994793          1
-#> 4    302 100 0.9994793          1
-#> 5    401 100 0.9994793          1
-#> 6    501 100 0.9994793          1
-#> 7    601 100 0.9994793          1
-#> 8    701 100 0.9994793          1
-#> 9    801 100 0.9994793          1
-#> 10   901 100 0.9994793          1
+#> 1      4  95 0.9987941          1
+#> 2     98 103 0.9992482          1
+#> 3    202  95 0.9987941          1
+#> 4    297 103 0.9992482          1
+#> 5    399  95 0.9987941          1
+#> 6    495 103 0.9992482          1
+#> 7    597  95 0.9987941          1
+#> 8    697  95 0.9987941          1
+#> 9    792 103 0.9992482          1
+#> 10   894  95 0.9987941          1
 ```
 
-Assume grid of potential pattern durations of {0.9, 1.01, 1.1} seconds
-(the grid is now “perfect” in a sense it contains duration of the true
-pattern used in data simulation).
+Assume grid of potential pattern durations of {0.9, 0.95, 1, 1.03, 1.1}
+seconds. The grid is now perfect in a sense it contains the duration of
+the true pattern used in data simulation. A perfect match `sim_i=1`
+between a time-series `x` and a template is reached.
 
 ``` r
 segmentPattern(
   x = x,
   x.fs = 100,
   template = true.pattern,
-  pattern.dur.seq = c(0.9, 1.01, 1.1),
+  pattern.dur.seq = c(0.9, 0.95, 1, 1.03, 1.1),
   similarity.measure = "cor",
   compute.template.idx = TRUE)
 #>    tau_i T_i sim_i template_i
-#> 1      1 101     1          1
-#> 2    101 101     1          1
-#> 3    201 101     1          1
-#> 4    301 101     1          1
-#> 5    401 101     1          1
-#> 6    501 101     1          1
-#> 7    601 101     1          1
-#> 8    701 101     1          1
-#> 9    801 101     1          1
-#> 10   901 101     1          1
+#> 1      1 100     1          1
+#> 2    100 100     1          1
+#> 3    199 100     1          1
+#> 4    298 100     1          1
+#> 5    397 100     1          1
+#> 6    496 100     1          1
+#> 7    595 100     1          1
+#> 8    694 100     1          1
+#> 9    793 100     1          1
+#> 10   892 100     1          1
 ```
 
 ### Example 2
 
-Simulate a time-series `x`; assume that time-series is collected
-frequency of 100 Hz, there are two patterns of various duration present
-in `x`, and there is noise in collected data.
+Simulate a time-series `x`; assume that `x` is collected frequency of
+100 Hz, there are two patterns of various duration present in `x`, and
+there is noise in collected data.
 
 Then, generate `x2` as a noisy version of `x`.
 
@@ -137,8 +142,8 @@ plot(x2, type = "l", xlab = "", ylab = "", main = "Time-series x2")
 
 <img src="man/figures/README-unnamed-chunk-5-3.png" width="100%" />
 
-Assume perfect grid of potential pattern duration, {0.7, 0.8, 0.9, 1.0,
-1.1, 1.2, 1.3} seconds. Segment `x`.
+Assume a perfect grid of potential pattern duration, {0.7, 0.8, 0.9,
+1.0, 1.1, 1.2, 1.3} seconds. Segment `x`.
 
 ``` r
 segmentPattern(
@@ -192,7 +197,7 @@ segmentPattern(
 ```
 
 Segment `x2`; smooth data time-series before similarity matrix
-computation. Assume more dense grid of potential pattern duration.
+computation. Assume a more dense grid of potential pattern duration.
 
 ``` r
 par(mfrow = c(1,1), cex = 1)
@@ -252,7 +257,7 @@ Vignettes are available to better demonstrate package methods usgae.
         data from an external study (attached to `adeptdata` package),
     2.  by deriving new stride templates in a semi-manual manner.
 
-References
+### References
 
 1.  Karas, M., Straczkiewicz, M., Fadel, W., Harezlak, J., Crainiceanu,
     C., Urbanek, J.K. *Adaptive empirical pattern transformation (ADEPT)
