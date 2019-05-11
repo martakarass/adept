@@ -29,12 +29,12 @@ run_local <- FALSE
 # wd.tmp <- "/Users/martakaras/Dropbox/_PROJECTS/R/adept/vignettes/"
 ```
 
-This vignette provides an example of segmentation of walking strides (two consecutive steps) in sub-second accelerometry data with `adept` package. The exemplary dataset is a part of the `adeptdata` package. We demonstrate that ADEPT ([1]) can be used to perform automatic and precise walking stride segmentation from data collected during a combination of running, walking and resting exercises. We introduce how to segment data: 
+This vignette provides an example of segmentation of walking strides (two consecutive steps) in sub-second accelerometry data with `adept` package. The exemplary dataset is a part of the `adeptdata` package. We demonstrate that ADEPT^[Karas, M., Straczkiewicz, M., Fadel, W., Harezlak, J., Crainiceanu, C., Urbanek, J.K. *Adaptive empirical pattern transformation (ADEPT) with application to walking stride segmentation*, Submitted to *Biostatistics*, 2018.] can be used to perform automatic and precise walking stride segmentation from data collected during a combination of running, walking and resting exercises. We introduce how to segment data: 
 
 i. with the use of stride templates that were pre-computed based on data from an external study (attached to `adeptdata` package), 
 ii. by deriving new stride templates in a semi-manual manner. 
 
-See [Introduction to adept package](https://martakarass.github.io/adept/articles/adept-intro.html) vignette for an introduction to the ADEPT and usage examples of the `segmentPattern` function which implements the ADEPT method.
+See [Introduction to adept package](https://martakarass.github.io/adept/articles/adept-intro.html)^[Karas, M., Crainiceanu, C., Urbanek, J.: *Introduction to adept package* vignette to the 'adept' package.] vignette for an introduction to the ADEPT and usage examples of the `segmentPattern` function which implements the ADEPT method.
 
 # Raw accelerometry data sample
 
@@ -54,7 +54,7 @@ Screenshot taken from a personal profile of *mapmyrun* tracking application, acc
 
 ### Sensor and accelerometry data
 
-Data were collected with two [ActiGraph GT9X Link](https://www.actigraphcorp.com/actigraph-link/) physical activity monitors at the sampling frequency of 100 Hz. ActiGraph GT9X Link has 3-axis accelerometer collecting accelerometry data along three orthogonal axes. At sampling frequency of 100 Hz, we collected 100 observations per second per axis (total of 300 observations per second).  
+Data were collected with two [ActiGraph GT9X Link](https://www.actigraphcorp.com/actigraph-link/) physical activity monitors at the sampling frequency of 100 Hz. ActiGraph GT9X Link has 3-axis accelerometer collecting accelerometry data along three orthogonal axes. At a sampling frequency of 100 Hz, we collected 100 observations per second per axis (total of 300 observations per second).  
 
 ### Sensor location
 
@@ -142,7 +142,7 @@ acc_running_sub %>%
 
 ##### Note on sensors desynchronization 
 
-* The two sensors used in the experiment were set up to initialize data collection at the same time. However, as discussed in [2], perfect synchronization on most of modern operating systems is impossible. Aditionally, measurements might still get desynchronized across devices even after a few minutes of data collection. Because of that, sub-second level alignment of data cross devices cannot be expected.
+* The two sensors used in the experiment were set up to initialize data collection at the same time. However, as discussed in^[Karas, M., Bai, J., Straczkiewicz, M., Harezlak, J., Glynn, N W., Harris, T., Zipunnikov, V., Crainiceanu, C., Urbanek, J.K. *Accelerometry data in health research: challenges and opportunities. Review and examples*, Statistics in Biosciences, 2018. ([link](https://rdcu.be/bgLtM)).], perfect synchronization on most of modern operating systems is impossible. Additionally, measurements might still get desynchronized across devices even after a few minutes of data collection. Because of that, sub-second level alignment of data cross devices cannot be expected.
 
 ### Vector magnitude 
 
@@ -306,12 +306,12 @@ out1.la <- read.csv(path.tmp)
 head(out1.la)
 ```
 
-Each row of the returned `data.frame` describes one identified pattern:
+The segmentation result is a data frame, where each row describes one identified pattern occurrence:
 
-* `tau_i` - Pattern start, expressed as a time-series `x` (here: $(vm)$ time-series) index.
-* `T_i` - Pattern duration, expressed as a time-series `x` vector length.
-* `sim_i` - Similarity (here: correlation) between a pattern template and a time-series `x` window.
-* `template_i` - Index of a pattern template to which a time-series `x` window was matched. 
+* `tau_i` - index of `x` where pattern starts,
+* `T_i` - pattern duration, expressed in `x` vector length,
+* `sim_i` - similarity between a pattern and `x`,
+* `template_i` - index of a pattern template best matched to a pattern in the time-series `x`.
 
 ##### Left hip
 
@@ -363,7 +363,7 @@ head(out1.lh)
 
 We estimate stride duration, expressed in seconds, as `T_i` divided by data sampling frequency (here: $100$). Similarly, we estimate stride start, expressed in seconds after run-recording began, as `tau_i` divided by data sampling frequency; to get estimated stride start given in minutes after run-recording began, we additionally divide by $60$. 
 
-We use previously derived information of resting ($(vmc)<0.4$) and non-resting ($(vmc)\geq 0.4$) to filter out segmented data parts which likely do not correspond to running/walking. We then plot estimated stride duration against estimated stride start. We use different background shade to mark the derived resting/non-resting labels for subsequent $3$-minute windows.
+We use previously derived information of resting ($(vmc)<0.4$) and non-resting ($(vmc)\geq 0.4$) to filter out segmented data parts which likely do not correspond to running/walking. We then plot the estimated stride duration against estimated stride start. We use different background shade to mark the derived resting/non-resting labels for subsequent $3$-minute windows.
 
 ```{r, fig.width=7, fig.height=4}
 ## Merge results from two sensor locations, add resting/non-resting info
@@ -583,7 +583,7 @@ We now demonstrate a semi-manual way of deriving stride patterns from scratch.
 
 4. Within each selected $(vm)$ segment, identify a subset of local maxima that corresponds to stride beginnings and ends via visual inspection (the "manual" part). 
 
-5. For each selected $(vm)$ segment, cut it at the points of identified local maxima subset from step 3., interpolate obtained parts to a common vector length, align and compute their point-wise average. For each $(vm)$ segment, the resulted point-wise average is a one newly created template. 
+5. For each selected $(vm)$ segment, cut it at the points of identified local maxima subset from step 3., interpolate obtained parts to a common vector length, align, standardize to have mean 0 and variance 1, and compute their point-wise average. Standardize the average to have mean 0 and variance 1. For each $(vm)$ segment, the resulted point-wise average is a one newly created template. 
 
 Here, we select two $(vm)$ fragments in step 1., each of 6 seconds length, in a way that they correspond to a different pace of running/walking. We apply the above procedure separately for data collected at the left hip and left ankle. That way, for each sensor location, we arrive at two distinct stride templates that we further use in segmentation.
 
@@ -608,9 +608,11 @@ cut.and.avg <- function(x, x.cut.idx){
   mat.out <- matrix(NA, nrow = x.cut.idx.l-1, ncol = 200)
   for (i in 1:(length(x.cut.idx)-1)){
     xp <- x[x.cut.idx[i]:x.cut.idx[i+1]]
-    mat.out[i, ] <- approx(seq(0, 1, length.out = length(xp)), xp, seq(0, 1, length.out = 200))$y
+    xpa <- approx(seq(0, 1, length.out = length(xp)), xp, seq(0, 1, length.out = 200))$y
+    mat.out[i, ] <- as.numeric(scale(xpa, scale = TRUE, center = TRUE))
   }
   out <- apply(mat.out, 2, mean)
+  as.numeric(scale(out, scale = TRUE, center = TRUE))
 }
 
 ## Smooth the accelerometry vm time-series 
@@ -778,14 +780,3 @@ ggplot(plt.df,
 
 
 # References
-
-References: 
-
-1: Karas, M., Straczkiewicz, M., Fadel, W., Harezlak, J., Crainiceanu, C., Urbanek, J.K. Adaptive empirical pattern transformation (ADEPT) with application to walking stride segmentation, Submitted to Biostatistics, 2018.
-
-2: Karas, M., Bai, J., Straczkiewicz, M., Harezlak, J., Glynn, N W., Harris, T., Zipunnikov, V., Crainiceanu, C., Urbanek, J.K. Accelerometry data in health research: challenges and opportunities. Review and examples, Statistics in Biosciences, 2018. ([link](https://rdcu.be/bgLtM))
-
-
-
-
-

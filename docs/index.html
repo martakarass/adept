@@ -94,7 +94,7 @@
 <div id="overview" class="section level3">
 <h3 class="hasAnchor">
 <a href="#overview" class="anchor"></a>Overview</h3>
-<p>The <code>adept</code> package implements ADaptive Empirical Pattern Transformation (ADEPT) method<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> for pattern segmentation from a time-series. ADEPT is optimized to perform fast, accurate walking strides segmentation from high-density data collected with a wearable accelerometer during walking.</p>
+<p>The <code>adept</code> package implements ADaptive Empirical Pattern Transformation (ADEPT) method<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> for pattern segmentation from a time-series. ADEPT is optimized to perform fast, accurate walking strides segmentation from high-density data collected with a wearable accelerometer during walking. The method was validated using data collected with sensors worn at left wrist, left hip and both ankles.</p>
 </div>
 <div id="installation" class="section level3">
 <h3 class="hasAnchor">
@@ -106,7 +106,7 @@
 <div id="example-1" class="section level3">
 <h3 class="hasAnchor">
 <a href="#example-1" class="anchor"></a>Example 1</h3>
-<p>Simulate a time-series <code>x</code>; assume that <code>x</code> is collected frequency of 100 Hz, there is one pattern of a fixed duration of 1.0 seconds present in <code>x</code>, and there is no noise in collected data.</p>
+<p>We simulate a time-series <code>x</code>; we assume that <code>x</code> is collected at a frequency of 100 Hz, there is one pattern of a fixed duration of 1.0 seconds present in <code>x</code>, and there is no noise in collected data.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">true.pattern &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Trig">cos</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="dv">2</span> <span class="op">*</span><span class="st"> </span>pi, <span class="dt">length.out =</span> <span class="dv">100</span>))</a>
 <a class="sourceLine" id="cb2-2" title="2">x &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(true.pattern[<span class="dv">1</span>], <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">replicate</a></span>(<span class="dv">10</span>, true.pattern[<span class="op">-</span><span class="dv">1</span>]))</a>
 <a class="sourceLine" id="cb2-3" title="3"></a>
@@ -114,7 +114,7 @@
 <a class="sourceLine" id="cb2-5" title="5"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(true.pattern, <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">xlab =</span> <span class="st">""</span>, <span class="dt">ylab =</span> <span class="st">""</span>, <span class="dt">main =</span> <span class="st">"Pattern"</span>)</a>
 <a class="sourceLine" id="cb2-6" title="6"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(x, <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">xlab =</span> <span class="st">""</span>, <span class="dt">ylab =</span> <span class="st">""</span>, <span class="dt">main =</span> <span class="st">"Time-series x"</span>)</a></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-2-1.png" width="100%"></p>
-<p>Segment pattern from data. Assume that a perfect template is available. Use grid of potential pattern durations of {0.9, 0.95, 1.03, 1.1} seconds; the grid is imperfect in a sense it does not contain duration of the true pattern used in time-series <code>x</code> simulation.</p>
+<p>We segment pattern from data. We assume that a perfect template is available. We use a grid of potential pattern durations of {0.9, 0.95, 1.03, 1.1} seconds; the grid is imperfect in a sense it does not contain the duration of the true pattern used in <code>x</code> simulation.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(adept)</a>
 <a class="sourceLine" id="cb3-2" title="2"></a>
 <a class="sourceLine" id="cb3-3" title="3"><span class="kw"><a href="reference/segmentPattern.html">segmentPattern</a></span>(</a>
@@ -135,7 +135,18 @@
 <a class="sourceLine" id="cb3-18" title="18"><span class="co">#&gt; 8    697  95 0.9987941          1</span></a>
 <a class="sourceLine" id="cb3-19" title="19"><span class="co">#&gt; 9    792 103 0.9992482          1</span></a>
 <a class="sourceLine" id="cb3-20" title="20"><span class="co">#&gt; 10   894  95 0.9987941          1</span></a></code></pre></div>
-<p>Assume grid of potential pattern durations of {0.9, 0.95, 1, 1.03, 1.1} seconds. The grid is now perfect in a sense it contains the duration of the true pattern used in data simulation. A perfect match <code>sim_i=1</code> between a time-series <code>x</code> and a template is reached.</p>
+<p>The segmentation result is a data frame, where each row describes one identified pattern occurrence:</p>
+<ul>
+<li>
+<code>tau_i</code> - index of <code>x</code> where pattern starts,</li>
+<li>
+<code>T_i</code> - pattern duration, expressed in <code>x</code> vector length,</li>
+<li>
+<code>sim_i</code> - similarity between a pattern and <code>x</code>,</li>
+<li>
+<code>template_i</code> - index of a pattern template best matched to a pattern in the time-series <code>x</code> (here: one pattern template was used, hence all <code>template_i</code>’s equal 1).</li>
+</ul>
+<p>We then assume a grid of potential pattern durations which contains the duration of the true pattern used in data simulation. A perfect match (<code>sim_i = 1</code>) between a time-series <code>x</code> and a template is obtained.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw"><a href="reference/segmentPattern.html">segmentPattern</a></span>(</a>
 <a class="sourceLine" id="cb4-2" title="2">  <span class="dt">x =</span> x,</a>
 <a class="sourceLine" id="cb4-3" title="3">  <span class="dt">x.fs =</span> <span class="dv">100</span>,</a>
@@ -158,8 +169,8 @@
 <div id="example-2" class="section level3">
 <h3 class="hasAnchor">
 <a href="#example-2" class="anchor"></a>Example 2</h3>
-<p>Simulate a time-series <code>x</code>; assume that <code>x</code> is collected frequency of 100 Hz, there are two patterns of various duration present in <code>x</code>, and there is noise in collected data.</p>
-<p>Then, generate <code>x2</code> as a noisy version of <code>x</code>.</p>
+<p>We simulate a time-series <code>x</code>; we assume that <code>x</code> is collected frequency of 100 Hz, there are two patterns of various duration present in <code>x</code>, and there is noise in collected data.</p>
+<p>Then, we generate <code>x2</code> as a noisy version of <code>x</code>.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">true.pattern<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Trig">cos</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="dv">2</span> <span class="op">*</span><span class="st"> </span>pi, <span class="dt">length.out =</span> <span class="dv">200</span>))</a>
 <a class="sourceLine" id="cb5-2" title="2">true.pattern<span class="fl">.2</span> &lt;-<span class="st"> </span>true.pattern<span class="fl">.1</span></a>
 <a class="sourceLine" id="cb5-3" title="3">true.pattern<span class="fl">.2</span>[<span class="dv">70</span><span class="op">:</span><span class="dv">130</span>] &lt;-<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>true.pattern<span class="fl">.2</span>[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">min</a></span>(<span class="dv">70</span><span class="op">:</span><span class="dv">130</span>)] <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">abs</a></span>(true.pattern<span class="fl">.2</span>[<span class="dv">70</span><span class="op">:</span><span class="dv">130</span>])</a>
@@ -186,12 +197,12 @@
 <p><img src="reference/figures/README-unnamed-chunk-5-2.png" width="100%"></p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(x2, <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">xlab =</span> <span class="st">""</span>, <span class="dt">ylab =</span> <span class="st">""</span>, <span class="dt">main =</span> <span class="st">"Time-series x2"</span>)</a></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-5-3.png" width="100%"></p>
-<p>Assume a perfect grid of potential pattern duration, {0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3} seconds. Segment <code>x</code>.</p>
+<p>We segment <code>x</code>. We assume a perfect grid of potential pattern duration, {0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3} seconds.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="kw"><a href="reference/segmentPattern.html">segmentPattern</a></span>(</a>
 <a class="sourceLine" id="cb8-2" title="2">  <span class="dt">x =</span> x,</a>
 <a class="sourceLine" id="cb8-3" title="3">  <span class="dt">x.fs =</span> <span class="dv">100</span>,</a>
 <a class="sourceLine" id="cb8-4" title="4">  <span class="dt">template =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(true.pattern<span class="fl">.1</span>, true.pattern<span class="fl">.2</span>),</a>
-<a class="sourceLine" id="cb8-5" title="5">  <span class="dt">pattern.dur.seq =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">70</span>, <span class="dv">130</span>, <span class="dt">by =</span> <span class="dv">10</span>) <span class="op">*</span><span class="st"> </span><span class="fl">0.01</span>,</a>
+<a class="sourceLine" id="cb8-5" title="5">  <span class="dt">pattern.dur.seq =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="fl">0.7</span>, <span class="fl">1.3</span>, <span class="dt">by =</span> <span class="fl">0.1</span>),</a>
 <a class="sourceLine" id="cb8-6" title="6">  <span class="dt">similarity.measure =</span> <span class="st">"cor"</span>,</a>
 <a class="sourceLine" id="cb8-7" title="7">  <span class="dt">compute.template.idx =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb8-8" title="8"><span class="co">#&gt;    tau_i T_i sim_i template_i</span></a>
@@ -209,12 +220,12 @@
 <a class="sourceLine" id="cb8-20" title="20"><span class="co">#&gt; 12  1010 120     1          2</span></a>
 <a class="sourceLine" id="cb8-21" title="21"><span class="co">#&gt; 13  1129 130     1          1</span></a>
 <a class="sourceLine" id="cb8-22" title="22"><span class="co">#&gt; 14  1258 130     1          2</span></a></code></pre></div>
-<p>Segment <code>x2</code>.</p>
+<p>We segment <code>x2</code>.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw"><a href="reference/segmentPattern.html">segmentPattern</a></span>(</a>
 <a class="sourceLine" id="cb9-2" title="2">  <span class="dt">x =</span> x2,</a>
 <a class="sourceLine" id="cb9-3" title="3">  <span class="dt">x.fs =</span> <span class="dv">100</span>,</a>
 <a class="sourceLine" id="cb9-4" title="4">  <span class="dt">template =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(true.pattern<span class="fl">.1</span>, true.pattern<span class="fl">.2</span>),</a>
-<a class="sourceLine" id="cb9-5" title="5">  <span class="dt">pattern.dur.seq =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">70</span>, <span class="dv">130</span>, <span class="dt">by =</span> <span class="dv">10</span>) <span class="op">*</span><span class="st"> </span><span class="fl">0.01</span>,</a>
+<a class="sourceLine" id="cb9-5" title="5">  <span class="dt">pattern.dur.seq =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="fl">0.7</span>, <span class="fl">1.3</span>, <span class="dt">by =</span> <span class="fl">0.1</span>),</a>
 <a class="sourceLine" id="cb9-6" title="6">  <span class="dt">similarity.measure =</span> <span class="st">"cor"</span>,</a>
 <a class="sourceLine" id="cb9-7" title="7">  <span class="dt">compute.template.idx =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb9-8" title="8"><span class="co">#&gt;    tau_i T_i     sim_i template_i</span></a>
@@ -231,7 +242,7 @@
 <a class="sourceLine" id="cb9-19" title="19"><span class="co">#&gt; 11  1017 110 0.6599280          1</span></a>
 <a class="sourceLine" id="cb9-20" title="20"><span class="co">#&gt; 12  1129 130 0.7938183          1</span></a>
 <a class="sourceLine" id="cb9-21" title="21"><span class="co">#&gt; 13  1267 120 0.7655408          2</span></a></code></pre></div>
-<p>Segment <code>x2</code>; smooth data time-series before similarity matrix computation. Assume a more dense grid of potential pattern duration.</p>
+<p>We now use <code>x.adept.ma.W</code> argument to smooth <code>x2</code> before similarity matrix computation in the segmentation procedure (see <code><a href="reference/segmentPattern.html">?segmentPattern</a></code> for details). We also assume a more dense grid of potential pattern duration. We observe that <code>sim_i</code> values obtained are higher than in the previous segmentation case.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/par">par</a></span>(<span class="dt">mfrow =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">1</span>), <span class="dt">cex =</span> <span class="dv">1</span>)</a>
 <a class="sourceLine" id="cb10-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(<span class="kw"><a href="reference/windowSmooth.html">windowSmooth</a></span>(<span class="dt">x =</span> x2, <span class="dt">x.fs =</span> <span class="dv">100</span>, <span class="dt">W =</span> <span class="fl">0.1</span>), </a>
 <a class="sourceLine" id="cb10-3" title="3">     <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">xlab =</span> <span class="st">""</span>, <span class="dt">ylab =</span> <span class="st">""</span>, <span class="dt">main =</span> <span class="st">"Time-series x2 smoothed"</span>)</a></code></pre></div>

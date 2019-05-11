@@ -27,9 +27,9 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-`adept` package implements ADaptive Empirical Pattern Transformation (ADEPT) **for pattern segmentation in a time-series `x`**. ADEPT is designed for identification of walking strides in sub-second level data collected with wearable accelerometers. ADEPT was validated ([1]) using data collected with sensors worn at left wrist, left hip and both ankles.  
+The `adept` package implements ADaptive Empirical Pattern Transformation (ADEPT) method^[Karas, M., Straczkiewicz, M., Fadel, W., Harezlak, J., Crainiceanu, C., Urbanek, J.K. *Adaptive empirical pattern transformation (ADEPT) with application to walking stride segmentation*, Submitted to *Biostatistics*, 2018.] for pattern segmentation from a time-series. ADEPT is optimized to perform fast, accurate walking strides segmentation from high-density data collected with a wearable accelerometer during walking. The method was validated using data collected with sensors worn at left wrist, left hip and both ankles. 
 
-This vignette introduces ADEPT algorithm and demonstrates the usage of `segmentPattern` function which implements ADEPT approach. Here, we focus on examples with simulated data; see the [Walking strides segmentation with adept](file://localhost/Users/martakaras/Dropbox/_PROJECTS/R/adept/docs/articles/adept-strides-segmentation.html) vignette for the example of walking stride segmentation in real-life data.
+This vignette introduces ADEPT algorithm and demonstrates the usage of `segmentPattern` function which implements ADEPT approach. Here, we focus on examples with simulated data; see the [Walking strides segmentation with adept](file://localhost/Users/martakaras/Dropbox/_PROJECTS/R/adept/docs/articles/adept-strides-segmentation.html)^[Karas, M., Crainiceanu, C., Urbanek, J.: *Walking strides segmentation with adept* vignette to the 'adept' package.] for the example of walking stride segmentation in real-life data.
 
 # ADEPT method   
 
@@ -37,7 +37,7 @@ ADEPT identifies patterns in a time-series `x` via maximization of chosen simila
 
 ## Pattern template
 
-We define pattern template as a 1-dimensional numeric vector which values represent the pattern of interest (e.g. accelerometry data of a human stride).
+We define a pattern template as a 1-dimensional numeric vector which values represent the pattern of interest (e.g. accelerometry data of a human stride).
 
 - See [1] where we show a way to derive walking stride templates from accelerometry data collected at left wrist, left hip and both ankles.
 - See [2] where we employed templates derived in [1] to segment stride pattern from another accelerometry data set. 
@@ -46,14 +46,14 @@ In this vignette, a pattern template is a simulated data vector.
 
 # Install and load `adept` package
 
-If not installed yet, install `adept` package from GitHub. 
+Install `adept` package from GitHub. 
 
 ```{r, eval = FALSE}
 # install.packages("devtools")      
 devtools::install_github("martakarass/adept")
 ```
 
-Load `adept`.
+Load `adept` and other packages. 
 
 ```{r}
 library(adept)
@@ -69,44 +69,37 @@ The examples below are organized into suites. Examples within one suite share da
 
 ### Simulate data
 
-Simulate data: 
+We simulate a time-series `x`. We assume that 
 
-- no noise in a simulated time-series `x`,
-- all patterns in a simulated time-series `x` of the same length (vector length: `101`).
+- `x` is collected at a frequency of 100 Hz, 
+- there is one pattern of a fixed duration of 1.0 seconds present in `x`, 
+- there is no noise in the collected data. 
 
 ```{r, fig.width=7, fig.height=2.3}
-## Generate signal and pattern template
-x0 <- cos(seq(0, 2 * pi * 10, length.out = 1001))
-x  <- x0
-template <- x0[1:101]
+true.pattern <- cos(seq(0, 2 * pi, length.out = 100))
+x <- c(true.pattern[1], replicate(10, true.pattern[-1]))
 
-## Plot time-series `x`
 data.frame(x = 1:length(x), y = x) %>%
   ggplot() + geom_line(aes(x = x, y = y)) +  theme_bw(base_size = 9) + 
   labs(x = "Time [s]", y = "Value", title = "Time-series x")
 ```
 
-Plot pattern template. 
-
 ```{r, fig.width=2.5, fig.height=2.3}
-data.frame(x = seq(0, 1, length.out = 101), y = template) %>%
-  ggplot() + 
-  geom_line(aes(x = x, y = y), color = "red") + 
-  theme_bw(base_size = 9) + 
-  labs(x = "Template phase", y = "Value", title = "Pattern template")
+data.frame(x = seq(0, 1, length.out = 100), y = true.pattern) %>%
+  ggplot() + geom_line(aes(x = x, y = y), color = "red") + 
+  theme_bw(base_size = 9) + labs(x = "Phase", y = "Value", title = "Pattern")
 ```
 
 ### Example 1(a): segment pattern 
 
-We use `segmentPattern` function to segment patterns within a time-series `x`.
+We use `segmentPattern` function segment pattern from a time-series `x`. We assume that a perfect template is available. We use a grid of potential pattern durations of {0.9, 0.95, 1.03, 1.1} seconds; the grid is imperfect in a sense it does not contain the duration of the true pattern used in `x` simulation.  
 
 ```{r}
-pattern.dur.seq <- c(90, 100, 110)
 out <- segmentPattern(
   x = x,
-  x.fs = 1,
-  template = template,
-  pattern.dur.seq = pattern.dur.seq,
+  x.fs = 100,
+  template = true.pattern,
+  pattern.dur.seq = c(0.9, 0.95, 1.03, 1.1),
   similarity.measure = "cor",
   compute.template.idx = TRUE)
 out
@@ -114,27 +107,25 @@ out
 
 #### `segmentPattern` output 
 
-Each row of the output data frame describes one identified pattern. E.g. the $i$-th row contains values of: 
+The segmentation result is a data frame, where each row describes one identified pattern occurrence:
 
-- `tau_i` - start of the $i$-th pattern in the data, expressed as a time-series `x` index,
-- `T_i` - $i$-th pattern duration, expressed as a time-series `x` vector length,
-- `sim_i` - similarity (here: correlation) between a pattern template and a time-series `x`, 
-- `template_i` - index of a pattern template best matched to a pattern in the time-series `x` (here: one pattern template was used, hence all `template_i`'s equal 1).
+* `tau_i` - index of `x` where pattern starts,
+* `T_i` - pattern duration, expressed in `x` vector length,
+* `sim_i` - similarity between a pattern and `x`,
+* `template_i` - index of a pattern template best matched to a pattern in the time-series `x` (here: one pattern template was used, hence all `template_i`'s equal 1).
 
-See Details in `segmentPattern` documentation.
-
+See `?segmentPattern` for details. 
 
 ### Example 1(b): use `pattern.dur.seq` to modify a grid of pattern duration 
 
-We next generate a dense grid of potential pattern durations, including value `101` used in the `x` simulation to obtain a perfect match (`sim_i = 1`).
+We next generate a dense grid of potential pattern durations, including value `1.0` seconds used in the `x` simulation. A perfect match (`sim_i = 1`) between a time-series `x` and a template is obtained.  
 
 ```{r}
-pattern.dur.seq <- 90:110  ## Assume dense pattern duration grid ranging 90-110 seconds
 out <- segmentPattern(
   x = x,
-  x.fs = 1,  
-  template = template,
-  pattern.dur.seq = pattern.dur.seq,
+  x.fs = 100,
+  template = true.pattern,
+  pattern.dur.seq = c(0.9, 0.95, 1, 1.03, 1.1),
   similarity.measure = "cor",
   compute.template.idx = TRUE)
 out
@@ -142,15 +133,14 @@ out
 
 ### Example 1(c): use `x.fs` to modify `x` time-series frequency
 
-We use `x.fs` to modify `x` time-series frequency, expressed in a number of observations in seconds, and we adjust `pattern.dur.seq` accordingly. We observe that results stay the same as in Example 1(b).
+We use `x.fs` to modify `x` time-series frequency, expressed in a number of observations in seconds, and we adjust `pattern.dur.seq` accordingly. We observe that results are the same as in Example 1(b).
 
 ```{r}
-pattern.dur.seq <- 90:110 * 0.01   ## Assume pattern duration grid ranging 0.9-1.1 seconds
 out <- segmentPattern(
   x = x,
-  x.fs = 100,   ## Assume data frequency 100 observations per second
-  template = template,
-  pattern.dur.seq = pattern.dur.seq,
+  x.fs = 10,   ## Assume data frequency 10 observations per second
+  template = true.pattern,
+  pattern.dur.seq = c(0.9, 0.95, 1, 1.03, 1.1) * 10,
   similarity.measure = "cor",
   compute.template.idx = TRUE)
 out
@@ -158,54 +148,33 @@ out
 
 
 
-## Examples 2: signal with no noise, length of pattern varies
+## Examples 2: signal with no noise, pattern duration varies
 
 ### Simulate data
 
-Simulate data: 
+We simulate a time-series `x`. We assume that 
 
-- no noise in a simulated time-series `x`,
-- length of patterns in a simulated time-series `x` varies.
+- `x` is collected at a frequency of 100 Hz, 
+- there is one pattern present in `x` and its duration varies,
+- there is no noise in the collected data. 
+
 
 ```{r, fig.width=7, fig.height=2.3}
 set.seed(1)
-## Simulate x as concatenated pattern occurrences of different length 
 true.pattern <- cos(seq(0, 2 * pi, length.out = 200))
-s.grid <- sample(60:120, size = 10)
 x <- numeric()
-for (s.tmp in s.grid){
+for (vl in seq(70, 130, by = 10)){
   true.pattern.s <- approx(
     seq(0, 1, length.out = 200), 
-    true.pattern, 
-    xout = seq(0, 1, length.out = s.tmp))$y
-  if (length(x) > 0){
-    x <- c(x, true.pattern.s[-1])
-  } else {
-    x <- c(x, true.pattern.s)
-  }
+    true.pattern, xout = seq(0, 1, length.out = vl))$y
+  x <- c(x, true.pattern.s[-1])
+  if (vl == 70) x <- c(true.pattern.s[1], x)
 }
 
-## Define template used further in segmentation 
-template <- true.pattern
-```
-
-Plot time-series `x`. 
-
-```{r, fig.width=7, fig.height=2.3}
 data.frame(x = 1:length(x), y = x) %>%
   ggplot() + geom_line(aes(x = x, y = y)) +  theme_bw(base_size = 9) + 
   labs(x = "Time [s]", y = "Value", title = "Time-series x")
-```
 
-Plot template. 
-
-```{r, fig.width=2.5, fig.height=2.3}
-data.frame(x = seq(0, 1, length.out = length(template)), y = template) %>%
-  ggplot() + geom_line(aes(x = x, y = y), color = "red") + 
-  theme_bw(base_size = 9) + labs(x = "Template phase", y = "Value", title = "Template")
-```
-
-```{r}
 ## Function to plot segmentation results with ggplot2
 library(ggplot2)
 out.plot1 <- function(val, out){
@@ -248,17 +217,15 @@ out.plot1 <- function(val, out){
 We use a dense grid of potential pattern duration, including all values used in the `x` simulation to again obtain the perfect match (`sim_i = 1`). In this example, the start and the end points of identified patterns are connected (see figure below).
 
 ```{r, fig.width=7, fig.height=2.3}
-pattern.dur.seq <- 60:120
 out <- segmentPattern(
   x = x,
-  x.fs = 1,
-  template = template,
-  pattern.dur.seq = pattern.dur.seq,
+  x.fs = 100,
+  template = true.pattern,
+  pattern.dur.seq = 60:130 * 0.01,
   similarity.measure = "cor",
   compute.template.idx = TRUE)
 out
 
-## Plot segmetation results
 out.plot1(x, out)
 ```
 
@@ -271,12 +238,11 @@ Next, we use a less dense grid of potential pattern duration. We observe that pe
 - As explained later, when peak detection tuning is used, having a "maximally dense" pattern duration grid does not contribute much.
 
 ```{r }
-pattern.dur.seq <- c(60, 90, 120)
 out <- segmentPattern(
   x = x,
-  x.fs = 1,
-  template = template,
-  pattern.dur.seq = pattern.dur.seq,
+  x.fs = 100,
+  template = true.pattern,
+  pattern.dur.seq = c(0.6, 0.9, 1.2),
   similarity.measure = "cor",
   compute.template.idx = TRUE)
 out
@@ -291,12 +257,11 @@ out.plot1(x, out)
 We use `similarity.measure` to modify the similarity statistic. We observe that `sim_i` values in the result data frame change and the segmentation results change slightly too. The explanation is that a change of similarity statistic takes an effect on ADEPT iterative maximization procedure. 
 
 ```{r }
-pattern.dur.seq <- c(60, 90, 120)
-  out <- segmentPattern(
+out <- segmentPattern(
   x = x,
-  x.fs = 1,
-  template = template,
-  pattern.dur.seq = pattern.dur.seq,
+  x.fs = 100,
+  template = true.pattern,
+  pattern.dur.seq = c(0.6, 0.9, 1.2),
   similarity.measure = "cov",  ## Use covariance as a similarity statistic
   compute.template.idx = TRUE)
 out
@@ -307,55 +272,37 @@ out.plot1(x, out)
 ```
 
 
-
-## Examples 3: signal with no noise, length of pattern and pattern shape vary
+## Examples 3: signal with no noise, pattern duration and pattern shape vary
 
 ### Simulate data
 
-Simulate data: 
+We simulate a time-series `x`. We assume that 
 
-- no noise in simulated time-series `x`,
-- length of patterns in a simulated time-series `x` varies, 
-- two different shape patterns used to simulate a time-series `x`.  
+- `x` is collected at a frequency of 100 Hz, 
+- there are two patterns present in `x` and their duration varies,
+- there is no noise in the collected data. 
 
 ```{r, fig.width=7, fig.height=2.3}
-## Simulate x as concatenated pattern occurrences of 
-## different length and different shape
-set.seed(1)
-s.grid <- sample(60:120, size = 5)
 true.pattern.1 <- cos(seq(0, 2 * pi, length.out = 200))
 true.pattern.2 <- true.pattern.1
-seq.tmp <- 70:130
-true.pattern.2[seq.tmp] <- 2 * true.pattern.2[min(seq.tmp)] + abs(true.pattern.2[seq.tmp])
+true.pattern.2[70:130] <- 2 * true.pattern.2[min(70:130)] + abs(true.pattern.2[70:130])
 x <- numeric()
-for (ss in s.grid){
+for (vl in seq(70, 130, by = 10)){
   true.pattern.1.s <- approx(
     seq(0, 1, length.out = 200), 
-    true.pattern.1, 
-    xout = seq(0, 1, length.out = ss))$y
-  if (length(x) > 0){
-    x <- c(x, true.pattern.1.s[-1])
-  } else {
-    x <- c(x, true.pattern.1.s)
-  }
+    true.pattern.1, xout = seq(0, 1, length.out = vl))$y
   true.pattern.2.s <- approx(
     seq(0, 1, length.out = 200), 
-    true.pattern.2,
-    xout = seq(0, 1, length.out = ss))$y
-  x <- c(x, true.pattern.2.s[-1])
+    true.pattern.2, xout = seq(0, 1, length.out = vl))$y
+  x <- c(x, true.pattern.1.s[-1], true.pattern.2.s[-1])
+  if (vl == 70) x <- c(true.pattern.1.s[1], x)
 }
-```
 
-Plot time-series `x`.
-
-```{r, fig.width=7, fig.height=2.3}
-## Plot time-series `x`
 data.frame(x = 1:length(x), y = x) %>%
   ggplot() + geom_line(aes(x = x, y = y)) +  theme_bw(base_size = 9) + 
   labs(x = "Time [s]", y = "Value", title = "Time-series x")
 ```
 
-Plot two vectors that were used in a time-series `x` simulation.
 
 ```{r, fig.width=2.5, fig.height=2.3}
 plt1 <- 
@@ -372,96 +319,78 @@ plt1;plt2
 ```
 
 
-
 ### Example 3(a): segment pattern
 
-We use a dense grid of potential pattern duration. We use a `template` object consisting of one out of two patterns used in a time-series `x` simulation.   
+To segment pattern from `x`, we use a dense grid of potential pattern duration. We use a `template` object consisting of one of the two true patterns used in `x` simulation. 
 
 ```{r, fig.width=7, fig.height=2.3}
-pattern.dur.seq <- 60:120
-template <- true.pattern.1 ## Template consisting of one out of two patterns
 out <- segmentPattern(
   x = x,
-  x.fs = 1,
-  template = template,
-  pattern.dur.seq = pattern.dur.seq,
+  x.fs = 100,
+  template = true.pattern.1, ## Template consisting of one out of two true patterns
+  pattern.dur.seq = 60:130 * 0.01,
   similarity.measure = "cor",
   compute.template.idx = TRUE)
 out
 
-## Plot segmetation results
 out.plot1(x, out)
 ```
 
 
 ### Example 3(b): use `similarity.measure.thresh` to modify the threshold of minimal similarity 
 
-We use similarity threshold to segment only these patterns which have similarity `sim_i` (here: covariance) greater than the threshold value. Note that using the threshold may substantially speed up method execution. 
+We use a similarity threshold to segment only those patterns for which similarity (here: covariance) is greater than 0.95. Note that using the threshold may substantially speed up method execution while working with a large data set. 
 
 ```{r, fig.width=7, fig.height=2.3}
-pattern.dur.seq <- 60:120
-template <- true.pattern.1
 out <- segmentPattern(
   x = x,
-  x.fs = 1,
-  template = template,
-  pattern.dur.seq = pattern.dur.seq,
+  x.fs = 100,
+  template = true.pattern.1,
+  pattern.dur.seq = 60:130 * 0.01,
   similarity.measure = "cor",
   similarity.measure.thresh = 0.95, 
   compute.template.idx = TRUE)
 out
 
-## Plot segmetation results
 out.plot1(x, out)
 ```
 
 
 ### Example 3(c): use multiple templates simultaneously
 
-Use two templates simultaneously in segmentation. We observe that the index of a pattern template best matched to a pattern in the time-series `x` is `1` and `2` interchangeably.
+We next use a `template` object consisting of both true patterns used in `x` simulation. We observe that the index of a pattern template best matched to a pattern in the time-series `x` is `1` and `2` interchangeably.
 
 ```{r, fig.width=7, fig.height=2.3}
-pattern.dur.seq <- 60:120
-## Use two templates simultaneously in segmentation
-template <- list(true.pattern.1,
-                 true.pattern.2)
 out <- segmentPattern(
   x = x,
-  x.fs = 1,
-  template = template,
-  pattern.dur.seq = pattern.dur.seq,
+  x.fs = 100,
+  template = list(true.pattern.1, true.pattern.2),
+  pattern.dur.seq = 60:130 * 0.01,
   similarity.measure = "cor",
   compute.template.idx = TRUE)
 out
 
-## Plot segmetation results
 out.plot1(x, out)
 ```
 
 
-
-## Examples 4: signal with noise, length of pattern occurrences and pattern shape vary
+## Examples 4: signal with noise, pattern duration and pattern shape vary
 
 
 ### Simulate data
 
-Simulate data: 
+We simulate a time-series `x`. We assume that 
 
-- add noise to a simulated time-series `x`,
-- length of patterns in a simulated time-series `x` varies,
-- two different shape patterns used to simulate a time-series `x`.  
+- `x` is collected at a frequency of 100 Hz, 
+- there are two patterns present in `x` and their duration varies,
+- there is noise in collected data.  
 
-Here, we use a time-series `x` generated above in Examples 3.  
+We generate `x2` as a noisy version of a time-series `x` generated in *Examples 3*.  
 
 ```{r, fig.width=7, fig.height=2.3}
-## Add noise to x generated in Examples 3
 set.seed(1)
 x2 <- x + rnorm(length(x), sd = 0.5)
-```
 
-Plot a time-series `x`.
-
-```{r, fig.width=7, fig.height=2.3}
 data.frame(x = 1:length(x2), y = x2) %>%
   ggplot() + geom_line(aes(x = x, y = y), size = 0.3) +  theme_bw(base_size = 9) + 
   labs(x = "Time [s]", y = "Value", title = "Time-series x")
@@ -470,23 +399,18 @@ data.frame(x = 1:length(x2), y = x2) %>%
 
 ### Example 4(a): segment pattern
 
-We use two pattern templates simultaneously in segmentation. 
+We use two templates simultaneously in segmentation. 
 
 ```{r, fig.width=7, fig.height=2.3}
-pattern.dur.seq <- 60:120
-template <- list(true.pattern.1,
-                 true.pattern.2)
-  
 out <- segmentPattern(
   x = x2,
-  x.fs = 1,
-  template = template,
-  pattern.dur.seq = pattern.dur.seq,
+  x.fs = 100,
+  template = list(true.pattern.1, true.pattern.2),
+  pattern.dur.seq =  60:130 * 0.01,
   similarity.measure = "cor",
   compute.template.idx = TRUE)
 out
 
-## Plot segmetation results
 out.plot1(x2, out)
 ```
 
@@ -497,38 +421,35 @@ We use `x.adept.ma.W` to define a length of a smoothing window to smooth `x` for
 
 **Smoothing of a time-series `x`**
 
-Function `windowSmooth` allows observing the effect of smoothing for different values of smoothing window length `W`. `W` is expressed in seconds.  
-
-* Here, `W = 10` seems to be a plausible choice. 
+Function `windowSmooth` allows observing the effect of smoothing for different values of smoothing window length `W`. `W` is expressed in seconds. Here, `W = 0.1` seconds seems to be a plausible choice. 
 
 ```{r, fig.width=7, fig.height=2.3}
-x2.smoothed <- windowSmooth(x = x2, x.fs = 1, W = 10)
+x2.smoothed <- windowSmooth(x = x2, x.fs = 100, W = 0.1)
 
 data.frame(x = 1:length(x2.smoothed), y = x2.smoothed) %>%
   ggplot() + geom_line(aes(x = x, y = y)) +  theme_bw(base_size = 9) + 
   labs(x = "Time [s]", y = "Value", title = "Time-series x smoothed")
 ```
 
-Use `x.adept.ma.W = 10` and compare with results from Example 4(a). Observe that using a smoothed version of `x` in similarity matrix computation is pronounced in `sim_i` values in the output data frame, as well as in a slight change in `tau_i` and `T_i` values.
+Use `x.adept.ma.W = 0.1` and compare with results from Example 4(a). Observe that using a smoothed version of `x` in similarity matrix computation is pronounced in `sim_i` values in the output data frame, as well as in a slight change in `tau_i` and `T_i` values.
 
 ```{r, fig.width=7, fig.height=2.3}
 out <- segmentPattern(
   x = x2,
-  x.fs = 1,
-  template = template,
-  pattern.dur.seq = pattern.dur.seq,
+  x.fs = 100,
+  template = list(true.pattern.1, true.pattern.2),
+  pattern.dur.seq =  60:130 * 0.01,
   similarity.measure = "cor",
-  x.adept.ma.W = 10,
+  x.adept.ma.W = 0.1,
   compute.template.idx = TRUE)
 out
 
-## Plot segmetation results
 out.plot1(x2, out)
 ```
 
 ### Example 4(c): use fine-tune procedure for peak detection
 
-Employ a fine-tuning procedure for stride identification. See `segmentPattern` documentation for more details. 
+We employ a fine-tuning procedure for stride identification. See `segmentPattern` documentation for more details. 
 
 **Fine-tune procedure `"maxima"`** 
 
@@ -538,31 +459,30 @@ Fine-tune procedure `"maxima"` tunes preliminarily identified start and end of a
 * Smoothed version of `x` may be used for local maxima search (as presented later). 
 
 ```{r, fig.width=7, fig.height=2.3}
-out <- segmentPattern(x = x2,
-                      x.fs = 1,
-                      template = template,
-                      pattern.dur.seq = pattern.dur.seq,
-                      similarity.measure = "cor",
-                      x.adept.ma.W = 10,
-                      finetune = "maxima",
-                      finetune.maxima.nbh.W = 30,
-                      compute.template.idx = TRUE)
+out <- segmentPattern(
+  x = x2,
+  x.fs = 100,
+  template = list(true.pattern.1, true.pattern.2),
+  pattern.dur.seq =  60:130 * 0.01,
+  x.adept.ma.W = 0.1,
+  finetune = "maxima",
+  finetune.maxima.nbh.W = 0.3,
+  compute.template.idx = TRUE)
 out
 
-## Plot segmetation results
 out.plot1(x2, out)
 ```
 
-We observe that almost all identified pattern occurrence start/end points are hitting the time point which our eyes identify as local `x` maxima. The exception takes place around time point `600`; the explanation for it is that an identified pattern cannot be longer than `120` seconds given we used potential pattern duration grid ranging from `60` to `120` seconds. 
+We observe that almost all identified pattern occurrence start/end points are hitting the time point which our eyes identify as local `x` maxima. 
 
 ### Example 4(d): use fine-tune procedure and smooth signal for peak detection
 
-We smooth `x` for both similarity matrix computation (set `x.adept.ma.W = 10`) and for  fine-tune peak detection procedure (set `finetune.maxima.nbh.W = 30`). 
+We smooth `x` for both similarity matrix computation (set `x.adept.ma.W = 0.1`) and for  fine-tune peak detection procedure (set `finetune.maxima.nbh.W = 0.3`). 
 
-* Here, `W = 50` seems to be a plausible choice for fine-tune peak detection procedure as it removes ("smooth together") multiple local maxima of `x`, leaving out a single one. 
+* Here, `W = 0.5` seconds seems to be a plausible choice for fine-tune peak detection procedure as it removes ("smooth together") multiple local maxima of `x`, leaving out a single one. 
 
 ```{r, fig.width=7, fig.height=2.3}
-x2.smoothed <- windowSmooth(x = x2, x.fs = 1, W = 50)
+x2.smoothed <- windowSmooth(x = x2, x.fs = 100, W = 0.5)
 
 data.frame(x = 1:length(x2.smoothed), y = x2.smoothed) %>%
   ggplot() + geom_line(aes(x = x, y = y)) +  theme_bw(base_size = 9) + 
@@ -570,25 +490,21 @@ data.frame(x = 1:length(x2.smoothed), y = x2.smoothed) %>%
 ```
 
 ```{r, fig.width=7, fig.height=2.3}
-pattern.dur.seq <- 60:120
-template <- list(true.pattern.1,
-                 true.pattern.2)
-  
 out <- segmentPattern(
   x = x2,
-  x.fs = 1,
-  template = template,
-  pattern.dur.seq = pattern.dur.seq,
+  x.fs = 100,
+  template = list(true.pattern.1, true.pattern.2),
+  pattern.dur.seq =  60:130 * 0.01,
   similarity.measure = "cor",
-  x.adept.ma.W = 10,  ## smoothing parameter for similarity matrix computation
+  x.adept.ma.W = 0.1,  ## smoothing parameter for similarity matrix computation
   finetune = "maxima",  ## use fine-tuning
-  finetune.maxima.ma.W = 50, ## smoothing parameter for peak detection in fine-tuning
-  finetune.maxima.nbh.W = 30,  ## neighborhoods length in fine-tuning
+  finetune.maxima.ma.W = 0.5, ## smoothing parameter for peak detection in fine-tuning
+  finetune.maxima.nbh.W = 0.3,  ## neighborhoods length in fine-tuning
   compute.template.idx = TRUE)
 out
 ```
 
-Plot segmentation results. 
+We plot segmentation results. 
 
 ```{r}
 ## Function to plot nice results visualization 
@@ -632,21 +548,11 @@ out.plot2 <- function(val, val.sm, out){
 
 
 ```{r, fig.width=7, fig.height=3}
-## Plot segmetation results
 out.plot2(x2, windowSmooth(x = x2, x.fs = 1, W = 50), out)
 ```
 
 
 # References
-
-1: Karas, M., Straczkiewicz, M., Fadel, W., Harezlak, J., Crainiceanu, C., Urbanek, J.K. *Adaptive empirical pattern transformation (ADEPT) with application to walking stride segmentation*, Submitted to *Biostatistics*, 2018.
-
-2: Karas, M.: [Walking strides segmentation with adept](file://localhost/Users/martakaras/Dropbox/_PROJECTS/R/adept/docs/articles/adept-strides-segmentation.html) vignette. 
-
-
-
-
-
 
 
 

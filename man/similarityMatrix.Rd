@@ -12,7 +12,7 @@ similarityMatrix(x, template.scaled, similarity.measure)
 \item{template.scaled}{A list of lists of numeric vectors, as returned by
 \code{scaleTemplate}.  Each element of
 \code{template.scaled}
-is a list of pattern templates interpolated to a particular vector length.
+is a list of templates interpolated to a particular vector length.
  Number of elements in the \code{template.scaled}  corresponds to the
  number of unique template length values used in segmentation.}
 
@@ -25,19 +25,19 @@ used in similarity matrix computation; one of the following:
 }
 \value{
 A numeric matrix. Contains values of similarity between a time-series \code{x}
-and scaled pattern templates.
+and scaled templates.
 \itemize{
   \item Number of rows equals \code{template.scaled} length,
   number of columns equals \code{x}  length.
   \item A particular matrix row consists of similarity statistic
-  between \code{x} and a pattern rescaled to a particular vector length.
+  between \code{x} and a template rescaled to a particular vector length.
   Precisely, each row's element is a maximum out of similarity values
  computed for each distinct template used in segmentation.
 }
 }
 \description{
 Compute ADEPT similarity matrix between a time-series \code{x} and a collection
-of scaled pattern templates.
+of scaled templates.
 }
 \examples{
 ## Simulate data

@@ -14,7 +14,8 @@ The `adept` package implements ADaptive Empirical Pattern Transformation
 (ADEPT) method\[1\] for pattern segmentation from a time-series. ADEPT
 is optimized to perform fast, accurate walking strides segmentation from
 high-density data collected with a wearable accelerometer during
-walking.
+walking. The method was validated using data collected with sensors worn
+at left wrist, left hip and both ankles.
 
 ### Installation
 
@@ -27,9 +28,9 @@ devtools::install_github("martakarass/adept")
 
 ### Example 1
 
-Simulate a time-series `x`; assume that `x` is collected frequency of
-100 Hz, there is one pattern of a fixed duration of 1.0 seconds present
-in `x`, and there is no noise in collected data.
+We simulate a time-series `x`; we assume that `x` is collected at a
+frequency of 100 Hz, there is one pattern of a fixed duration of 1.0
+seconds present in `x`, and there is no noise in collected data.
 
 ``` r
 true.pattern <- cos(seq(0, 2 * pi, length.out = 100))
@@ -42,10 +43,10 @@ plot(x, type = "l", xlab = "", ylab = "", main = "Time-series x")
 
 <img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
 
-Segment pattern from data. Assume that a perfect template is available.
-Use grid of potential pattern durations of {0.9, 0.95, 1.03, 1.1}
-seconds; the grid is imperfect in a sense it does not contain duration
-of the true pattern used in time-series `x` simulation.
+We segment pattern from data. We assume that a perfect template is
+available. We use a grid of potential pattern durations of {0.9, 0.95,
+1.03, 1.1} seconds; the grid is imperfect in a sense it does not contain
+the duration of the true pattern used in `x` simulation.
 
 ``` r
 library(adept)
@@ -70,10 +71,19 @@ segmentPattern(
 #> 10   894  95 0.9987941          1
 ```
 
-Assume grid of potential pattern durations of {0.9, 0.95, 1, 1.03, 1.1}
-seconds. The grid is now perfect in a sense it contains the duration of
-the true pattern used in data simulation. A perfect match `sim_i=1`
-between a time-series `x` and a template is reached.
+The segmentation result is a data frame, where each row describes one
+identified pattern occurrence:
+
+  - `tau_i` - index of `x` where pattern starts,
+  - `T_i` - pattern duration, expressed in `x` vector length,
+  - `sim_i` - similarity between a pattern and `x`,
+  - `template_i` - index of a pattern template best matched to a pattern
+    in the time-series `x` (here: one pattern template was used, hence
+    all `template_i`’s equal 1).
+
+We then assume a grid of potential pattern durations which contains the
+duration of the true pattern used in data simulation. A perfect match
+(`sim_i = 1`) between a time-series `x` and a template is obtained.
 
 ``` r
 segmentPattern(
@@ -98,11 +108,11 @@ segmentPattern(
 
 ### Example 2
 
-Simulate a time-series `x`; assume that `x` is collected frequency of
-100 Hz, there are two patterns of various duration present in `x`, and
-there is noise in collected data.
+We simulate a time-series `x`; we assume that `x` is collected frequency
+of 100 Hz, there are two patterns of various duration present in `x`,
+and there is noise in collected data.
 
-Then, generate `x2` as a noisy version of `x`.
+Then, we generate `x2` as a noisy version of `x`.
 
 ``` r
 true.pattern.1 <- cos(seq(0, 2 * pi, length.out = 200))
@@ -142,15 +152,15 @@ plot(x2, type = "l", xlab = "", ylab = "", main = "Time-series x2")
 
 <img src="man/figures/README-unnamed-chunk-5-3.png" width="100%" />
 
-Assume a perfect grid of potential pattern duration, {0.7, 0.8, 0.9,
-1.0, 1.1, 1.2, 1.3} seconds. Segment `x`.
+We segment `x`. We assume a perfect grid of potential pattern duration,
+{0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3} seconds.
 
 ``` r
 segmentPattern(
   x = x,
   x.fs = 100,
   template = list(true.pattern.1, true.pattern.2),
-  pattern.dur.seq = seq(70, 130, by = 10) * 0.01,
+  pattern.dur.seq = seq(0.7, 1.3, by = 0.1),
   similarity.measure = "cor",
   compute.template.idx = TRUE)
 #>    tau_i T_i sim_i template_i
@@ -170,14 +180,14 @@ segmentPattern(
 #> 14  1258 130     1          2
 ```
 
-Segment `x2`.
+We segment `x2`.
 
 ``` r
 segmentPattern(
   x = x2,
   x.fs = 100,
   template = list(true.pattern.1, true.pattern.2),
-  pattern.dur.seq = seq(70, 130, by = 10) * 0.01,
+  pattern.dur.seq = seq(0.7, 1.3, by = 0.1),
   similarity.measure = "cor",
   compute.template.idx = TRUE)
 #>    tau_i T_i     sim_i template_i
@@ -196,8 +206,11 @@ segmentPattern(
 #> 13  1267 120 0.7655408          2
 ```
 
-Segment `x2`; smooth data time-series before similarity matrix
-computation. Assume a more dense grid of potential pattern duration.
+We now use `x.adept.ma.W` argument to smooth `x2` before similarity
+matrix computation in the segmentation procedure (see `?segmentPattern`
+for details). We also assume a more dense grid of potential pattern
+duration. We observe that `sim_i` values obtained are higher than in the
+previous segmentation case.
 
 ``` r
 par(mfrow = c(1,1), cex = 1)

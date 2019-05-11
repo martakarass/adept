@@ -8,7 +8,7 @@ scaleTemplate(template, template.vl)
 }
 \arguments{
 \item{template}{A list of numeric vectors. Each vector represents
-a distinct pattern template.}
+a distinct template.}
 
 \item{template.vl}{A numeric vector. A grid of vector lengths that each
 element of \code{template} is to be linearly interpolated into.}
@@ -16,7 +16,7 @@ element of \code{template} is to be linearly interpolated into.}
 \value{
 A list of lists of numeric vectors.
 Each element of the
-returned list is a list of pattern templates scaled according
+returned list is a list of templates scaled according
 to a particular vector length. The number of elements in the returned
 list equals the length of \code{template.vl}.
 }

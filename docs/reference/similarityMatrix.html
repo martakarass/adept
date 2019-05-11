@@ -33,7 +33,7 @@
 <meta property="og:title" content="ADEPT Similarity Matrix Computation — similarityMatrix" />
 
 <meta property="og:description" content="Compute ADEPT similarity matrix between a time-series x and a collection
-of scaled pattern templates." />
+of scaled templates." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -126,7 +126,7 @@ of scaled pattern templates." />
     <div class="ref-description">
     
     <p>Compute ADEPT similarity matrix between a time-series <code>x</code> and a collection
-of scaled pattern templates.</p>
+of scaled templates.</p>
     
     </div>
 
@@ -144,7 +144,7 @@ of scaled pattern templates.</p>
       <td><p>A list of lists of numeric vectors, as returned by
 <code>scaleTemplate</code>.  Each element of
 <code>template.scaled</code>
-is a list of pattern templates interpolated to a particular vector length.
+is a list of templates interpolated to a particular vector length.
  Number of elements in the <code>template.scaled</code>  corresponds to the
  number of unique template length values used in segmentation.</p></td>
     </tr>
@@ -161,11 +161,11 @@ used in similarity matrix computation; one of the following:</p><ul>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A numeric matrix. Contains values of similarity between a time-series <code>x</code>
-and scaled pattern templates.</p><ul>
+and scaled templates.</p><ul>
 <li><p>Number of rows equals <code>template.scaled</code> length,
   number of columns equals <code>x</code>  length.</p></li>
 <li><p>A particular matrix row consists of similarity statistic
-  between <code>x</code> and a pattern rescaled to a particular vector length.
+  between <code>x</code> and a template rescaled to a particular vector length.
   Precisely, each row's element is a maximum out of similarity values
  computed for each distinct template used in segmentation.</p></li>
 </ul>

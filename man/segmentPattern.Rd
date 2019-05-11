@@ -20,8 +20,8 @@ expressed in a number of observations per second.}
 \item{template}{A list of numeric vectors, or a numeric vector.
 Each vector represents a distinct pattern template used in segmentation.}
 
-\item{pattern.dur.seq}{A numeric vector. A grid of pattern duration
-times used in segmentation. Expressed in seconds. See: Details.}
+\item{pattern.dur.seq}{A numeric vector. A grid of potential pattern duration
+used in segmentation. Expressed in seconds. See: Details.}
 
 \item{similarity.measure}{A character scalar. Statistic used to compute similarity
 between a time-series \code{x}  and pattern templates. Currently supported values:
@@ -32,7 +32,7 @@ between a time-series \code{x}  and pattern templates. Currently supported value
 Default is \code{"cov"}.}
 
 \item{similarity.measure.thresh}{A numeric scalar. Threshold of minimal similarity
-value between a time-series \code{x} and pattern templates
+value between a time-series \code{x} and a pattern template
 below which the algorithm does not identify a pattern occurrence.
 Default is \code{0}.}
 
@@ -87,20 +87,16 @@ Setting to \code{TRUE} may increase computation time. Default is \code{FALSE}.}
 }
 \value{
 A \code{data.frame} with segmentation results. Each row
-of the returned \code{data.frame} describes one identified pattern occurrence:
+describes one identified pattern occurrence:
 \itemize{
-  \item \code{tau_i} - index of a time-series \code{x} where identified pattern occurrence starts,
-  \item \code{T_i} - duration of identified pattern occurrence, expressed in  a time-series \code{x} vector length,
-  \item \code{sim_i} -  value of similarity statistic between an identified pattern occurrence and corresponding
-  window of a time-series used in similarity matrix computation;
-  note: this value corresponds to similarity statistic between
-  preliminarily identified pattern occurrence and corresponding window of a time-series used in similarity matrix computation;
-  specifically: if the fine-tune procedure is employed,
-  the similarity value between the final pattern occurrence location and corresponding window of time-series \code{x}
-  signal may differ from the value in this table,
+  \item \code{tau_i} - index of  \code{x} where pattern starts,
+  \item \code{T_i} - pattern duration, expressed in \code{x} vector length,
+  \item \code{sim_i} -  similarity between a pattern and \code{x};
+  note: if 'maxima' fine-tune and/or \code{x} smoothing is employed,
+  the similarity value between the final segmented pattern and a template
+   may differ from the value in this table,
   \item \code{template_i} - if \code{compute.template.idx} equals \code{TRUE}:
-  index of pattern template that yielded a similarity matrix value
- corresponding to an identified pattern occurrence;
+  index of a template best matched to \code{x};
  if \code{compute.template.idx} equals \code{FALSE}: \code{NA}.
 }
 }
@@ -111,25 +107,13 @@ Transformation (ADEPT).
 \details{
 Function implements Adaptive Empirical Pattern Transformation (ADEPT) method for pattern segmentation
 from a time-series \code{x}.
-ADEPT was designed with the aim of performing fast, accurate walking strides segmentation
-from high-density data
-collected from wearable accelerometer worn during continuous walking activity.
+ADEPT is optimized to perform fast, accurate walking strides segmentation from
+high-density data collected with a wearable accelerometer during walking.
 
-    ADEPT identifies pattern occurrences from a time-series \code{x} via maximizing similarity
-(correlation, covariance etc.) between a time-series \code{x} and pattern
-templates.
-\itemize{
-  \item Pattern template is scaled to various scale parameters to allow
-  for a potentially better match with pattern occurrences that may change
-  its duration over time.  \code{pattern.dur.seq} argument defines a grid of a
-   pattern duration to be used in segmentation. Note:  the more dense grid may potentially
-   increase segmentation accuracy but may also increase method execution time.
-  \item Multiple pattern templates are allowed simultaneously to
-  allow for potentially better match with pattern occurrences
-  that may change its shape over time.
-}
-In practice, a pre-defined pattern template may be derived as an empirical pattern, that is,
-a data-derived vector representing a pattern of interest.
+ ADEPT identifies patterns in a time-series \code{x} via maximization of chosen
+ similarity statistic (correlation, covariance, etc.) between a time-series \code{x}
+ and a pattern template(s). It accounts for variability in both
+ (1) pattern duration and (2) pattern shape.
 }
 \examples{
 ## Example 1:
