@@ -33,11 +33,15 @@ test_that("Sute 1. Test if maxAndTune works correctly. Case: no noise in signal,
                     finetune.maxima.x,
                     finetune.maxima.nbh.vl)
 
-  expect_equal(sort(out$tau_i),
-               c(1, 101, 201, 302, 401, 501, 601, 701, 801, 901))
-  expect_equal(sort(out$T_i),
-               c(100, 100, 100, 100, 100, 100, 100, 100, 100, 100))
-
+  # expect_equal(sort(out$tau_i),
+  #              c(1, 101, 201, 302, 401, 501, 601, 701, 801, 901))
+  # expect_equal(sort(out$T_i),
+  #              c(100, 100, 100, 100, 100, 100, 100, 100, 100, 100))
+  ## @MK May 11, 2019: account for micro differences in similarity matrix
+  ## computation osx/win which may yield up to 1 index difference in stride location
+  ## estimation
+  expect_true(max(abs(sort(out$tau_i) - c(1, 101, 201, 302, 401, 501, 601, 701, 801, 901))) <= 1)
+  expect_true(max(abs(sort(out$T_i) - c(100, 100, 100, 100, 100, 100, 100, 100, 100, 100))) <= 1)
 })
 
 

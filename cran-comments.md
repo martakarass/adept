@@ -14,3 +14,4 @@
 Dear Volunteer: thank you so much for your kind work on checking the package! Please find a few notes below. 
 
 * There are NO references describing the methods in the package to be included in the Description field of the DESCRIPTION file as of now. 
+
