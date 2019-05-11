@@ -106,7 +106,7 @@
 <div id="example-1" class="section level3">
 <h3 class="hasAnchor">
 <a href="#example-1" class="anchor"></a>Example 1</h3>
-<p>We simulate a time-series <code>x</code>; we assume that <code>x</code> is collected at a frequency of 100 Hz, there is one pattern of a fixed duration of 1.0 seconds present in <code>x</code>, and there is no noise in collected data.</p>
+<p>We simulate a time-series <code>x</code>. We assume that <code>x</code> is collected at a frequency of 100 Hz, there is one shape of a pattern within <code>x</code>, each pattern lasts 1 second, and there is no noise in collected data.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">true.pattern &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Trig">cos</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="dv">2</span> <span class="op">*</span><span class="st"> </span>pi, <span class="dt">length.out =</span> <span class="dv">100</span>))</a>
 <a class="sourceLine" id="cb2-2" title="2">x &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(true.pattern[<span class="dv">1</span>], <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">replicate</a></span>(<span class="dv">10</span>, true.pattern[<span class="op">-</span><span class="dv">1</span>]))</a>
 <a class="sourceLine" id="cb2-3" title="3"></a>
@@ -142,9 +142,9 @@
 <li>
 <code>T_i</code> - pattern duration, expressed in <code>x</code> vector length,</li>
 <li>
-<code>sim_i</code> - similarity between a pattern and <code>x</code>,</li>
+<code>sim_i</code> - similarity between a template and <code>x</code>,</li>
 <li>
-<code>template_i</code> - index of a pattern template best matched to a pattern in the time-series <code>x</code> (here: one pattern template was used, hence all <code>template_i</code>’s equal 1).</li>
+<code>template_i</code> - index of a template best matched to a time-series <code>x</code> (here: one template was used, hence all <code>template_i</code>’s equal 1).</li>
 </ul>
 <p>We then assume a grid of potential pattern durations which contains the duration of the true pattern used in data simulation. A perfect match (<code>sim_i = 1</code>) between a time-series <code>x</code> and a template is obtained.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw"><a href="reference/segmentPattern.html">segmentPattern</a></span>(</a>
@@ -169,7 +169,7 @@
 <div id="example-2" class="section level3">
 <h3 class="hasAnchor">
 <a href="#example-2" class="anchor"></a>Example 2</h3>
-<p>We simulate a time-series <code>x</code>; we assume that <code>x</code> is collected frequency of 100 Hz, there are two patterns of various duration present in <code>x</code>, and there is noise in collected data.</p>
+<p>We simulate a time-series <code>x</code>. We assume that <code>x</code> is collected at a frequency of 100 Hz, there are two shapes of a pattern within <code>x</code>, patterns have various duration, and there is no noise in collected data.</p>
 <p>Then, we generate <code>x2</code> as a noisy version of <code>x</code>.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">true.pattern<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Trig">cos</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="dv">2</span> <span class="op">*</span><span class="st"> </span>pi, <span class="dt">length.out =</span> <span class="dv">200</span>))</a>
 <a class="sourceLine" id="cb5-2" title="2">true.pattern<span class="fl">.2</span> &lt;-<span class="st"> </span>true.pattern<span class="fl">.1</span></a>

@@ -2,9 +2,9 @@
 
 
 
-#' Pattern Templates Scaling
+#' Templates Scaling
 #'
-#' Compute a list of scaled versions of pattern templates via linear interpolation.
+#' Compute a list of scaled templates via linear interpolation.
 #'
 #' @param template A list of numeric vectors. Each vector represents
 #' a distinct template.
@@ -19,27 +19,26 @@
 #'
 #'
 #' @examples
-#' ## List of two distinct pattern templates
+#' ## Construct a list of two templates
 #' template <- list(sin(seq(0, 2 * pi, length.out = 100)),
 #'                  cos(seq(0, 2 * pi, length.out = 100)))
-#' ## Vector which defines a grid of vector lengths to which each of
-#' ## the distinct pattern templates is scaled into
+#' ## A grid of vector lengths to which each of templates is scaled into
 #' template.vl <- c(50, 100, 200)
-#' ## Compute list of rescaled versions of pattern templates
+#' ## Compute list of rescaled templates
 #' out <- scaleTemplate(template, template.vl)
 #'
-#' ## Plot 1st distinct pattern template, rescaled to different vector lengths
-#' par(mfrow = c(2, 1))
+#' ## Plot 1st template after rescaling to three values of vector length
+#' par(mfrow = c(2, 1), cex = 0.7)
 #' plot(out[[3]][[1]], type = "l",
-#'      main = "pattern: sin([0,2*pi]); different scales considered",
-#'      ylab = "pattern", xlab = "output vector index")
+#'      main = "Pattern: sin([0, 2 * pi]) rescaled according to different scales",
+#'      ylab = "Pattern", xlab = "Index")
 #' lines(out[[2]][[1]], col = "red")
 #' lines(out[[1]][[1]], col = "blue")
 #'
-#' ## Plot 2nd distinct pattern template, rescaled to different vector lengths
+#' ## Plot 2nd template after rescaling to three values of vector length
 #' plot(out[[3]][[2]], type = "l",
-#'      main = "pattern: cos([0,2*pi]); different scales considered",
-#'      ylab = "pattern", xlab = "output vector index")
+#'      main = "Pattern: cos([0, 2 * pi]) rescaled according to different scales",
+#'      ylab = "Pattern", xlab = "Index")
 #' lines(out[[2]][[2]], col = "red")
 #' lines(out[[1]][[2]], col = "blue")
 #'

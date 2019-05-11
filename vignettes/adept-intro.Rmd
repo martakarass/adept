@@ -72,27 +72,28 @@ The examples below are organized into suites. Examples within one suite share da
 We simulate a time-series `x`. We assume that 
 
 - `x` is collected at a frequency of 100 Hz, 
-- there is one pattern of a fixed duration of 1.0 seconds present in `x`, 
+- there is one shape of pattern present within `x`, 
+- each pattern lasts 1 second,
 - there is no noise in the collected data. 
 
-```{r, fig.width=7, fig.height=2.3}
+```{r, fig.width=2.5, fig.height=2.3}
 true.pattern <- cos(seq(0, 2 * pi, length.out = 100))
 x <- c(true.pattern[1], replicate(10, true.pattern[-1]))
 
-data.frame(x = 1:length(x), y = x) %>%
-  ggplot() + geom_line(aes(x = x, y = y)) +  theme_bw(base_size = 9) + 
-  labs(x = "Time [s]", y = "Value", title = "Time-series x")
-```
-
-```{r, fig.width=2.5, fig.height=2.3}
 data.frame(x = seq(0, 1, length.out = 100), y = true.pattern) %>%
   ggplot() + geom_line(aes(x = x, y = y), color = "red") + 
   theme_bw(base_size = 9) + labs(x = "Phase", y = "Value", title = "Pattern")
 ```
 
+```{r, fig.width=7, fig.height=2.3}
+data.frame(x = seq(0, by = 0.01, length.out = length(x)), y = x) %>%
+  ggplot() + geom_line(aes(x = x, y = y)) +  theme_bw(base_size = 9) + 
+  labs(x = "Time [s]", y = "Value", title = "Time-series x")
+```
+
 ### Example 1(a): segment pattern 
 
-We use `segmentPattern` function segment pattern from a time-series `x`. We assume that a perfect template is available. We use a grid of potential pattern durations of {0.9, 0.95, 1.03, 1.1} seconds; the grid is imperfect in a sense it does not contain the duration of the true pattern used in `x` simulation.  
+We use `segmentPattern` to segment pattern from a time-series `x`. We assume that a perfect template is available. We use a grid of potential pattern durations of {0.9, 0.95, 1.03, 1.1} seconds; the grid is imperfect in a sense it does not contain the duration of the true pattern used in `x` simulation.  
 
 ```{r}
 out <- segmentPattern(
@@ -111,8 +112,8 @@ The segmentation result is a data frame, where each row describes one identified
 
 * `tau_i` - index of `x` where pattern starts,
 * `T_i` - pattern duration, expressed in `x` vector length,
-* `sim_i` - similarity between a pattern and `x`,
-* `template_i` - index of a pattern template best matched to a pattern in the time-series `x` (here: one pattern template was used, hence all `template_i`'s equal 1).
+* `sim_i` - similarity between a template and `x`,
+* `template_i` - index of a template best matched to a time-series `x` (here: one template was used, hence all `template_i`'s equal 1).
 
 See `?segmentPattern` for details. 
 
@@ -138,9 +139,9 @@ We use `x.fs` to modify `x` time-series frequency, expressed in a number of obse
 ```{r}
 out <- segmentPattern(
   x = x,
-  x.fs = 10,   ## Assume data frequency 10 observations per second
+  x.fs = 10,   ## Assumed data frequency of 10 observations per second
   template = true.pattern,
-  pattern.dur.seq = c(0.9, 0.95, 1, 1.03, 1.1) * 10,
+  pattern.dur.seq = c(0.9, 0.95, 1, 1.03, 1.1) * 10, ## Adjusted accordingly
   similarity.measure = "cor",
   compute.template.idx = TRUE)
 out
@@ -155,7 +156,8 @@ out
 We simulate a time-series `x`. We assume that 
 
 - `x` is collected at a frequency of 100 Hz, 
-- there is one pattern present in `x` and its duration varies,
+- there is one shape of a pattern present within `x`, 
+- patterns have various duration, 
 - there is no noise in the collected data. 
 
 
@@ -171,19 +173,21 @@ for (vl in seq(70, 130, by = 10)){
   if (vl == 70) x <- c(true.pattern.s[1], x)
 }
 
-data.frame(x = 1:length(x), y = x) %>%
+data.frame(x = seq(0, by = 0.01, length.out = length(x)), y = x) %>%
   ggplot() + geom_line(aes(x = x, y = y)) +  theme_bw(base_size = 9) + 
   labs(x = "Time [s]", y = "Value", title = "Time-series x")
 
 ## Function to plot segmentation results with ggplot2
 library(ggplot2)
-out.plot1 <- function(val, out){
+out.plot1 <- function(val, out, fs = 100){
   yrange <- c(-1, 1) * max(abs(val))
   y.h <- 0
   plt <- ggplot()
   for (i in 1:nrow(out)){
     tau1_i <- out[i, "tau_i"]
     tau2_i <- tau1_i + out[i, "T_i"] - 1
+    tau1_i <- tau1_i/fs
+    tau2_i <- tau2_i/fs
     plt <- 
       plt + 
       geom_vline(xintercept = tau1_i, color = "red") + 
@@ -198,9 +202,10 @@ out.plot1 <- function(val, out){
         ymax = yrange[2]
     )
   }
+  geom_line.df <- data.frame(x = seq(0, by = 1/fs, length.out = length(val)), y = val)
   plt <- 
     plt + 
-    geom_line(data = data.frame(x = 1:length(val), y = val), 
+    geom_line(data = geom_line.df, 
               aes(x = x, y = y), 
               color = "black", 
               size = 0.3) + 
@@ -209,7 +214,6 @@ out.plot1 <- function(val, out){
          title = "Black line: signal x\nRed vertical lines: start and end points of identified pattern occurrence\nRed shaded area: area corresponding to identified pattern occurrence")
   plot(plt)
 }
-
 ```
 
 ### Example 2(a): segment pattern
@@ -237,7 +241,7 @@ Next, we use a less dense grid of potential pattern duration. We observe that pe
 - A less dense `pattern.dur.seq` grid yields a shorter time of method execution.
 - As explained later, when peak detection tuning is used, having a "maximally dense" pattern duration grid does not contribute much.
 
-```{r }
+```{r, fig.width=7, fig.height=2.3}
 out <- segmentPattern(
   x = x,
   x.fs = 100,
@@ -246,9 +250,7 @@ out <- segmentPattern(
   similarity.measure = "cor",
   compute.template.idx = TRUE)
 out
-```
 
-```{r, fig.width=7, fig.height=2.3}
 out.plot1(x, out)
 ```
 
@@ -256,7 +258,7 @@ out.plot1(x, out)
 
 We use `similarity.measure` to modify the similarity statistic. We observe that `sim_i` values in the result data frame change and the segmentation results change slightly too. The explanation is that a change of similarity statistic takes an effect on ADEPT iterative maximization procedure. 
 
-```{r }
+```{r, fig.width=7, fig.height=2.3}
 out <- segmentPattern(
   x = x,
   x.fs = 100,
@@ -265,9 +267,7 @@ out <- segmentPattern(
   similarity.measure = "cov",  ## Use covariance as a similarity statistic
   compute.template.idx = TRUE)
 out
-```
 
-```{r, fig.width=7, fig.height=2.3}
 out.plot1(x, out)
 ```
 
@@ -279,7 +279,8 @@ out.plot1(x, out)
 We simulate a time-series `x`. We assume that 
 
 - `x` is collected at a frequency of 100 Hz, 
-- there are two patterns present in `x` and their duration varies,
+- there are two shapes of pattern present within `x`, 
+- patterns have various duration, 
 - there is no noise in the collected data. 
 
 ```{r, fig.width=7, fig.height=2.3}
@@ -298,7 +299,7 @@ for (vl in seq(70, 130, by = 10)){
   if (vl == 70) x <- c(true.pattern.1.s[1], x)
 }
 
-data.frame(x = 1:length(x), y = x) %>%
+data.frame(x = seq(0, by = 0.01, length.out = length(x)), y = x) %>%
   ggplot() + geom_line(aes(x = x, y = y)) +  theme_bw(base_size = 9) + 
   labs(x = "Time [s]", y = "Value", title = "Time-series x")
 ```
@@ -308,12 +309,12 @@ data.frame(x = 1:length(x), y = x) %>%
 plt1 <- 
   data.frame(x = seq(0, 1, length.out = length(true.pattern.1)), y = true.pattern.1) %>%
   ggplot() + geom_line(aes(x = x, y = y), color = "red") + 
-  theme_bw(base_size = 9) + labs(x = "Template phase", y = "Value", title = "Template 1") + 
+  theme_bw(base_size = 9) + labs(x = "Phase", y = "Value", title = "Pattern 1") + 
   scale_y_continuous(limits = c(-1,1))
 plt2 <- 
   data.frame(x = seq(0, 1, length.out = length(true.pattern.2)), y = true.pattern.2) %>%
   ggplot() + geom_line(aes(x = x, y = y), color = "red") + 
-  theme_bw(base_size = 9) + labs(x = "Template phase", y = "Value", title = "Template 2") + 
+  theme_bw(base_size = 9) + labs(x = "Phase", y = "Value", title = "Pattern 2") + 
   scale_y_continuous(limits = c(-1,1))
 plt1;plt2
 ```
@@ -339,7 +340,7 @@ out.plot1(x, out)
 
 ### Example 3(b): use `similarity.measure.thresh` to modify the threshold of minimal similarity 
 
-We use a similarity threshold to segment only those patterns for which similarity (here: covariance) is greater than 0.95. Note that using the threshold may substantially speed up method execution while working with a large data set. 
+We use a similarity threshold to segment only those patterns for which similarity (here: correlation) is greater than 0.95. Note that using the threshold may substantially speed up method execution when working with a large data set. 
 
 ```{r, fig.width=7, fig.height=2.3}
 out <- segmentPattern(
@@ -382,16 +383,16 @@ out.plot1(x, out)
 We simulate a time-series `x`. We assume that 
 
 - `x` is collected at a frequency of 100 Hz, 
-- there are two patterns present in `x` and their duration varies,
-- there is noise in collected data.  
-
-We generate `x2` as a noisy version of a time-series `x` generated in *Examples 3*.  
+- there are two shapes of a pattern present within `x`, 
+- patterns have various duration, 
+- there is noise in the collected data. 
 
 ```{r, fig.width=7, fig.height=2.3}
+## Generate `x` as a noisy version of a time-series generated in *Examples 3*.  
 set.seed(1)
-x2 <- x + rnorm(length(x), sd = 0.5)
+x <- x + rnorm(length(x), sd = 0.5)
 
-data.frame(x = 1:length(x2), y = x2) %>%
+data.frame(x = seq(0, by = 0.01, length.out = length(x)), y = x) %>%
   ggplot() + geom_line(aes(x = x, y = y), size = 0.3) +  theme_bw(base_size = 9) + 
   labs(x = "Time [s]", y = "Value", title = "Time-series x")
 ```
@@ -403,7 +404,7 @@ We use two templates simultaneously in segmentation.
 
 ```{r, fig.width=7, fig.height=2.3}
 out <- segmentPattern(
-  x = x2,
+  x = x,
   x.fs = 100,
   template = list(true.pattern.1, true.pattern.2),
   pattern.dur.seq =  60:130 * 0.01,
@@ -411,7 +412,7 @@ out <- segmentPattern(
   compute.template.idx = TRUE)
 out
 
-out.plot1(x2, out)
+out.plot1(x, out)
 ```
 
 
@@ -424,9 +425,9 @@ We use `x.adept.ma.W` to define a length of a smoothing window to smooth `x` for
 Function `windowSmooth` allows observing the effect of smoothing for different values of smoothing window length `W`. `W` is expressed in seconds. Here, `W = 0.1` seconds seems to be a plausible choice. 
 
 ```{r, fig.width=7, fig.height=2.3}
-x2.smoothed <- windowSmooth(x = x2, x.fs = 100, W = 0.1)
-
-data.frame(x = 1:length(x2.smoothed), y = x2.smoothed) %>%
+x.smoothed <- windowSmooth(x = x, x.fs = 100, W = 0.1)
+  
+data.frame(x = seq(0, by = 0.01, length.out = length(x.smoothed)), y = x.smoothed) %>%
   ggplot() + geom_line(aes(x = x, y = y)) +  theme_bw(base_size = 9) + 
   labs(x = "Time [s]", y = "Value", title = "Time-series x smoothed")
 ```
@@ -435,7 +436,7 @@ Use `x.adept.ma.W = 0.1` and compare with results from Example 4(a). Observe tha
 
 ```{r, fig.width=7, fig.height=2.3}
 out <- segmentPattern(
-  x = x2,
+  x = x,
   x.fs = 100,
   template = list(true.pattern.1, true.pattern.2),
   pattern.dur.seq =  60:130 * 0.01,
@@ -444,12 +445,12 @@ out <- segmentPattern(
   compute.template.idx = TRUE)
 out
 
-out.plot1(x2, out)
+out.plot1(x, out)
 ```
 
 ### Example 4(c): use fine-tune procedure for peak detection
 
-We employ a fine-tuning procedure for stride identification. See `segmentPattern` documentation for more details. 
+We employ a fine-tuning procedure for stride identification.
 
 **Fine-tune procedure `"maxima"`** 
 
@@ -460,7 +461,7 @@ Fine-tune procedure `"maxima"` tunes preliminarily identified start and end of a
 
 ```{r, fig.width=7, fig.height=2.3}
 out <- segmentPattern(
-  x = x2,
+  x = x,
   x.fs = 100,
   template = list(true.pattern.1, true.pattern.2),
   pattern.dur.seq =  60:130 * 0.01,
@@ -470,7 +471,7 @@ out <- segmentPattern(
   compute.template.idx = TRUE)
 out
 
-out.plot1(x2, out)
+out.plot1(x, out)
 ```
 
 We observe that almost all identified pattern occurrence start/end points are hitting the time point which our eyes identify as local `x` maxima. 
@@ -482,16 +483,16 @@ We smooth `x` for both similarity matrix computation (set `x.adept.ma.W = 0.1`) 
 * Here, `W = 0.5` seconds seems to be a plausible choice for fine-tune peak detection procedure as it removes ("smooth together") multiple local maxima of `x`, leaving out a single one. 
 
 ```{r, fig.width=7, fig.height=2.3}
-x2.smoothed <- windowSmooth(x = x2, x.fs = 100, W = 0.5)
+x.smoothed.2 <- windowSmooth(x = x, x.fs = 100, W = 0.5)
 
-data.frame(x = 1:length(x2.smoothed), y = x2.smoothed) %>%
+data.frame(x = seq(0, by = 0.01, length.out = length(x.smoothed.2)), y = x.smoothed.2) %>%
   ggplot() + geom_line(aes(x = x, y = y)) +  theme_bw(base_size = 9) + 
   labs(x = "Time [s]", y = "Value", title = "Time-series x smoothed aggresively")
 ```
 
 ```{r, fig.width=7, fig.height=2.3}
 out <- segmentPattern(
-  x = x2,
+  x = x,
   x.fs = 100,
   template = list(true.pattern.1, true.pattern.2),
   pattern.dur.seq =  60:130 * 0.01,
@@ -508,17 +509,21 @@ We plot segmentation results.
 
 ```{r}
 ## Function to plot nice results visualization 
-out.plot2 <- function(val, val.sm, out){
+out.plot2 <- function(val, val.sm, out, fs = 100){
   yrange <- c(-1, 1) * max(abs(val))
   y.h <- 0
+  geom_line.df1 <- data.frame(
+    x = seq(0, by = 1/fs, length.out = length(val)), y = val)
   plt <- 
     ggplot() + 
-    geom_line(data = data.frame(x = 1:length(val), y = val), 
+    geom_line(data = geom_line.df1,
               aes(x = x, y = y), 
               color = "grey") 
   for (i in 1:nrow(out)){
     tau1_i <- out[i, "tau_i"]
     tau2_i <- tau1_i + out[i, "T_i"] - 1
+    tau1_i <- tau1_i/fs
+    tau2_i <- tau2_i/fs
     plt <- 
       plt + 
       geom_vline(xintercept = tau1_i, color = "red") + 
@@ -533,9 +538,11 @@ out.plot2 <- function(val, val.sm, out){
         ymax = yrange[2]
     )
   }
+  geom_line.df2 <- data.frame(
+    x = seq(0, by = 1/fs, length.out = length(val.sm)), y = val.sm)
   plt <- 
     plt + 
-    geom_line(data = data.frame(x = 1:length(val.sm), y = val.sm), 
+    geom_line(data = geom_line.df2, 
               aes(x = x, y = y), 
               color = "black", size = 0.6, alpha = 0.8) + 
     theme_bw(base_size = 9) + 
@@ -548,7 +555,7 @@ out.plot2 <- function(val, val.sm, out){
 
 
 ```{r, fig.width=7, fig.height=3}
-out.plot2(x2, windowSmooth(x = x2, x.fs = 1, W = 50), out)
+out.plot2(x, windowSmooth(x = x, x.fs = 100, W = 0.5), out)
 ```
 
 

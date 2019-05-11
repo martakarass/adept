@@ -28,9 +28,9 @@ devtools::install_github("martakarass/adept")
 
 ### Example 1
 
-We simulate a time-series `x`; we assume that `x` is collected at a
-frequency of 100 Hz, there is one pattern of a fixed duration of 1.0
-seconds present in `x`, and there is no noise in collected data.
+We simulate a time-series `x`. We assume that `x` is collected at a
+frequency of 100 Hz, there is one shape of a pattern within `x`, each
+pattern lasts 1 second, and there is no noise in collected data.
 
 ``` r
 true.pattern <- cos(seq(0, 2 * pi, length.out = 100))
@@ -76,10 +76,9 @@ identified pattern occurrence:
 
   - `tau_i` - index of `x` where pattern starts,
   - `T_i` - pattern duration, expressed in `x` vector length,
-  - `sim_i` - similarity between a pattern and `x`,
-  - `template_i` - index of a pattern template best matched to a pattern
-    in the time-series `x` (here: one pattern template was used, hence
-    all `template_i`’s equal 1).
+  - `sim_i` - similarity between a template and `x`,
+  - `template_i` - index of a template best matched to a time-series `x`
+    (here: one template was used, hence all `template_i`’s equal 1).
 
 We then assume a grid of potential pattern durations which contains the
 duration of the true pattern used in data simulation. A perfect match
@@ -108,9 +107,9 @@ segmentPattern(
 
 ### Example 2
 
-We simulate a time-series `x`; we assume that `x` is collected frequency
-of 100 Hz, there are two patterns of various duration present in `x`,
-and there is noise in collected data.
+We simulate a time-series `x`. We assume that `x` is collected at a
+frequency of 100 Hz, there are two shapes of a pattern within `x`,
+patterns have various duration, and there is no noise in collected data.
 
 Then, we generate `x2` as a noisy version of `x`.
 

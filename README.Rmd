@@ -34,7 +34,7 @@ devtools::install_github("martakarass/adept")
 
 ### Example 1
 
-We simulate a time-series `x`; we assume that `x` is collected at a frequency of 100 Hz, there is one pattern of a fixed duration of 1.0 seconds present in `x`, and there is no noise in collected data. 
+We simulate a time-series `x`. We assume that `x` is collected at a frequency of 100 Hz, there is one shape of a pattern within `x`, each pattern lasts 1 second, and there is no noise in collected data. 
 
 ```{r, fig.width=10, fig.height=4}
 true.pattern <- cos(seq(0, 2 * pi, length.out = 100))
@@ -63,8 +63,8 @@ The segmentation result is a data frame, where each row describes one identified
 
 * `tau_i` - index of `x` where pattern starts,
 * `T_i` - pattern duration, expressed in `x` vector length,
-* `sim_i` - similarity between a pattern and `x`,
-* `template_i` - index of a pattern template best matched to a pattern in the time-series `x` (here: one pattern template was used, hence all `template_i`'s equal 1).
+* `sim_i` - similarity between a template and `x`,
+* `template_i` - index of a template best matched to a time-series `x` (here: one template was used, hence all `template_i`'s equal 1).
 
 We then assume a grid of potential pattern durations which contains the duration of the true pattern used in data simulation. A perfect match (`sim_i = 1`) between a time-series `x` and a template is obtained. 
 
@@ -80,7 +80,7 @@ segmentPattern(
 
 ### Example 2
 
-We simulate a time-series `x`; we assume that `x` is collected frequency of 100 Hz, there are two patterns of various duration present in `x`, and there is noise in collected data. 
+We simulate a time-series `x`. We assume that `x` is collected at a frequency of 100 Hz, there are two shapes of a pattern within `x`, patterns have various duration, and there is no noise in collected data. 
 
 Then, we generate `x2` as a noisy version of `x`. 
 
@@ -111,7 +111,6 @@ plot(x2, type = "l", xlab = "", ylab = "", main = "Time-series x2")
 ```
 
 We segment `x`. We assume a perfect grid of potential pattern duration, {0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3} seconds. 
-
 ```{r}
 segmentPattern(
   x = x,

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Pattern Templates Scaling — scaleTemplate • adept</title>
+<title>Templates Scaling — scaleTemplate • adept</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Pattern Templates Scaling — scaleTemplate" />
+<meta property="og:title" content="Templates Scaling — scaleTemplate" />
 
-<meta property="og:description" content="Compute a list of scaled versions of pattern templates via linear interpolation." />
+<meta property="og:description" content="Compute a list of scaled templates via linear interpolation." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -117,14 +117,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Pattern Templates Scaling</h1>
+    <h1>Templates Scaling</h1>
     <small class="dont-index">Source: <a href='https://github.com/martakarass/adept/blob/master/R/scaleTemplate.R'><code>R/scaleTemplate.R</code></a></small>
     <div class="hidden name"><code>scaleTemplate.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Compute a list of scaled versions of pattern templates via linear interpolation.</p>
+    <p>Compute a list of scaled templates via linear interpolation.</p>
     
     </div>
 
@@ -155,27 +155,26 @@ list equals the length of <code>template.vl</code>.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>## List of two distinct pattern templates</span>
+    <pre class="examples"><div class='input'><span class='co'>## Construct a list of two templates</span>
 <span class='no'>template</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Trig'>sin</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>0</span>, <span class='fl'>2</span> * <span class='no'>pi</span>, <span class='kw'>length.out</span> <span class='kw'>=</span> <span class='fl'>100</span>)),
                  <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Trig'>cos</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>0</span>, <span class='fl'>2</span> * <span class='no'>pi</span>, <span class='kw'>length.out</span> <span class='kw'>=</span> <span class='fl'>100</span>)))
-<span class='co'>## Vector which defines a grid of vector lengths to which each of</span>
-<span class='co'>## the distinct pattern templates is scaled into</span>
+<span class='co'>## A grid of vector lengths to which each of templates is scaled into</span>
 <span class='no'>template.vl</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>50</span>, <span class='fl'>100</span>, <span class='fl'>200</span>)
-<span class='co'>## Compute list of rescaled versions of pattern templates</span>
+<span class='co'>## Compute list of rescaled templates</span>
 <span class='no'>out</span> <span class='kw'>&lt;-</span> <span class='fu'>scaleTemplate</span>(<span class='no'>template</span>, <span class='no'>template.vl</span>)
 
-<span class='co'>## Plot 1st distinct pattern template, rescaled to different vector lengths</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/par'>par</a></span>(<span class='kw'>mfrow</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>2</span>, <span class='fl'>1</span>))
+<span class='co'>## Plot 1st template after rescaling to three values of vector length</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/par'>par</a></span>(<span class='kw'>mfrow</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>2</span>, <span class='fl'>1</span>), <span class='kw'>cex</span> <span class='kw'>=</span> <span class='fl'>0.7</span>)
 <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>out</span><span class='kw'>[[</span><span class='fl'>3</span>]]<span class='kw'>[[</span><span class='fl'>1</span>]], <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"l"</span>,
-     <span class='kw'>main</span> <span class='kw'>=</span> <span class='st'>"pattern: sin([0,2*pi]); different scales considered"</span>,
-     <span class='kw'>ylab</span> <span class='kw'>=</span> <span class='st'>"pattern"</span>, <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='st'>"output vector index"</span>)
+     <span class='kw'>main</span> <span class='kw'>=</span> <span class='st'>"Pattern: sin([0, 2 * pi]) rescaled according to different scales"</span>,
+     <span class='kw'>ylab</span> <span class='kw'>=</span> <span class='st'>"Pattern"</span>, <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='st'>"Index"</span>)
 <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/lines'>lines</a></span>(<span class='no'>out</span><span class='kw'>[[</span><span class='fl'>2</span>]]<span class='kw'>[[</span><span class='fl'>1</span>]], <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"red"</span>)
 <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/lines'>lines</a></span>(<span class='no'>out</span><span class='kw'>[[</span><span class='fl'>1</span>]]<span class='kw'>[[</span><span class='fl'>1</span>]], <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"blue"</span>)
 
-<span class='co'>## Plot 2nd distinct pattern template, rescaled to different vector lengths</span>
+<span class='co'>## Plot 2nd template after rescaling to three values of vector length</span>
 <span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>out</span><span class='kw'>[[</span><span class='fl'>3</span>]]<span class='kw'>[[</span><span class='fl'>2</span>]], <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"l"</span>,
-     <span class='kw'>main</span> <span class='kw'>=</span> <span class='st'>"pattern: cos([0,2*pi]); different scales considered"</span>,
-     <span class='kw'>ylab</span> <span class='kw'>=</span> <span class='st'>"pattern"</span>, <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='st'>"output vector index"</span>)</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/lines'>lines</a></span>(<span class='no'>out</span><span class='kw'>[[</span><span class='fl'>2</span>]]<span class='kw'>[[</span><span class='fl'>2</span>]], <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/lines'>lines</a></span>(<span class='no'>out</span><span class='kw'>[[</span><span class='fl'>1</span>]]<span class='kw'>[[</span><span class='fl'>2</span>]], <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"blue"</span>)</div><div class='img'><img src='scaleTemplate-1.png' alt='' width='700' height='433' /></div><div class='input'>
+     <span class='kw'>main</span> <span class='kw'>=</span> <span class='st'>"Pattern: cos([0, 2 * pi]) rescaled according to different scales"</span>,
+     <span class='kw'>ylab</span> <span class='kw'>=</span> <span class='st'>"Pattern"</span>, <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='st'>"Index"</span>)</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/lines'>lines</a></span>(<span class='no'>out</span><span class='kw'>[[</span><span class='fl'>2</span>]]<span class='kw'>[[</span><span class='fl'>2</span>]], <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"red"</span>)</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/lines'>lines</a></span>(<span class='no'>out</span><span class='kw'>[[</span><span class='fl'>1</span>]]<span class='kw'>[[</span><span class='fl'>2</span>]], <span class='kw'>col</span> <span class='kw'>=</span> <span class='st'>"blue"</span>)</div><div class='img'><img src='scaleTemplate-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

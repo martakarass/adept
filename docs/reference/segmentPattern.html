@@ -142,7 +142,7 @@ Transformation (ADEPT).</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>A numeric vector. A time-series to segment pattern occurrences from.</p></td>
+      <td><p>A numeric vector. A time-series to segment pattern from.</p></td>
     </tr>
     <tr>
       <th>x.fs</th>
@@ -156,7 +156,7 @@ Each vector represents a distinct pattern template used in segmentation.</p></td
     </tr>
     <tr>
       <th>pattern.dur.seq</th>
-      <td><p>A numeric vector. A grid of potential pattern duration
+      <td><p>A numeric vector. A grid of potential pattern durations
 used in segmentation. Expressed in seconds. See: Details.</p></td>
     </tr>
     <tr>
@@ -170,8 +170,8 @@ between a time-series <code>x</code>  and pattern templates. Currently supported
     <tr>
       <th>similarity.measure.thresh</th>
       <td><p>A numeric scalar. Threshold of minimal similarity
-value between a time-series <code>x</code> and a pattern template
-below which the algorithm does not identify a pattern occurrence.
+value between a time-series <code>x</code> and a template
+below which the algorithm does not identify a pattern occurrence from <code>x</code>.
 Default is <code>0</code>.</p></td>
     </tr>
     <tr>
@@ -185,8 +185,8 @@ A length of a window used in moving average smoothing of a time-series <code>x</
       <th>finetune</th>
       <td><p>A character scalar. A type of fine-tuning procedure employed in
  segmentation. Defaults to <code>NULL</code> (no fine-tuning procedure employed). Currently supported values:</p><ul>
-<li><p><code>"maxima"</code> - tunes preliminarily identified locations of pattern occurrence
-  beginning and end so
+<li><p><code>"maxima"</code> - tunes preliminarily identified
+  beginning and end of a pattern so
   as they correspond to local maxima of time-series <code>x</code> (or smoothed version of <code>x</code>)
   found within neighbourhoods of preliminary locations.</p></li>
 </ul></td>
@@ -201,7 +201,8 @@ A length of a window used in moving average smoothing of a time-series <code>x</
     <tr>
       <th>finetune.maxima.nbh.W</th>
       <td><p>A numeric scalar.
-A length of the two neighborhoods centered at preliminarily identified pattern occurrence beginning and end points
+A length of the two neighborhoods centered at preliminarily identified
+beginning and end of a pattern
 within which we search for local maxima of <code>x</code> (or smoothed version of <code>x</code>) in <code>"maxima"</code>
 fine-tuning procedure. Expressed in seconds. Default is <code>NULL</code>.
 Note: if the length provided corresponds to an even number of <code>x</code> vector indices,
@@ -249,7 +250,7 @@ describes one identified pattern occurrence:</p><ul>
 <li><p><code>tau_i</code> - index of  <code>x</code> where pattern starts,</p></li>
 <li><p><code>T_i</code> - pattern duration, expressed in <code>x</code> vector length,</p></li>
 <li><p><code>sim_i</code> -  similarity between a pattern and <code>x</code>;
-  note: if 'maxima' fine-tune and/or <code>x</code> smoothing is employed,
+  note: if <code>"maxima"</code> fine-tune and/or <code>x</code> smoothing is employed,
   the similarity value between the final segmented pattern and a template
    may differ from the value in this table,</p></li>
 <li><p><code>template_i</code> - if <code>compute.template.idx</code> equals <code>TRUE</code>:
@@ -271,139 +272,203 @@ high-density data collected with a wearable accelerometer during walking.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>## Example 1:</span>
-<span class='co'>## - no noise in time-series x generation,</span>
-<span class='co'>## - all pattern occurrences of the same length (101) n time-series x generation.</span>
-<span class='co'>## Generate signal and template.</span>
-<span class='no'>x0</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Trig'>cos</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>0</span>, <span class='fl'>2</span> * <span class='no'>pi</span> * <span class='fl'>10</span>, <span class='kw'>length.out</span> <span class='kw'>=</span> <span class='fl'>1001</span>))
-<span class='no'>x</span>  <span class='kw'>&lt;-</span> <span class='no'>x0</span>
-<span class='no'>template</span> <span class='kw'>&lt;-</span> <span class='no'>x0</span>[<span class='fl'>1</span>:<span class='fl'>101</span>]
-<span class='co'>## Include true pattern occurrence length 101</span>
-<span class='co'>## (and some redundat for the sake of example).</span>
-<span class='no'>pattern.dur.seq</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>90</span>, <span class='fl'>100</span>, <span class='fl'>101</span>, <span class='fl'>102</span>, <span class='fl'>110</span>)
-<span class='co'>## Use segmentPattern function to identify beginnings tau_i and duration T_i</span>
-<span class='co'>## of pattern occurrences within a signal x.</span>
-<span class='no'>out</span> <span class='kw'>&lt;-</span> <span class='fu'>segmentPattern</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>,
-                      <span class='kw'>x.fs</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-                      <span class='kw'>template</span> <span class='kw'>=</span> <span class='no'>template</span>,
-                      <span class='kw'>pattern.dur.seq</span> <span class='kw'>=</span> <span class='no'>pattern.dur.seq</span>,
-                      <span class='kw'>similarity.measure</span> <span class='kw'>=</span> <span class='st'>"cor"</span>)
-<span class='no'>out</span></div><div class='output co'>#&gt;    tau_i T_i sim_i template_i
-#&gt; 1      1 101     1         NA
-#&gt; 2    101 101     1         NA
-#&gt; 3    201 101     1         NA
-#&gt; 4    301 101     1         NA
-#&gt; 5    401 101     1         NA
-#&gt; 6    501 101     1         NA
-#&gt; 7    601 101     1         NA
-#&gt; 8    701 101     1         NA
-#&gt; 9    801 101     1         NA
-#&gt; 10   901 101     1         NA</div><div class='input'>
-<span class='co'>## Example 2:</span>
-<span class='co'>## - no noise in time-series x generation,</span>
-<span class='co'>## - use pattern occurrences of different length in time-series x generation.</span>
-<span class='co'>## Generate signal and template.</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Random'>set.seed</a></span>(<span class='fl'>1</span>)
-<span class='co'>## Grid of different true pattern occurrence durations.</span>
-<span class='no'>s.grid</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sample'>sample</a></span>(<span class='fl'>60</span>:<span class='fl'>120</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>10</span>)
-<span class='no'>x_block</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Trig'>cos</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>0</span>, <span class='fl'>2</span> * <span class='no'>pi</span>, <span class='kw'>length.out</span> <span class='kw'>=</span> <span class='fl'>200</span>))
-<span class='co'>## Generate signal x that consists of "glued" pattern occurrences of different length</span>
-<span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/numeric'>numeric</a></span>()
-<span class='kw'>for</span> (<span class='no'>ss</span> <span class='kw'>in</span> <span class='no'>s.grid</span>){
-  <span class='no'>x_block_interpolated</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/approxfun'>approx</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>, <span class='kw'>length.out</span> <span class='kw'>=</span> <span class='fl'>200</span>),
-                                 <span class='no'>x_block</span>,
-                                 <span class='kw'>xout</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>, <span class='kw'>length.out</span> <span class='kw'>=</span> <span class='no'>ss</span>))$<span class='no'>y</span>
-  <span class='kw'>if</span> (<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/length'>length</a></span>(<span class='no'>x</span>)<span class='kw'>&gt;</span><span class='fl'>0</span>){
-    <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='no'>x</span>[-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/length'>length</a></span>(<span class='no'>x</span>)]
-  }
-  <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='no'>x</span>, <span class='no'>x_block_interpolated</span>)
-}
-<span class='co'>## Pattern template used in algorithm</span>
-<span class='no'>template</span> <span class='kw'>&lt;-</span> <span class='no'>x_block</span>
-<span class='co'>## Assume dense grid of pattern occurrence duration.</span>
-<span class='no'>pattern.dur.seq</span> <span class='kw'>&lt;-</span> <span class='fl'>60</span>:<span class='fl'>120</span>
-<span class='co'>## Use segmentPattern function to identify beginnings tau_i and duration T_i.</span>
-<span class='no'>out</span> <span class='kw'>&lt;-</span> <span class='fu'>segmentPattern</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>,
-                      <span class='kw'>x.fs</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-                      <span class='kw'>template</span> <span class='kw'>=</span> <span class='no'>template</span>,
-                      <span class='kw'>pattern.dur.seq</span> <span class='kw'>=</span> <span class='no'>pattern.dur.seq</span>,
-                      <span class='kw'>similarity.measure</span> <span class='kw'>=</span> <span class='st'>"cor"</span>)
-<span class='no'>out</span></div><div class='output co'>#&gt;    tau_i T_i sim_i template_i
-#&gt; 1      1  76     1         NA
-#&gt; 2     76  82     1         NA
-#&gt; 3    157  93     1         NA
-#&gt; 4    249 112     1         NA
-#&gt; 5    360  71     1         NA
-#&gt; 6    430 110     1         NA
-#&gt; 7    539 111     1         NA
-#&gt; 8    649  95     1         NA
-#&gt; 9    743 118     1         NA
-#&gt; 10   860  63     1         NA</div><div class='input'>
-<span class='co'>## Example 3(a):</span>
-<span class='co'>## - add noise in time-series x generation,</span>
-<span class='co'>## - use pattern occurrences of different length in time-series x generation.</span>
-<span class='co'>## Generate signal and template</span>
-<span class='no'>s.grid</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sample'>sample</a></span>(<span class='fl'>60</span>:<span class='fl'>120</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>10</span>)
-<span class='no'>x_block</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Trig'>cos</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>0</span>, <span class='fl'>2</span> * <span class='no'>pi</span>, <span class='kw'>length.out</span> <span class='kw'>=</span> <span class='fl'>200</span>))
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Random'>set.seed</a></span>(<span class='fl'>1</span>)
-<span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/numeric'>numeric</a></span>()
-<span class='kw'>for</span> (<span class='no'>ss</span> <span class='kw'>in</span> <span class='no'>s.grid</span>){
-  <span class='no'>x_block_interpolated</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/approxfun'>approx</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>, <span class='kw'>length.out</span> <span class='kw'>=</span> <span class='fl'>200</span>),
-                                 <span class='no'>x_block</span>,
-                                 <span class='kw'>xout</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>, <span class='kw'>length.out</span> <span class='kw'>=</span> <span class='no'>ss</span>))$<span class='no'>y</span>
-  <span class='kw'>if</span> (<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/length'>length</a></span>(<span class='no'>x</span>)<span class='kw'>&gt;</span><span class='fl'>0</span>){
-    <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='no'>x</span>[-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/length'>length</a></span>(<span class='no'>x</span>)]
-  }
-  <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='no'>x</span>, <span class='no'>x_block_interpolated</span>)
-}
-<span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='no'>x</span> + <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/length'>length</a></span>(<span class='no'>x</span>), <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>0.3</span>)
-<span class='no'>pattern.dur.seq</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>50</span>, <span class='fl'>150</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>5</span>)
-<span class='co'>## Pattern template used in algorithm</span>
-<span class='no'>template</span> <span class='kw'>&lt;-</span> <span class='no'>x_block</span>
-<span class='co'>## Use segmentPattern function to identify beginnings tau_i and duration T_i:</span>
-<span class='co'>## - use fine-tune "maxima" procedure.</span>
-<span class='no'>out</span> <span class='kw'>&lt;-</span> <span class='fu'>segmentPattern</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>,
-                      <span class='kw'>x.fs</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-                      <span class='kw'>template</span> <span class='kw'>=</span> <span class='no'>template</span>,
-                      <span class='kw'>pattern.dur.seq</span> <span class='kw'>=</span> <span class='no'>pattern.dur.seq</span>,
-                      <span class='kw'>similarity.measure</span> <span class='kw'>=</span> <span class='st'>"cor"</span>,
-                      <span class='kw'>finetune</span> <span class='kw'>=</span> <span class='st'>"maxima"</span>,
-                      <span class='kw'>finetune.maxima.ma.W</span> <span class='kw'>=</span> <span class='fl'>30</span>,
-                      <span class='kw'>finetune.maxima.nbh.W</span> <span class='kw'>=</span> <span class='fl'>120</span>)
+    <pre class="examples"><div class='input'><span class='co'>## Example 1: Simulate a time-series `x`. Assume that</span>
+<span class='co'>## - `x` is collected at a frequency of 100 Hz,</span>
+<span class='co'>## - there is one shape of pattern present within `x`,</span>
+<span class='co'>## - each pattern lasts 1 second,</span>
+<span class='co'>## - there is no noise in the collected data.</span>
+<span class='no'>true.pattern</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Trig'>cos</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>0</span>, <span class='fl'>2</span> * <span class='no'>pi</span>, <span class='kw'>length.out</span> <span class='kw'>=</span> <span class='fl'>100</span>))
+<span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='no'>true.pattern</span>[<span class='fl'>1</span>], <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/lapply'>replicate</a></span>(<span class='fl'>10</span>, <span class='no'>true.pattern</span>[-<span class='fl'>1</span>]))
+<span class='co'>## Segment pattern from x.</span>
+<span class='no'>out</span> <span class='kw'>&lt;-</span> <span class='fu'>segmentPattern</span>(
+  <span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>,
+  <span class='kw'>x.fs</span> <span class='kw'>=</span> <span class='fl'>100</span>,
+  <span class='kw'>template</span> <span class='kw'>=</span> <span class='no'>true.pattern</span>,
+  <span class='kw'>pattern.dur.seq</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.9</span>, <span class='fl'>0.95</span>, <span class='fl'>1.03</span>, <span class='fl'>1.1</span>),
+  <span class='kw'>similarity.measure</span> <span class='kw'>=</span> <span class='st'>"cor"</span>,
+  <span class='kw'>compute.template.idx</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='no'>out</span></div><div class='output co'>#&gt;    tau_i T_i     sim_i template_i
-#&gt; 1     15  59 0.9382082         NA
-#&gt; 2     73  72 0.9415944         NA
-#&gt; 3    144  97 0.8947532         NA
-#&gt; 4    240  85 0.9312574         NA
-#&gt; 5    324 100 0.9240268         NA
-#&gt; 6    423  86 0.8882856         NA
-#&gt; 7    508 103 0.9275960         NA
-#&gt; 8    610 107 0.9088106         NA
-#&gt; 9    716  88 0.9218908         NA
-#&gt; 10   803  99 0.9077963         NA</div><div class='input'><span class='co'>## Example 3(b):</span>
-<span class='co'>## Use segmentPattern function to identify beginnings tau_i and duration T_i:</span>
-<span class='co'>## - use time-series x smooting for ADEPT similarity matrix computation,</span>
-<span class='co'>## - use fine-tune "maxima" procedure.</span>
-<span class='no'>out</span> <span class='kw'>&lt;-</span> <span class='fu'>segmentPattern</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>,
-                      <span class='kw'>x.fs</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-                      <span class='kw'>template</span> <span class='kw'>=</span> <span class='no'>template</span>,
-                      <span class='kw'>pattern.dur.seq</span> <span class='kw'>=</span> <span class='no'>pattern.dur.seq</span>,
-                      <span class='kw'>similarity.measure</span> <span class='kw'>=</span> <span class='st'>"cor"</span>,
-                      <span class='kw'>x.adept.ma.W</span> <span class='kw'>=</span> <span class='fl'>30</span>,
-                      <span class='kw'>finetune</span> <span class='kw'>=</span> <span class='st'>"maxima"</span>,
-                      <span class='kw'>finetune.maxima.ma.W</span> <span class='kw'>=</span> <span class='fl'>30</span>,
-                      <span class='kw'>finetune.maxima.nbh.W</span> <span class='kw'>=</span> <span class='fl'>120</span>)
+#&gt; 1      4  95 0.9987941          1
+#&gt; 2     98 103 0.9992482          1
+#&gt; 3    202  95 0.9987941          1
+#&gt; 4    297 103 0.9992482          1
+#&gt; 5    399  95 0.9987941          1
+#&gt; 6    495 103 0.9992482          1
+#&gt; 7    597  95 0.9987941          1
+#&gt; 8    697  95 0.9987941          1
+#&gt; 9    792 103 0.9992482          1
+#&gt; 10   894  95 0.9987941          1</div><div class='input'><span class='co'>## Segment pattern from x. Now assume a grid of potential pattern duratios</span>
+<span class='co'>## contains true pattern duration</span>
+<span class='no'>out</span> <span class='kw'>&lt;-</span> <span class='fu'>segmentPattern</span>(
+  <span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>,
+  <span class='kw'>x.fs</span> <span class='kw'>=</span> <span class='fl'>100</span>,
+  <span class='kw'>template</span> <span class='kw'>=</span> <span class='no'>true.pattern</span>,
+  <span class='kw'>pattern.dur.seq</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0.9</span>, <span class='fl'>0.95</span>, <span class='fl'>1</span>, <span class='fl'>1.03</span>, <span class='fl'>1.1</span>),
+  <span class='kw'>similarity.measure</span> <span class='kw'>=</span> <span class='st'>"cor"</span>,
+  <span class='kw'>compute.template.idx</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>out</span></div><div class='output co'>#&gt;    tau_i T_i sim_i template_i
+#&gt; 1      1 100     1          1
+#&gt; 2    100 100     1          1
+#&gt; 3    199 100     1          1
+#&gt; 4    298 100     1          1
+#&gt; 5    397 100     1          1
+#&gt; 6    496 100     1          1
+#&gt; 7    595 100     1          1
+#&gt; 8    694 100     1          1
+#&gt; 9    793 100     1          1
+#&gt; 10   892 100     1          1</div><div class='input'>
+<span class='co'>## Example 2: Simulate a time-series `x`. Assume that</span>
+<span class='co'>## - `x` is collected at a frequency of 100 Hz,</span>
+<span class='co'>## - there are two shapes of pattern present within `x`,</span>
+<span class='co'>## - patterns have various duration,</span>
+<span class='co'>## - there is no noise in the collected data.</span>
+<span class='no'>true.pattern.1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Trig'>cos</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>0</span>, <span class='fl'>2</span> * <span class='no'>pi</span>, <span class='kw'>length.out</span> <span class='kw'>=</span> <span class='fl'>200</span>))
+<span class='no'>true.pattern.2</span> <span class='kw'>&lt;-</span> <span class='no'>true.pattern.1</span>
+<span class='no'>true.pattern.2</span>[<span class='fl'>70</span>:<span class='fl'>130</span>] <span class='kw'>&lt;-</span> <span class='fl'>2</span> * <span class='no'>true.pattern.2</span>[<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Extremes'>min</a></span>(<span class='fl'>70</span>:<span class='fl'>130</span>)] + <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/MathFun'>abs</a></span>(<span class='no'>true.pattern.2</span>[<span class='fl'>70</span>:<span class='fl'>130</span>])
+<span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/numeric'>numeric</a></span>()
+<span class='kw'>for</span> (<span class='no'>vl</span> <span class='kw'>in</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>70</span>, <span class='fl'>130</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>10</span>)){
+  <span class='no'>true.pattern.1.s</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/approxfun'>approx</a></span>(
+    <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>, <span class='kw'>length.out</span> <span class='kw'>=</span> <span class='fl'>200</span>),
+    <span class='no'>true.pattern.1</span>, <span class='kw'>xout</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>, <span class='kw'>length.out</span> <span class='kw'>=</span> <span class='no'>vl</span>))$<span class='no'>y</span>
+  <span class='no'>true.pattern.2.s</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/approxfun'>approx</a></span>(
+    <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>, <span class='kw'>length.out</span> <span class='kw'>=</span> <span class='fl'>200</span>),
+    <span class='no'>true.pattern.2</span>, <span class='kw'>xout</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>, <span class='kw'>length.out</span> <span class='kw'>=</span> <span class='no'>vl</span>))$<span class='no'>y</span>
+  <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='no'>x</span>, <span class='no'>true.pattern.1.s</span>[-<span class='fl'>1</span>], <span class='no'>true.pattern.2.s</span>[-<span class='fl'>1</span>])
+  <span class='kw'>if</span> (<span class='no'>vl</span> <span class='kw'>==</span> <span class='fl'>70</span>) <span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='no'>true.pattern.1.s</span>[<span class='fl'>1</span>], <span class='no'>x</span>)
+}
+<span class='co'>## Segment pattern from x. Use a `template` object consisting of both</span>
+<span class='co'>## true patterns used in `x` simulation.</span>
+<span class='no'>out</span> <span class='kw'>&lt;-</span> <span class='fu'>segmentPattern</span>(
+  <span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>,
+  <span class='kw'>x.fs</span> <span class='kw'>=</span> <span class='fl'>100</span>,
+  <span class='kw'>template</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>true.pattern.1</span>, <span class='no'>true.pattern.2</span>),
+  <span class='kw'>pattern.dur.seq</span> <span class='kw'>=</span> <span class='fl'>60</span>:<span class='fl'>130</span> * <span class='fl'>0.01</span>,
+  <span class='kw'>similarity.measure</span> <span class='kw'>=</span> <span class='st'>"cor"</span>,
+  <span class='kw'>compute.template.idx</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>out</span></div><div class='output co'>#&gt;    tau_i T_i sim_i template_i
+#&gt; 1      1  70     1          1
+#&gt; 2     70  70     1          2
+#&gt; 3    139  80     1          1
+#&gt; 4    218  80     1          2
+#&gt; 5    297  90     1          1
+#&gt; 6    386  90     1          2
+#&gt; 7    475 100     1          1
+#&gt; 8    574 100     1          2
+#&gt; 9    673 110     1          1
+#&gt; 10   782 110     1          2
+#&gt; 11   891 120     1          1
+#&gt; 12  1010 120     1          2
+#&gt; 13  1129 130     1          1
+#&gt; 14  1258 130     1          2</div><div class='input'>
+<span class='co'>## Example 3: Simulate a time-series `x`. Assume that</span>
+<span class='co'>## - `x` is collected at a frequency of 100 Hz,</span>
+<span class='co'>## - there are two shapes of a pattern present within `x`,</span>
+<span class='co'>## - patterns have various duration,</span>
+<span class='co'>## - there is noise in the collected data.</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Random'>set.seed</a></span>(<span class='fl'>1</span>)
+<span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='no'>x</span> + <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/length'>length</a></span>(<span class='no'>x</span>), <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)
+<span class='co'>## Segment pattern from x.</span>
+<span class='no'>out</span> <span class='kw'>&lt;-</span> <span class='fu'>segmentPattern</span>(
+  <span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>,
+  <span class='kw'>x.fs</span> <span class='kw'>=</span> <span class='fl'>100</span>,
+  <span class='kw'>template</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>true.pattern.1</span>, <span class='no'>true.pattern.2</span>),
+  <span class='kw'>pattern.dur.seq</span> <span class='kw'>=</span>  <span class='fl'>60</span>:<span class='fl'>130</span> * <span class='fl'>0.01</span>,
+  <span class='kw'>similarity.measure</span> <span class='kw'>=</span> <span class='st'>"cor"</span>,
+  <span class='kw'>compute.template.idx</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 <span class='no'>out</span></div><div class='output co'>#&gt;    tau_i T_i     sim_i template_i
-#&gt; 1     15  59 0.9174144         NA
-#&gt; 2     73  72 0.9972443         NA
-#&gt; 3    144  97 0.9988023         NA
-#&gt; 4    240  85 0.9989863         NA
-#&gt; 5    324 100 0.9994808         NA
-#&gt; 6    423  86 0.9985073         NA
-#&gt; 7    508 103 0.9988414         NA
-#&gt; 8    610 107 0.9993086         NA
-#&gt; 9    716  88 0.9987364         NA
-#&gt; 10   803  99 0.9959775         NA</div><div class='input'>
+#&gt; 1      4  63 0.8615665          1
+#&gt; 2     76  62 0.7351057          2
+#&gt; 3    137  84 0.7708233          1
+#&gt; 4    220  76 0.6768561          2
+#&gt; 5    295  92 0.8507212          1
+#&gt; 6    391  83 0.7404364          2
+#&gt; 7    473 106 0.8300020          1
+#&gt; 8    582  87 0.6515298          2
+#&gt; 9    668 118 0.8047385          1
+#&gt; 10   785 106 0.6958617          2
+#&gt; 11   890 123 0.7927484          1
+#&gt; 12  1015 113 0.6789908          1
+#&gt; 13  1129 130 0.7938183          1
+#&gt; 14  1265 123 0.7686607          2</div><div class='input'><span class='co'>## Segment pattern from x. Use `x.adept.ma.W` to define a length of a smoothing</span>
+<span class='co'>## window to smooth `x` for similarity matrix computation.</span>
+<span class='no'>out</span> <span class='kw'>&lt;-</span> <span class='fu'>segmentPattern</span>(
+  <span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>,
+  <span class='kw'>x.fs</span> <span class='kw'>=</span> <span class='fl'>100</span>,
+  <span class='kw'>template</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>true.pattern.1</span>, <span class='no'>true.pattern.2</span>),
+  <span class='kw'>pattern.dur.seq</span> <span class='kw'>=</span>  <span class='fl'>60</span>:<span class='fl'>130</span> * <span class='fl'>0.01</span>,
+  <span class='kw'>similarity.measure</span> <span class='kw'>=</span> <span class='st'>"cor"</span>,
+  <span class='kw'>x.adept.ma.W</span> <span class='kw'>=</span> <span class='fl'>0.1</span>,
+  <span class='kw'>compute.template.idx</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>out</span></div><div class='output co'>#&gt;    tau_i T_i     sim_i template_i
+#&gt; 1      4  63 0.9931174          1
+#&gt; 2     75  63 0.9683646          2
+#&gt; 3    139  79 0.9683054          1
+#&gt; 4    217  80 0.9748040          2
+#&gt; 5    296  94 0.9802473          1
+#&gt; 6    391  82 0.9462213          2
+#&gt; 7    472 106 0.9855837          1
+#&gt; 8    578  93 0.9608881          2
+#&gt; 9    670 115 0.9887225          1
+#&gt; 10   784 107 0.9562694          2
+#&gt; 11   896 113 0.9734575          1
+#&gt; 12  1008 127 0.9703118          1
+#&gt; 13  1134 116 0.9606235          1
+#&gt; 14  1266 122 0.9593345          2</div><div class='input'><span class='co'>## Segment pattern from x. Use `x.adept.ma.W` to define a length of a smoothing</span>
+<span class='co'>## window to smooth `x` for similarity matrix computation. Employ a fine-tuning</span>
+<span class='co'>## procedure for stride identification.</span>
+<span class='no'>out</span> <span class='kw'>&lt;-</span> <span class='fu'>segmentPattern</span>(
+  <span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>,
+  <span class='kw'>x.fs</span> <span class='kw'>=</span> <span class='fl'>100</span>,
+  <span class='kw'>template</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>true.pattern.1</span>, <span class='no'>true.pattern.2</span>),
+  <span class='kw'>pattern.dur.seq</span> <span class='kw'>=</span>  <span class='fl'>60</span>:<span class='fl'>130</span> * <span class='fl'>0.01</span>,
+  <span class='kw'>similarity.measure</span> <span class='kw'>=</span> <span class='st'>"cor"</span>,
+  <span class='kw'>x.adept.ma.W</span> <span class='kw'>=</span> <span class='fl'>0.1</span>,
+  <span class='kw'>finetune</span> <span class='kw'>=</span> <span class='st'>"maxima"</span>,
+  <span class='kw'>finetune.maxima.nbh.W</span> <span class='kw'>=</span> <span class='fl'>0.3</span>,
+  <span class='kw'>compute.template.idx</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>out</span></div><div class='output co'>#&gt;    tau_i T_i     sim_i template_i
+#&gt; 1      4  67 0.9931174          1
+#&gt; 2     70  78 0.9683646          2
+#&gt; 3    147  60 0.9060130          2
+#&gt; 4    206  98 0.9785617          2
+#&gt; 5    303  78 0.9802473          1
+#&gt; 6    380 107 0.9666486          2
+#&gt; 7    486  93 0.9855837          1
+#&gt; 8    578  93 0.9608881          2
+#&gt; 9    670 105 0.9887225          1
+#&gt; 10   774 113 0.9786236          2
+#&gt; 11   893 128 0.9734575          1
+#&gt; 12  1020 112 0.9453138          1
+#&gt; 13  1131 123 0.9661650          1
+#&gt; 14  1253 125 0.9593345          2</div><div class='input'><span class='co'>## Segment pattern from x. Employ a fine-tuning procedure for stride</span>
+<span class='co'>## identification. Smooth `x` for both similarity matrix computation</span>
+<span class='co'>## (set `x.adept.ma.W = 0.1`) and for  fine-tune peak detection procedure</span>
+<span class='co'>## (set `finetune.maxima.nbh.W = 0.3`).</span>
+<span class='no'>out</span> <span class='kw'>&lt;-</span> <span class='fu'>segmentPattern</span>(
+  <span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>x</span>,
+  <span class='kw'>x.fs</span> <span class='kw'>=</span> <span class='fl'>100</span>,
+  <span class='kw'>template</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>true.pattern.1</span>, <span class='no'>true.pattern.2</span>),
+  <span class='kw'>pattern.dur.seq</span> <span class='kw'>=</span>  <span class='fl'>60</span>:<span class='fl'>130</span> * <span class='fl'>0.01</span>,
+  <span class='kw'>similarity.measure</span> <span class='kw'>=</span> <span class='st'>"cor"</span>,
+  <span class='kw'>x.adept.ma.W</span> <span class='kw'>=</span> <span class='fl'>0.1</span>,
+  <span class='kw'>finetune</span> <span class='kw'>=</span> <span class='st'>"maxima"</span>,
+  <span class='kw'>finetune.maxima.nbh.W</span> <span class='kw'>=</span> <span class='fl'>0.3</span>,
+  <span class='kw'>compute.template.idx</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='no'>out</span></div><div class='output co'>#&gt;    tau_i T_i     sim_i template_i
+#&gt; 1      4  67 0.9931174          1
+#&gt; 2     70  78 0.9683646          2
+#&gt; 3    147  60 0.9060130          2
+#&gt; 4    206  98 0.9785617          2
+#&gt; 5    303  78 0.9802473          1
+#&gt; 6    380 107 0.9666486          2
+#&gt; 7    486  93 0.9855837          1
+#&gt; 8    578  93 0.9608881          2
+#&gt; 9    670 105 0.9887225          1
+#&gt; 10   774 113 0.9786236          2
+#&gt; 11   893 128 0.9734575          1
+#&gt; 12  1020 112 0.9453138          1
+#&gt; 13  1131 123 0.9661650          1
+#&gt; 14  1253 125 0.9593345          2</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

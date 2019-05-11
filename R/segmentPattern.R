@@ -6,12 +6,12 @@
 #' Segment pattern from a time-series \code{x} via Adaptive Empirical Pattern
 #' Transformation (ADEPT).
 #'
-#' @param x A numeric vector. A time-series to segment pattern occurrences from.
+#' @param x A numeric vector. A time-series to segment pattern from.
 #' @param x.fs A numeric scalar. Frequency at which a time-series \code{x} is collected,
 #' expressed in a number of observations per second.
 #' @param template A list of numeric vectors, or a numeric vector.
 #' Each vector represents a distinct pattern template used in segmentation.
-#' @param pattern.dur.seq  A numeric vector. A grid of potential pattern duration
+#' @param pattern.dur.seq  A numeric vector. A grid of potential pattern durations
 #' used in segmentation. Expressed in seconds. See: Details.
 #' @param similarity.measure A character scalar. Statistic used to compute similarity
 #' between a time-series \code{x}  and pattern templates. Currently supported values:
@@ -21,8 +21,8 @@
 #' }
 #' Default is \code{"cov"}.
 #' @param similarity.measure.thresh A numeric scalar. Threshold of minimal similarity
-#' value between a time-series \code{x} and a pattern template
-#' below which the algorithm does not identify a pattern occurrence.
+#' value between a time-series \code{x} and a template
+#' below which the algorithm does not identify a pattern occurrence from \code{x}.
 #' Default is \code{0}.
 #' @param x.adept.ma.W A numeric scalar.
 #' A length of a window used in moving average smoothing of a time-series \code{x} for
@@ -31,8 +31,8 @@
 #' @param finetune A character scalar. A type of fine-tuning procedure employed in
 #'  segmentation. Defaults to \code{NULL} (no fine-tuning procedure employed). Currently supported values:
 #' \itemize{
-#'   \item \code{"maxima"} - tunes preliminarily identified locations of pattern occurrence
-#'   beginning and end so
+#'   \item \code{"maxima"} - tunes preliminarily identified
+#'   beginning and end of a pattern so
 #'   as they correspond to local maxima of time-series \code{x} (or smoothed version of \code{x})
 #'   found within neighbourhoods of preliminary locations.
 #' }
@@ -41,7 +41,8 @@
 #'  \code{"maxima"} fine-tuning procedure. Expressed in seconds.
 #'  Default is \code{NULL} (no smoothing applied).
 #' @param finetune.maxima.nbh.W A numeric scalar.
-#' A length of the two neighborhoods centered at preliminarily identified pattern occurrence beginning and end points
+#' A length of the two neighborhoods centered at preliminarily identified
+#' beginning and end of a pattern
 #' within which we search for local maxima of \code{x} (or smoothed version of \code{x}) in \code{"maxima"}
 #' fine-tuning procedure. Expressed in seconds. Default is \code{NULL}.
 #' Note: if the length provided corresponds to an even number of \code{x} vector indices,
@@ -82,7 +83,7 @@
 #'   \item \code{tau_i} - index of  \code{x} where pattern starts,
 #'   \item \code{T_i} - pattern duration, expressed in \code{x} vector length,
 #'   \item \code{sim_i} -  similarity between a pattern and \code{x};
-#'   note: if 'maxima' fine-tune and/or \code{x} smoothing is employed,
+#'   note: if \code{"maxima"} fine-tune and/or \code{x} smoothing is employed,
 #'   the similarity value between the final segmented pattern and a template
 #'    may differ from the value in this table,
 #'   \item \code{template_i} - if \code{compute.template.idx} equals \code{TRUE}:
@@ -97,101 +98,118 @@
 #' @importFrom magrittr '%>%'
 #'
 #' @examples
-#' ## Example 1:
-#' ## - no noise in time-series x generation,
-#' ## - all pattern occurrences of the same length (101) n time-series x generation.
-#' ## Generate signal and template.
-#' x0 <- cos(seq(0, 2 * pi * 10, length.out = 1001))
-#' x  <- x0
-#' template <- x0[1:101]
-#' ## Include true pattern occurrence length 101
-#' ## (and some redundat for the sake of example).
-#' pattern.dur.seq <- c(90, 100, 101, 102, 110)
-#' ## Use segmentPattern function to identify beginnings tau_i and duration T_i
-#' ## of pattern occurrences within a signal x.
-#' out <- segmentPattern(x = x,
-#'                       x.fs = 1,
-#'                       template = template,
-#'                       pattern.dur.seq = pattern.dur.seq,
-#'                       similarity.measure = "cor")
+#' ## Example 1: Simulate a time-series `x`. Assume that
+#' ## - `x` is collected at a frequency of 100 Hz,
+#' ## - there is one shape of pattern present within `x`,
+#' ## - each pattern lasts 1 second,
+#' ## - there is no noise in the collected data.
+#' true.pattern <- cos(seq(0, 2 * pi, length.out = 100))
+#' x <- c(true.pattern[1], replicate(10, true.pattern[-1]))
+#' ## Segment pattern from x.
+#' out <- segmentPattern(
+#'   x = x,
+#'   x.fs = 100,
+#'   template = true.pattern,
+#'   pattern.dur.seq = c(0.9, 0.95, 1.03, 1.1),
+#'   similarity.measure = "cor",
+#'   compute.template.idx = TRUE)
+#' out
+#' ## Segment pattern from x. Now assume a grid of potential pattern duratios
+#' ## contains true pattern duration
+#' out <- segmentPattern(
+#'   x = x,
+#'   x.fs = 100,
+#'   template = true.pattern,
+#'   pattern.dur.seq = c(0.9, 0.95, 1, 1.03, 1.1),
+#'   similarity.measure = "cor",
+#'   compute.template.idx = TRUE)
 #' out
 #'
-#' ## Example 2:
-#' ## - no noise in time-series x generation,
-#' ## - use pattern occurrences of different length in time-series x generation.
-#' ## Generate signal and template.
-#' set.seed(1)
-#' ## Grid of different true pattern occurrence durations.
-#' s.grid <- sample(60:120, size = 10)
-#' x_block <- cos(seq(0, 2 * pi, length.out = 200))
-#' ## Generate signal x that consists of "glued" pattern occurrences of different length
+#' ## Example 2: Simulate a time-series `x`. Assume that
+#' ## - `x` is collected at a frequency of 100 Hz,
+#' ## - there are two shapes of pattern present within `x`,
+#' ## - patterns have various duration,
+#' ## - there is no noise in the collected data.
+#' true.pattern.1 <- cos(seq(0, 2 * pi, length.out = 200))
+#' true.pattern.2 <- true.pattern.1
+#' true.pattern.2[70:130] <- 2 * true.pattern.2[min(70:130)] + abs(true.pattern.2[70:130])
 #' x <- numeric()
-#' for (ss in s.grid){
-#'   x_block_interpolated <- approx(seq(0, 1, length.out = 200),
-#'                                  x_block,
-#'                                  xout = seq(0, 1, length.out = ss))$y
-#'   if (length(x)>0){
-#'     x <- x[-length(x)]
-#'   }
-#'   x <- c(x, x_block_interpolated)
+#' for (vl in seq(70, 130, by = 10)){
+#'   true.pattern.1.s <- approx(
+#'     seq(0, 1, length.out = 200),
+#'     true.pattern.1, xout = seq(0, 1, length.out = vl))$y
+#'   true.pattern.2.s <- approx(
+#'     seq(0, 1, length.out = 200),
+#'     true.pattern.2, xout = seq(0, 1, length.out = vl))$y
+#'   x <- c(x, true.pattern.1.s[-1], true.pattern.2.s[-1])
+#'   if (vl == 70) x <- c(true.pattern.1.s[1], x)
 #' }
-#' ## Pattern template used in algorithm
-#' template <- x_block
-#' ## Assume dense grid of pattern occurrence duration.
-#' pattern.dur.seq <- 60:120
-#' ## Use segmentPattern function to identify beginnings tau_i and duration T_i.
-#' out <- segmentPattern(x = x,
-#'                       x.fs = 1,
-#'                       template = template,
-#'                       pattern.dur.seq = pattern.dur.seq,
-#'                       similarity.measure = "cor")
+#' ## Segment pattern from x. Use a `template` object consisting of both
+#' ## true patterns used in `x` simulation.
+#' out <- segmentPattern(
+#'   x = x,
+#'   x.fs = 100,
+#'   template = list(true.pattern.1, true.pattern.2),
+#'   pattern.dur.seq = 60:130 * 0.01,
+#'   similarity.measure = "cor",
+#'   compute.template.idx = TRUE)
 #' out
 #'
-#' ## Example 3(a):
-#' ## - add noise in time-series x generation,
-#' ## - use pattern occurrences of different length in time-series x generation.
-#' ## Generate signal and template
-#' s.grid <- sample(60:120, size = 10)
-#' x_block <- cos(seq(0, 2 * pi, length.out = 200))
+#' ## Example 3: Simulate a time-series `x`. Assume that
+#' ## - `x` is collected at a frequency of 100 Hz,
+#' ## - there are two shapes of a pattern present within `x`,
+#' ## - patterns have various duration,
+#' ## - there is noise in the collected data.
 #' set.seed(1)
-#' x <- numeric()
-#' for (ss in s.grid){
-#'   x_block_interpolated <- approx(seq(0, 1, length.out = 200),
-#'                                  x_block,
-#'                                  xout = seq(0, 1, length.out = ss))$y
-#'   if (length(x)>0){
-#'     x <- x[-length(x)]
-#'   }
-#'   x <- c(x, x_block_interpolated)
-#' }
-#' x <- x + rnorm(length(x), sd = 0.3)
-#' pattern.dur.seq <- seq(50, 150, by = 5)
-#' ## Pattern template used in algorithm
-#' template <- x_block
-#' ## Use segmentPattern function to identify beginnings tau_i and duration T_i:
-#' ## - use fine-tune "maxima" procedure.
-#' out <- segmentPattern(x = x,
-#'                       x.fs = 1,
-#'                       template = template,
-#'                       pattern.dur.seq = pattern.dur.seq,
-#'                       similarity.measure = "cor",
-#'                       finetune = "maxima",
-#'                       finetune.maxima.ma.W = 30,
-#'                       finetune.maxima.nbh.W = 120)
+#' x <- x + rnorm(length(x), sd = 0.5)
+#' ## Segment pattern from x.
+#' out <- segmentPattern(
+#'   x = x,
+#'   x.fs = 100,
+#'   template = list(true.pattern.1, true.pattern.2),
+#'   pattern.dur.seq =  60:130 * 0.01,
+#'   similarity.measure = "cor",
+#'   compute.template.idx = TRUE)
 #' out
-#' ## Example 3(b):
-#' ## Use segmentPattern function to identify beginnings tau_i and duration T_i:
-#' ## - use time-series x smooting for ADEPT similarity matrix computation,
-#' ## - use fine-tune "maxima" procedure.
-#' out <- segmentPattern(x = x,
-#'                       x.fs = 1,
-#'                       template = template,
-#'                       pattern.dur.seq = pattern.dur.seq,
-#'                       similarity.measure = "cor",
-#'                       x.adept.ma.W = 30,
-#'                       finetune = "maxima",
-#'                       finetune.maxima.ma.W = 30,
-#'                       finetune.maxima.nbh.W = 120)
+#' ## Segment pattern from x. Use `x.adept.ma.W` to define a length of a smoothing
+#' ## window to smooth `x` for similarity matrix computation.
+#' out <- segmentPattern(
+#'   x = x,
+#'   x.fs = 100,
+#'   template = list(true.pattern.1, true.pattern.2),
+#'   pattern.dur.seq =  60:130 * 0.01,
+#'   similarity.measure = "cor",
+#'   x.adept.ma.W = 0.1,
+#'   compute.template.idx = TRUE)
+#' out
+#' ## Segment pattern from x. Use `x.adept.ma.W` to define a length of a smoothing
+#' ## window to smooth `x` for similarity matrix computation. Employ a fine-tuning
+#' ## procedure for stride identification.
+#' out <- segmentPattern(
+#'   x = x,
+#'   x.fs = 100,
+#'   template = list(true.pattern.1, true.pattern.2),
+#'   pattern.dur.seq =  60:130 * 0.01,
+#'   similarity.measure = "cor",
+#'   x.adept.ma.W = 0.1,
+#'   finetune = "maxima",
+#'   finetune.maxima.nbh.W = 0.3,
+#'   compute.template.idx = TRUE)
+#' out
+#' ## Segment pattern from x. Employ a fine-tuning procedure for stride
+#' ## identification. Smooth `x` for both similarity matrix computation
+#' ## (set `x.adept.ma.W = 0.1`) and for  fine-tune peak detection procedure
+#' ## (set `finetune.maxima.nbh.W = 0.3`).
+#' out <- segmentPattern(
+#'   x = x,
+#'   x.fs = 100,
+#'   template = list(true.pattern.1, true.pattern.2),
+#'   pattern.dur.seq =  60:130 * 0.01,
+#'   similarity.measure = "cor",
+#'   x.adept.ma.W = 0.1,
+#'   finetune = "maxima",
+#'   finetune.maxima.nbh.W = 0.3,
+#'   compute.template.idx = TRUE)
 #' out
 #'
 segmentPattern <- function(x,
