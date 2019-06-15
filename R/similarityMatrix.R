@@ -34,7 +34,7 @@
 #' @seealso \code{scaleTemplate {adept}}
 #'
 #' @export
-#' @import runstats
+#' @import dvmisc
 #'
 #' @examples
 #' ## Simulate data
@@ -66,9 +66,9 @@ similarityMatrix <- function(x,
                             template.scaled,
                             similarity.measure){
 
-  runstat.func <- switch(similarity.measure,
-                         "cov" = RunningCov,
-                         "cor" = RunningCor)
+  sliding.func <- switch(similarity.measure,
+                         "cov" = sliding_cov,
+                         "cor" = sliding_cor)
 
   ## Outer lapply: iterate over pattern scales considered;
   ## each lapply iteration fills one row of the output similarity matrix.
@@ -79,11 +79,11 @@ similarityMatrix <- function(x,
     ## to the highest value of similarity between signal \code{x} and
     ## a short pattern
     ## at a time point corresponding to this vector's element.
-    runstat.func.out0 <- lapply(template.scaled.i, function(template.scaled.ik){
-      do.call(runstat.func, list(x = x, y = template.scaled.ik))
+    sliding.func.out0 <- lapply(template.scaled.i, function(template.scaled.ik){
+      do.call(sliding.func, list(long = x, short = template.scaled.ik))
     })
-    do.call(pmax, runstat.func.out0)
 
+    c(do.call(pmax, sliding.func.out0), rep(NA, length(template.scaled.i[[1]]) - 1))
   })
 
   ## rbind list elements (which are vectors) into a matrix
@@ -124,7 +124,7 @@ similarityMatrix <- function(x,
 #' is the order in which particular pattern template was provided in
 #' the \code{template} list in \code{segmentPattern}.
 #'
-#' @import runstats
+#' @import dvmisc
 #'
 #' @noRd
 #'
@@ -132,9 +132,9 @@ templateIdxMatrix <- function(x,
                           template.scaled,
                           similarity.measure){
 
-  runstat.func <- switch(similarity.measure,
-                         "cov" = RunningCov,
-                         "cor" = RunningCor)
+  sliding.func <- switch(similarity.measure,
+                         "cov" = sliding_cov,
+                         "cor" = sliding_cor)
 
   ## Outer lapply: iterate over pattern scales considered;
   ## each lapply iteration fills one row of the output similarity matrix.
@@ -145,10 +145,11 @@ templateIdxMatrix <- function(x,
     ## to the highest value of similarity between signal \code{x} and
     ## a short pattern
     ## at a time point corresponding to this vector's element.
-    runstat.func.out0 <- lapply(template.scaled.i, function(template.scaled.ik){
-      do.call(runstat.func, list(x = x, y = template.scaled.ik))
+    sliding.func.out0 <- lapply(template.scaled.i, function(template.scaled.ik){
+      do.call(sliding.func, list(long = x, short = template.scaled.ik))
     })
-    max.col(t(do.call(rbind, runstat.func.out0)), ties.method = "first")
+    c(max.col(t(do.call(rbind, sliding.func.out0)), ties.method = "first"),
+      rep(NA, length(template.scaled.i[[1]]) - 1))
   })
 
   ## rbind list elements (which are vectors) into a matrix
