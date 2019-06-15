@@ -11,6 +11,12 @@
 
 Dear Volunteer: thank you so much for your kind work on checking the package! Please find a few notes below. 
 
+Update notes: 
+
+* Uopdating package as introduced major speed improvement by substituting some functionality with one from `dvmisc` (c++ based). 
+
+Technical notes: 
+
 * Please kindly DISABLE VIGNETTE CHECKING for my package (as it has been done upon initial submission). 
 
 * There are NO references describing the methods in the package to be included in the Description field of the DESCRIPTION file as of now. 
