@@ -2,7 +2,6 @@
 
 language: R
 sudo: false
-cache: packages
 warnings_are_errors: true
 
 os:
@@ -10,12 +9,8 @@ os:
   - osx
 
 r:
-  - 3.4
   - release
   - devel
-
-r_packages:
- - mvtnorm
 
 matrix:
   allow_failures:
