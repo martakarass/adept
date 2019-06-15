@@ -14,6 +14,9 @@ r:
   - release
   - devel
 
+before_install:
+  - Rscript -e 'install.packages("mvtnorm")'
+
 matrix:
   allow_failures:
     - r: devel
