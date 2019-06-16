@@ -29,7 +29,7 @@ knitr::opts_chunk$set(
 
 The `adept` package implements ADaptive Empirical Pattern Transformation (ADEPT) method^[Karas, M., Straczkiewicz, M., Fadel, W., Harezlak, J., Crainiceanu, C., Urbanek, J.K. *Adaptive empirical pattern transformation (ADEPT) with application to walking stride segmentation*, Submitted to *Biostatistics*, 2018.] for pattern segmentation from a time-series. ADEPT is optimized to perform fast, accurate walking strides segmentation from high-density data collected with a wearable accelerometer during walking. The method was validated using data collected with sensors worn at left wrist, left hip and both ankles. 
 
-This vignette introduces ADEPT algorithm and demonstrates the usage of `segmentPattern` function which implements ADEPT approach. Here, we focus on examples with simulated data; see the [Walking strides segmentation with adept](file://localhost/Users/martakaras/Dropbox/_PROJECTS/R/adept/docs/articles/adept-strides-segmentation.html)^[Karas, M., Crainiceanu, C., Urbanek, J.: *Walking strides segmentation with adept* vignette to the 'adept' package.] for the example of walking stride segmentation in real-life data.
+This vignette introduces ADEPT algorithm and demonstrates the usage of `segmentPattern` function which implements ADEPT approach. Here, we focus on examples with simulated data; see the [Walking strides segmentation with adept](https://martakarass.github.io/adept/articles/adept-strides-segmentation.html)^[Karas, M., Crainiceanu, C., Urbanek, J.: *Walking strides segmentation with adept* vignette to the 'adept' package.] for the example of walking stride segmentation in real-life data.
 
 # ADEPT method   
 
