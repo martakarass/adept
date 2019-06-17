@@ -26,9 +26,8 @@
 #' head and tail of the
 #' output vector where the moving window is undefined are filled with \code{NA}.
 #'
-#' @importFrom stats convolve
-#'
 #' @export
+#' @import dvmisc
 #'
 #' @examples
 #' ## Time-series defined as a function f(x) = x
@@ -61,21 +60,10 @@ windowSmooth <- function(x, W, x.fs = 1){
   ## Replace W with closest odd integer no larger than W
   W.vl <-  W.vl + (W.vl %% 2) - 1
 
-  ## Compute moving average via convolution of signal and a fixed value vector
-  N <- length(x)
-  win <- rep(1/W.vl, W.vl)
-  win <- append(win, rep(0, N - W.vl))
-  x.out0 <- convolve(x, win)
-  x.out0 <- x.out0[1:N]
-
   ## Replace head and tail of a signal with NA's
   W.wing <- floor(W.vl/2)
-  x.out.head <- rep(NA, W.wing)
-  x.out.tail <- rep(NA, W.wing)
+  x.out  <- c(rep(NA, W.wing), moving_mean(x, W.vl), rep(NA, W.wing))
 
-  x.out <- c(x.out.head,
-             x.out0[1:(N - 2 * W.wing)],
-             x.out.tail)
   return(x.out)
 }
 
