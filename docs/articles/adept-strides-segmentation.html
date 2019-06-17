@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adept</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.2</span>
       </span>
     </div>
 
@@ -88,7 +88,7 @@
                         <h4 class="author">Ciprian Crainiceanu</h4>
                         <h4 class="author">Jacek Urbanek</h4>
             
-            <h4 class="date">2019-06-16</h4>
+            <h4 class="date">2019-06-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/martakarass/adept/blob/master/vignettes/adept-strides-segmentation.Rmd"><code>vignettes/adept-strides-segmentation.Rmd</code></a></small>
       <div class="hidden name"><code>adept-strides-segmentation.Rmd</code></div>
@@ -360,9 +360,9 @@
 <a class="sourceLine" id="cb7-13" title="13">  <span class="dt">run.parallel =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(out1.la)</a>
 <a class="sourceLine" id="cb8-2" title="2"><span class="co">#&gt;   tau_i T_i     sim_i template_i</span></a>
-<a class="sourceLine" id="cb8-3" title="3"><span class="co">#&gt; 1    18  57 0.6957134          1</span></a>
-<a class="sourceLine" id="cb8-4" title="4"><span class="co">#&gt; 2    74  51 0.4782092          1</span></a>
-<a class="sourceLine" id="cb8-5" title="5"><span class="co">#&gt; 3   142 115 0.7533280          1</span></a>
+<a class="sourceLine" id="cb8-3" title="3"><span class="co">#&gt; 1     1  65 0.3546074          1</span></a>
+<a class="sourceLine" id="cb8-4" title="4"><span class="co">#&gt; 2    65  50 0.3143345          2</span></a>
+<a class="sourceLine" id="cb8-5" title="5"><span class="co">#&gt; 3   133 124 0.7533280          1</span></a>
 <a class="sourceLine" id="cb8-6" title="6"><span class="co">#&gt; 4   256  76 0.8841799          1</span></a>
 <a class="sourceLine" id="cb8-7" title="7"><span class="co">#&gt; 5   371  81 0.9152038          1</span></a>
 <a class="sourceLine" id="cb8-8" title="8"><span class="co">#&gt; 6   451  78 0.9075649          1</span></a></code></pre></div>
@@ -531,7 +531,7 @@
 <a class="sourceLine" id="cb15-15" title="15"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/table">table</a></span>(pam.out<span class="op">$</span>clustering)</a>
 <a class="sourceLine" id="cb15-16" title="16"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb15-17" title="17"><span class="co">#&gt;    1    2 </span></a>
-<a class="sourceLine" id="cb15-18" title="18"><span class="co">#&gt; 1419  120</span></a>
+<a class="sourceLine" id="cb15-18" title="18"><span class="co">#&gt; 1420  120</span></a>
 <a class="sourceLine" id="cb15-19" title="19"></a>
 <a class="sourceLine" id="cb15-20" title="20"><span class="co">## Put clustering results into data frame </span></a>
 <a class="sourceLine" id="cb15-21" title="21">data.df &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/as.data.frame">as.data.frame</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/t">t</a></span>(data.mat))</a>
