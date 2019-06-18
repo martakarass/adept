@@ -13,6 +13,8 @@ Dear Volunteer: thank you so much for your kind work on checking the package! Pl
 
 Update notes: 
 
+* I consulted r-package-devel mailing list and it seems the package update rejection (dated Jun 17) is a false-positive. 
+
 * Uopdating package as introduced major speed improvement by substituting some functionality with one from `dvmisc` (c++ based). 
 
 Technical notes: 
