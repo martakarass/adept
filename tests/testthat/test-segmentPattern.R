@@ -556,140 +556,41 @@ test_that("Example 4(a): no noise in signal, all pattern occurences of the same
 
 test_that("Example 5(a). Setting: no noise in signal, all pattern occurences of the same
           length, long signal. We check for the same behaviour with and without parallel
-          computation with fixed number of 2 workers.", {
+          computation with fixed number of 2 cores.", {
 
-  ## Generate signal and template
-  ## approx 30 min for data collected at freq
-  # x0 <- cos(seq(0, 2 * pi * 10 * 20, length.out = 1000 * 20 + 1))
-  # x  <- x0
-  # template <- x0[1:101]
-  #
-  # pattern.dur.seq <- c(90, 100, 101)
-  #
-  # out <- segmentPattern(x = x,
-  #                       x.fs = 1,
-  #                       template = template,
-  #                       pattern.dur.seq = pattern.dur.seq,
-  #                       similarity.measure = "cor",
-  #                       x.cut = TRUE,
-  #                       x.cut.vl = 6000,
-  #                       compute.template.idx = TRUE)
-  #
-  # out2 <- segmentPattern(x = x,
-  #                        x.fs = 1,
-  #                        template = template,
-  #                        pattern.dur.seq = pattern.dur.seq,
-  #                        similarity.measure = "cor",
-  #                        x.cut = TRUE,
-  #                        x.cut.vl = 6000,
-  #                        run.parallel = TRUE,
-  #                        run.parallel.cores = 2,
-  #                        compute.template.idx = TRUE)
-  #
-  # expect_equal(out$tau_i, out2$tau_i)
-  # expect_equal(out$T_i,   out2$T_i)
-  # expect_equal(out$sim_i, out2$sim_i)
-  # expect_equal(out$template_i, out2$template_i)
+  # Generate signal and template
+  # approx 30 min for data collected at freq
+  x0 <- cos(seq(0, 2 * pi * 10 * 20, length.out = 1000 * 20 + 1))
+  x  <- x0
+  template <- x0[1:101]
+
+  pattern.dur.seq <- c(90, 100, 101)
+
+  out <- segmentPattern(x = x,
+                        x.fs = 1,
+                        template = template,
+                        pattern.dur.seq = pattern.dur.seq,
+                        similarity.measure = "cor",
+                        x.cut = TRUE,
+                        x.cut.vl = 6000,
+                        compute.template.idx = TRUE)
+
+  out2 <- segmentPattern(x = x,
+                         x.fs = 1,
+                         template = template,
+                         pattern.dur.seq = pattern.dur.seq,
+                         similarity.measure = "cor",
+                         x.cut = TRUE,
+                         x.cut.vl = 6000,
+                         run.parallel = TRUE,
+                         run.parallel.cores = 2,
+                         compute.template.idx = TRUE)
+
+  expect_equal(out$tau_i, out2$tau_i)
+  expect_equal(out$T_i,   out2$T_i)
+  expect_equal(out$sim_i, out2$sim_i)
+  expect_equal(out$template_i, out2$template_i)
 })
-
-
-
-test_that("Example 5(b). Setting: no noise in signal, all pattern occurences of the same
-          length, long signal. We check for the same behaviour with and without parallel
-          computation with maximum number of workers available.", {
-
-  ## Generate signal and template
-  ## approx 30 min for data collected at freq
-  # x0 <- cos(seq(0, 2 * pi * 10 * 20, length.out = 1000 * 20 + 1))
-  # x  <- x0
-  # template <- x0[1:101]
-  #
-  # pattern.dur.seq <- c(90, 100, 101)
-  #
-  # out <- segmentPattern(x = x,
-  #                       x.fs = 1,
-  #                       template = template,
-  #                       pattern.dur.seq = pattern.dur.seq,
-  #                       similarity.measure = "cor",
-  #                       x.cut = TRUE,
-  #                       x.cut.vl = 6000,
-  #                       compute.template.idx = TRUE)
-  #
-  # out2 <- segmentPattern(x = x,
-  #                        x.fs = 1,
-  #                        template = template,
-  #                        pattern.dur.seq = pattern.dur.seq,
-  #                        similarity.measure = "cor",
-  #                        x.cut = TRUE,
-  #                        x.cut.vl = 6000,
-  #                        run.parallel = TRUE,
-  #                        run.parallel.cores = NULL,
-  #                        compute.template.idx = TRUE)
-  #
-  # expect_equal(out$tau_i, out2$tau_i)
-  # expect_equal(out$T_i,   out2$T_i)
-  # expect_equal(out$sim_i, out2$sim_i)
-  # expect_equal(out$template_i, out2$template_i)
-})
-
-
-
-test_that("Example 5(c). Setting: no noise in signal, all pattern occurences of the same
-          length, long signal. We check for the same behaviour with and without parallel
-          computation with (maximum-1) number of workers available.", {
-
-  ## Generate signal and template
-  ## approx 30 min for data collected at freq
-  # x0 <- cos(seq(0, 2 * pi * 10 * 20, length.out = 1000 * 20 + 1))
-  # x  <- x0
-  # template <- x0[1:101]
-  #
-  # pattern.dur.seq <- c(90, 100, 101)
-  #
-  # out <- segmentPattern(x = x,
-  #                       x.fs = 1,
-  #                       template = template,
-  #                       pattern.dur.seq = pattern.dur.seq,
-  #                       similarity.measure = "cor",
-  #                       x.cut = TRUE,
-  #                       x.cut.vl = 6000,
-  #                       compute.template.idx = TRUE)
-  #
-  # out2 <- segmentPattern(x = x,
-  #                        x.fs = 1,
-  #                        template = template,
-  #                        pattern.dur.seq = pattern.dur.seq,
-  #                        similarity.measure = "cor",
-  #                        x.cut = TRUE,
-  #                        x.cut.vl = 6000,
-  #                        run.parallel = TRUE,
-  #                        run.parallel.cores = availableCores(),
-  #                        compute.template.idx = TRUE)
-#
-#   out <- segmentPattern(x = x,
-#                         x.fs = 1,
-#                         template = template,
-#                         pattern.dur.seq = pattern.dur.seq,
-#                         similarity.measure = "cor",
-#                         x.cut = TRUE,
-#                         x.cut.vl = 6000)
-#
-#   out2 <- segmentPattern(x = x,
-#                          x.fs = 1,
-#                          template = template,
-#                          pattern.dur.seq = pattern.dur.seq,
-#                          similarity.measure = "cor",
-#                          x.cut = TRUE,
-#                          x.cut.vl = 6000,
-#                          run.parallel = TRUE,
-#                          run.parallel.cores = availableCores())
-#
-#   expect_equal(out$tau_i, out2$tau_i)
-#   expect_equal(out$T_i,   out2$T_i)
-#   expect_equal(out$sim_i, out2$sim_i)
-  # expect_equal(out$template_i, out2$template_i)
-})
-
 
 
 

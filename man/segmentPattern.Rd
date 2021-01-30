@@ -16,7 +16,7 @@ segmentPattern(
   finetune.maxima.ma.W = NULL,
   finetune.maxima.nbh.W = NULL,
   run.parallel = FALSE,
-  run.parallel.cores = NULL,
+  run.parallel.cores = 1L,
   x.cut = TRUE,
   x.cut.vl = 6000,
   compute.template.idx = FALSE
@@ -74,14 +74,11 @@ fine-tuning procedure. Expressed in seconds. Default is \code{NULL}.
 Note: if the length provided corresponds to an even number of \code{x} vector indices,
 it will be rounded down so as the corresponding number of vector indices is its closest odd number.}
 
-\item{run.parallel}{A logical scalar. Whether or not to use parallel execution in the algorithm.
-The \code{future} package
-is used to execute code asynchronously. Default is \code{FALSE}.}
+\item{run.parallel}{A logical scalar. Whether or not to use parallel execution in the algorithm
+with \code{parallel} package. Default is \code{FALSE}.}
 
 \item{run.parallel.cores}{An integer scalar.
-The number of cores to use for parallel execution.
-Default is \code{NULL}. If not specified, the number of cores is set to a number of
-cores available minus 1.}
+The number of cores to use for parallel execution. Defaults to 1L (no parallel).}
 
 \item{x.cut}{A logical scalar. Whether or not to use time optimization procedure in
 which a time-series \code{x} is cut into parts and segmentation is performed for
