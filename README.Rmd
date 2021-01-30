@@ -7,6 +7,9 @@ output:
 [![Travis build status](https://travis-ci.com/martakarass/adept.svg?branch=master)](https://travis-ci.com/martakarass/adept)
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/martakarass/adept?branch=master&svg=true)](https://ci.appveyor.com/project/martakarass/adept)
 [![Coverage status](https://codecov.io/gh/martakarass/adept/branch/master/graph/badge.svg)](https://codecov.io/github/martakarass/adept?branch=master)
+[![CRAN status](https://www.r-pkg.org/badges/version/adept)](https://CRAN.R-project.org/package=adept)
+[![](https://cranlogs.r-pkg.org/badges/grand-total/adept)](https://cran.r-project.org/package=adept)
+[![](https://cranlogs.r-pkg.org/badges/last-month/adept)](https://cran.r-project.org/package=adept)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
