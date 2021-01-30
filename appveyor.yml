@@ -16,7 +16,7 @@ cache:
 environment:
   global:
     USE_RTOOLS: true
-    WARNINGS_ARE_ERRORS: false
+    WARNINGS_ARE_ERRORS: 0
     CRAN: http://cran.rstudio.com
     _R_CHECK_SYSTEM_CLOCK_: 0
   matrix:
