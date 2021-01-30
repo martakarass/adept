@@ -229,6 +229,7 @@ segmentPattern <- function(x,
                            compute.template.idx = FALSE){
 
 
+  ## ---------------------------------------------------------------------------
   ## Check if correct objects were passed to the function
   x.cut.vl <- as.integer(x.cut.vl)
   if(!is.null(run.parallel.cores)) run.parallel.cores <-  as.integer(run.parallel.cores)
@@ -248,6 +249,7 @@ segmentPattern <- function(x,
   if (!(length(x.cut) == 1 & x.cut %in% c(TRUE, FALSE))) stop("x.cut must be a logical scalar.")
   if (!(is.null(x.cut.vl) || (length(x.cut.vl) == 1 & is.integer(x.cut.vl) & x.cut.vl > 0))) stop("x.cut.vl must me NULL or a positive integer scalar")
   if (!(length(compute.template.idx) == 1 & compute.template.idx %in% c(TRUE, FALSE))) stop("compute.template.idx must be a logical scalar.")
+
 
   ## ---------------------------------------------------------------------------
   ## Compute a list of rescaled template(s)
@@ -292,7 +294,9 @@ segmentPattern <- function(x,
 
     ## Other fine-tuning components
     if (!(finetune.maxima.nbh.W > 0)) stop("finetune.maxima.nbh.W should be greater than 0 for finetune == 'maxima'")
-    finetune.maxima.nbh.vl <- finetune.maxima.nbh.W * x.fs
+    ## Added round() @MK 2020-01-06
+    finetune.maxima.nbh.vl <- round(finetune.maxima.nbh.W * x.fs)
+    if (!(finetune.maxima.nbh.vl > 0)) stop("finetune.maxima.nbh.W should be greater")
   }
 
 
@@ -313,7 +317,8 @@ segmentPattern <- function(x,
   if (run.parallel){
     ## multiproces := multicore, if supported, otherwise multisession
     if (is.null(run.parallel.cores)) run.parallel.cores <- availableCores() - 1
-    plan(multiprocess, workers = run.parallel.cores)
+    ## [@MK: May 22] plan(multiprocess, workers = run.parallel.cores)
+    plan(multisession, workers = run.parallel.cores)
   } else {
     plan(sequential)
   }

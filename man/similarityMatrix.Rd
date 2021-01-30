@@ -56,7 +56,7 @@ out <- similarityMatrix(x, template.scaled, "cov")
 ## Visualize
 par(mfrow = c(1,1))
 image(t(out),
-      main = "ADEPT similarity matrix\\nfor time-series x and scaled versions of pattern templates",
+      main = "ADEPT similarity matrix\nfor time-series x and scaled versions of pattern templates",
       xlab = "Time index",
       ylab = "Pattern vector length",
       xaxt = "n", yaxt = "n")

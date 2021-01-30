@@ -4,12 +4,23 @@
 \alias{segmentPattern}
 \title{Pattern Segmentation From a Time-series via ADEPT}
 \usage{
-segmentPattern(x, x.fs, template, pattern.dur.seq,
-  similarity.measure = "cov", similarity.measure.thresh = 0,
-  x.adept.ma.W = NULL, finetune = NULL, finetune.maxima.ma.W = NULL,
-  finetune.maxima.nbh.W = NULL, run.parallel = FALSE,
-  run.parallel.cores = NULL, x.cut = TRUE, x.cut.vl = 6000,
-  compute.template.idx = FALSE)
+segmentPattern(
+  x,
+  x.fs,
+  template,
+  pattern.dur.seq,
+  similarity.measure = "cov",
+  similarity.measure.thresh = 0,
+  x.adept.ma.W = NULL,
+  finetune = NULL,
+  finetune.maxima.ma.W = NULL,
+  finetune.maxima.nbh.W = NULL,
+  run.parallel = FALSE,
+  run.parallel.cores = NULL,
+  x.cut = TRUE,
+  x.cut.vl = 6000,
+  compute.template.idx = FALSE
+)
 }
 \arguments{
 \item{x}{A numeric vector. A time-series to segment pattern from.}
