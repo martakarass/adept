@@ -142,7 +142,7 @@ acc_running_sub %>%
 
 ##### Note on sensors desynchronization 
 
-* The two sensors used in the experiment were set up to initialize data collection at the same time. However, as discussed in^[Karas, M., Bai, J., Straczkiewicz, M., Harezlak, J., Glynn, N W., Harris, T., Zipunnikov, V., Crainiceanu, C., Urbanek, J.K. *Accelerometry data in health research: challenges and opportunities. Review and examples*, Statistics in Biosciences, 2018. ([link](https://rdcu.be/bgLtM)).], perfect synchronization on most of modern operating systems is impossible. Additionally, measurements might still get desynchronized across devices even after a few minutes of data collection. Because of that, sub-second level alignment of data cross devices cannot be expected.
+* The two sensors used in the experiment were set up to initialize data collection at the same time. However, as discussed in^[Karas, M., Bai, J., Straczkiewicz, M., Harezlak, J., Glynn, N W., Harris, T., Zipunnikov, V., Crainiceanu, C., Urbanek, J.K. *Accelerometry data in health research: challenges and opportunities. Review and examples*, Statistics in Biosciences, 2018. ([link](https://pubmed.ncbi.nlm.nih.gov/31762829/)).], perfect synchronization on most of modern operating systems is impossible. Additionally, measurements might still get desynchronized across devices even after a few minutes of data collection. Because of that, sub-second level alignment of data cross devices cannot be expected.
 
 ### Vector magnitude 
 
