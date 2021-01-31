@@ -8,21 +8,29 @@
 
 <title>ADEPT Similarity Matrix Computation — similarityMatrix • adept</title>
 
+
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -30,11 +38,11 @@
 
 
 
-<meta property="og:title" content="ADEPT Similarity Matrix Computation — similarityMatrix" />
 
+<meta property="og:title" content="ADEPT Similarity Matrix Computation — similarityMatrix" />
 <meta property="og:description" content="Compute ADEPT similarity matrix between a time-series x and a collection
 of scaled templates." />
-<meta name="twitter:card" content="summary" />
+
 
 
 
@@ -48,9 +56,10 @@ of scaled templates." />
 <![endif]-->
 
 
+
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -64,7 +73,7 @@ of scaled templates." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adept</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2</span>
       </span>
     </div>
 
@@ -72,7 +81,7 @@ of scaled templates." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -98,11 +107,10 @@ of scaled templates." />
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/martakarass/adept">
-    <span class="fa fa-github fa-lg"></span>
+  <a href="https://github.com/martakarass/adept/">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -113,6 +121,7 @@ of scaled templates." />
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -124,14 +133,12 @@ of scaled templates." />
     </div>
 
     <div class="ref-description">
-    
     <p>Compute ADEPT similarity matrix between a time-series <code>x</code> and a collection
 of scaled templates.</p>
-    
     </div>
 
-    <pre class="usage"><span class='fu'>similarityMatrix</span>(<span class='no'>x</span>, <span class='no'>template.scaled</span>, <span class='no'>similarity.measure</span>)</pre>
-    
+    <pre class="usage"><span class='fu'>similarityMatrix</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>template.scaled</span>, <span class='va'>similarity.measure</span><span class='op'>)</span></pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -157,7 +164,7 @@ used in similarity matrix computation; one of the following:</p><ul>
 </ul></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A numeric matrix. Contains values of similarity between a time-series <code>x</code>
@@ -170,51 +177,45 @@ and scaled templates.</p><ul>
  computed for each distinct template used in segmentation.</p></li>
 </ul>
 
-    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code>scaleTemplate {adept}</code></p></div>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## Simulate data</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/par'>par</a></span>(<span class='kw'>mfrow</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>1</span>))
-<span class='no'>x0</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Trig'>sin</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>0</span>, <span class='fl'>2</span> * <span class='no'>pi</span> * <span class='fl'>100</span>, <span class='kw'>length.out</span> <span class='kw'>=</span> <span class='fl'>10000</span>))
-<span class='no'>x</span>  <span class='kw'>&lt;-</span> <span class='no'>x0</span> + <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fl'>1000</span>, <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>0.1</span>)
-<span class='no'>template</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='no'>x0</span>[<span class='fl'>1</span>:<span class='fl'>500</span>])
-<span class='no'>template.vl</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>300</span>, <span class='fl'>700</span>, <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>50</span>)
+<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mfrow <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>x0</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Trig.html'>sin</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>2</span> <span class='op'>*</span> <span class='va'>pi</span> <span class='op'>*</span> <span class='fl'>100</span>, length.out <span class='op'>=</span> <span class='fl'>10000</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>x</span>  <span class='op'>&lt;-</span> <span class='va'>x0</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>1000</span>, sd <span class='op'>=</span> <span class='fl'>0.1</span><span class='op'>)</span>
+<span class='va'>template</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='va'>x0</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>500</span><span class='op'>]</span><span class='op'>)</span>
+<span class='va'>template.vl</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>300</span>, <span class='fl'>700</span>, by <span class='op'>=</span> <span class='fl'>50</span><span class='op'>)</span>
 
 <span class='co'>## Rescale pattern</span>
-<span class='no'>template.scaled</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='scaleTemplate.html'>scaleTemplate</a></span>(<span class='no'>template</span>, <span class='no'>template.vl</span>)
+<span class='va'>template.scaled</span> <span class='op'>&lt;-</span> <span class='fu'><a href='scaleTemplate.html'>scaleTemplate</a></span><span class='op'>(</span><span class='va'>template</span>, <span class='va'>template.vl</span><span class='op'>)</span>
 
 <span class='co'>## Compute ADEPT similarity matrix</span>
-<span class='no'>out</span> <span class='kw'>&lt;-</span> <span class='fu'>similarityMatrix</span>(<span class='no'>x</span>, <span class='no'>template.scaled</span>, <span class='st'>"cov"</span>)
+<span class='va'>out</span> <span class='op'>&lt;-</span> <span class='fu'>similarityMatrix</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>template.scaled</span>, <span class='st'>"cov"</span><span class='op'>)</span>
 
 <span class='co'>## Visualize</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/par'>par</a></span>(<span class='kw'>mfrow</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>1</span>))
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/image'>image</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/t'>t</a></span>(<span class='no'>out</span>),
-      <span class='kw'>main</span> <span class='kw'>=</span> <span class='st'>"ADEPT similarity matrix\nfor time-series x and scaled versions of pattern templates"</span>,
-      <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='st'>"Time index"</span>,
-      <span class='kw'>ylab</span> <span class='kw'>=</span> <span class='st'>"Pattern vector length"</span>,
-      <span class='kw'>xaxt</span> <span class='kw'>=</span> <span class='st'>"n"</span>, <span class='kw'>yaxt</span> <span class='kw'>=</span> <span class='st'>"n"</span>)</div><div class='input'><span class='no'>xaxis</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/seq'>seq</a></span>(<span class='fl'>1000</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/length'>length</a></span>(<span class='no'>x0</span>), <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>1000</span>))
-<span class='no'>yaxis</span> <span class='kw'>&lt;-</span> <span class='no'>template.vl</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/axis'>axis</a></span>(<span class='fl'>1</span>, <span class='kw'>at</span> <span class='kw'>=</span> <span class='no'>xaxis</span>/<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Extremes'>max</a></span>(<span class='no'>xaxis</span>), <span class='kw'>labels</span> <span class='kw'>=</span> <span class='no'>xaxis</span>)</div><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/axis'>axis</a></span>(<span class='fl'>2</span>, <span class='kw'>at</span> <span class='kw'>=</span> (<span class='no'>yaxis</span> - <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Extremes'>min</a></span>(<span class='no'>yaxis</span>))/(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Extremes'>max</a></span>(<span class='no'>yaxis</span>) - <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Extremes'>min</a></span>(<span class='no'>yaxis</span>)), <span class='kw'>labels</span> <span class='kw'>=</span> <span class='no'>yaxis</span>)</div><div class='img'><img src='similarityMatrix-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span><span class='op'>(</span>mfrow <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/image.html'>image</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='va'>out</span><span class='op'>)</span>,
+      main <span class='op'>=</span> <span class='st'>"ADEPT similarity matrix\nfor time-series x and scaled versions of pattern templates"</span>,
+      xlab <span class='op'>=</span> <span class='st'>"Time index"</span>,
+      ylab <span class='op'>=</span> <span class='st'>"Pattern vector length"</span>,
+      xaxt <span class='op'>=</span> <span class='st'>"n"</span>, yaxt <span class='op'>=</span> <span class='st'>"n"</span><span class='op'>)</span>
+</div><div class='input'><span class='va'>xaxis</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>1000</span>, <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>x0</span><span class='op'>)</span>, by <span class='op'>=</span> <span class='fl'>1000</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>yaxis</span> <span class='op'>&lt;-</span> <span class='va'>template.vl</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/axis.html'>axis</a></span><span class='op'>(</span><span class='fl'>1</span>, at <span class='op'>=</span> <span class='va'>xaxis</span><span class='op'>/</span><span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>xaxis</span><span class='op'>)</span>, labels <span class='op'>=</span> <span class='va'>xaxis</span><span class='op'>)</span>
+</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/axis.html'>axis</a></span><span class='op'>(</span><span class='fl'>2</span>, at <span class='op'>=</span> <span class='op'>(</span><span class='va'>yaxis</span> <span class='op'>-</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>yaxis</span><span class='op'>)</span><span class='op'>)</span><span class='op'>/</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>yaxis</span><span class='op'>)</span> <span class='op'>-</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>yaxis</span><span class='op'>)</span><span class='op'>)</span>, labels <span class='op'>=</span> <span class='va'>yaxis</span><span class='op'>)</span>
+</div><div class='img'><img src='similarityMatrix-1.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-
-      <li><a href="#see-also">See also</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -222,13 +223,16 @@ and scaled templates.</p><ul>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 
