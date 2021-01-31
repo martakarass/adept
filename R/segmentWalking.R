@@ -135,10 +135,8 @@ RunningMean <- function(x, W, circular = FALSE){
 #' )
 #'
 #' # run walking segmentation
+#' # (parallel supported, except for Windows; see run.parallel, run.parallel.cores args)
 #' segmentWalking(xyz, xyz.fs, template)
-#'
-#' # parallel supported (does not work on Windows)
-#' # segmentWalking(xyz, xyz.fs, template, run.parallel = TRUE, run.parallel.cores = 2)
 #'
 segmentWalking <- function(xyz,
                            xyz.fs,

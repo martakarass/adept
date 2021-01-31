@@ -7,6 +7,8 @@ status](https://www.r-pkg.org/badges/version/adept)](https://CRAN.R-project.org/
 [![](https://cranlogs.r-pkg.org/badges/last-month/adept)](https://cran.r-project.org/package=adept)
 [![R build
 status](https://github.com/martakarass/adept/workflows/R-CMD-check/badge.svg)](https://github.com/martakarass/adept/actions)
+[![Codecov test
+coverage](https://codecov.io/gh/martakarass/adept/branch/master/graph/badge.svg)](https://codecov.io/gh/martakarass/adept?branch=master)
 
 ### Overview
 

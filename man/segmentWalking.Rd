@@ -136,7 +136,7 @@ template <- list(
 )
 
 # run walking segmentation
+# (parallel supported, except for Windows; see run.parallel, run.parallel.cores args)
 segmentWalking(xyz, xyz.fs, template)
-segmentWalking(xyz, xyz.fs, template, run.parallel = TRUE, run.parallel.cores = 2)
 
 }

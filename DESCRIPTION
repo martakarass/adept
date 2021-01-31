@@ -33,7 +33,8 @@ Suggests:
     gridExtra,
     spelling,
     cluster,
-    adeptdata
+    adeptdata,
+    covr
 VignetteBuilder: knitr
 Imports: 
     dplyr,
