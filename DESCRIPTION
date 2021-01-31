@@ -36,7 +36,6 @@ Suggests:
     adeptdata
 VignetteBuilder: knitr
 Imports: 
-    tibble,
     dplyr,
     magrittr,
     dvmisc,
