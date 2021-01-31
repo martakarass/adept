@@ -5,8 +5,8 @@ status](https://codecov.io/gh/martakarass/adept/branch/master/graph/badge.svg)](
 status](https://www.r-pkg.org/badges/version/adept)](https://CRAN.R-project.org/package=adept)
 [![](https://cranlogs.r-pkg.org/badges/grand-total/adept)](https://cran.r-project.org/package=adept)
 [![](https://cranlogs.r-pkg.org/badges/last-month/adept)](https://cran.r-project.org/package=adept)
-
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+[![R build
+status](https://github.com/martakarass/adept/workflows/R-CMD-check/badge.svg)](https://github.com/martakarass/adept/actions)
 
 ### Overview
 
