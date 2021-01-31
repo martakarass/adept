@@ -26,7 +26,7 @@ segmentWalking(
 \arguments{
 \item{xyz}{A numeric matrix (or data frame) of n × 3 dimension.
 Three-dimensional
-raw accelerometry data time-series; accceleration measurements \code{(x,y,z)}
+raw accelerometry data time-series; acceleration measurements \code{(x,y,z)}
 collected
 along three orthogonal axes by the sensor's accelerometer.}
 
@@ -115,28 +115,28 @@ Default algorithm parameters are optimized for a wrist-worn sensor and
 were evaluated with data collected in the free-living environment.
 }
 \examples{
-\donttest{
-  # define raw accelerometry data sample with walking activity
-  xyz <-
-    adeptdata::acc_walking_IU \%>\%
-    filter(loc_id == "left_wrist", subj_id == "id86237981") \%>\%
-    arrange(time_s) \%>\%
-    select(v1 = x, v2 = y, v3 = z) \%>\%
-    as.matrix()
-  # define raw accelerometry data sample frequency
-  xyz.fs <- 100
+library(adeptdata)
+library(dplyr)
+library(adept)
+xyz <-
+  adeptdata::acc_walking_IU \%>\%
+  filter(loc_id == "left_wrist", subj_id == "id86237981") \%>\%
+  arrange(time_s) \%>\%
+  select(v1 = x, v2 = y, v3 = z) \%>\%
+  as.matrix()
+# define raw accelerometry data sample frequency
+xyz.fs <- 100
 
-  # define template list based on predefined templates
-  template_mat <- adeptdata::stride_template$left_wrist[[3]]
-  template <- list(
-    template_mat[1, ],
-    template_mat[2, ],
-    template_mat[3, ]
-  )
+# define template list based on predefined templates
+template_mat <- adeptdata::stride_template$left_wrist[[3]]
+template <- list(
+  template_mat[1, ],
+  template_mat[2, ],
+  template_mat[3, ]
+)
 
-  # run walking segmentation
-  segmentWalking(xyz, xyz.fs, template)
-  segmentWalking(xyz, xyz.fs, template, run.parallel = TRUE, run.parallel.cores = 10)
-}
+# run walking segmentation
+segmentWalking(xyz, xyz.fs, template)
+segmentWalking(xyz, xyz.fs, template, run.parallel = TRUE, run.parallel.cores = 10)
 
 }

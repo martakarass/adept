@@ -262,7 +262,7 @@ Explanation of function arguments used:
 * `template` -- Pattern template(s). 
 * `pattern.dur.seq` - A grid of potential stride durations, expressed in seconds. 
 * `similarity.measure` - Statistic used to quantify similarity between accelerometry time-series and template. 
-* `x.adept.ma.W` - Length of smoothing window used in accelerometry time-series processing before computing siliarity between accelerometry time-series and templates, expressed in seconds. 
+* `x.adept.ma.W` - Length of smoothing window used in accelerometry time-series processing before computing similarity between accelerometry time-series and templates, expressed in seconds. 
 * `finetune` - Procedure employed to fine-tune preliminarily identified beginnings and ends of a pattern in a accelerometry time-series. 
 * `finetune.maxima.ma.W` -  Length of smoothing window used in `"maxima"` fine-tune procedure, expressed in seconds. 
 * `finetune.maxima.nbh.W` -  Length of a local maxima search grid used in `"maxima"` fine-tune procedure, expressed in seconds. 

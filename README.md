@@ -247,7 +247,7 @@ segmentPattern(
 
 ### Vignettes
 
-Vignettes are available to better demonstrate package methods usgae.
+Vignettes are available to better demonstrate package methods usage.
 
 1.  Vignette [Introduction to adept
     package](https://martakarass.github.io/adept/articles/adept-intro.html)

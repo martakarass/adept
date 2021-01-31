@@ -42,7 +42,7 @@ RunningMean <- function(x, W, circular = FALSE){
 #'
 #' @param xyz A numeric matrix (or data frame) of n × 3 dimension.
 #' Three-dimensional
-#' raw accelerometry data time-series; accceleration measurements \code{(x,y,z)}
+#' raw accelerometry data time-series; acceleration measurements \code{(x,y,z)}
 #' collected
 #' along three orthogonal axes by the sensor's accelerometer.
 #' @param xyz.fs A numeric scalar. Frequency at which a time-series
@@ -111,6 +111,7 @@ RunningMean <- function(x, W, circular = FALSE){
 #' @export
 #'
 #' @importFrom pracma cart2sph
+#' @importFrom stats median
 #'
 #' @examples
 #' library(adeptdata)
