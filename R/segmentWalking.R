@@ -113,29 +113,28 @@ RunningMean <- function(x, W, circular = FALSE){
 #' @importFrom pracma cart2sph
 #'
 #' @examples
-#' \donttest{
-#'   # define raw accelerometry data sample with walking activity
-#'   xyz <-
-#'     adeptdata::acc_walking_IU %>%
-#'     filter(loc_id == "left_wrist", subj_id == "id86237981") %>%
-#'     arrange(time_s) %>%
-#'     select(v1 = x, v2 = y, v3 = z) %>%
-#'     as.matrix()
-#'   # define raw accelerometry data sample frequency
-#'   xyz.fs <- 100
-#'
-#'   # define template list based on predefined templates
-#'   template_mat <- adeptdata::stride_template$left_wrist[[3]]
-#'   template <- list(
-#'     template_mat[1, ],
-#'     template_mat[2, ],
-#'     template_mat[3, ]
-#'   )
-#'
-#'   # run walking segmentation
-#'   segmentWalking(xyz, xyz.fs, template)
-#'   segmentWalking(xyz, xyz.fs, template, run.parallel = TRUE, run.parallel.cores = 10)
-#' }
+library(adeptdata)
+library(dplyr)
+xyz <-
+  adeptdata::acc_walking_IU %>%
+  filter(loc_id == "left_wrist", subj_id == "id86237981") %>%
+  arrange(time_s) %>%
+  select(v1 = x, v2 = y, v3 = z) %>%
+  as.matrix()
+# define raw accelerometry data sample frequency
+xyz.fs <- 100
+
+# define template list based on predefined templates
+template_mat <- adeptdata::stride_template$left_wrist[[3]]
+template <- list(
+  template_mat[1, ],
+  template_mat[2, ],
+  template_mat[3, ]
+)
+
+# run walking segmentation
+segmentWalking(xyz, xyz.fs, template)
+segmentWalking(xyz, xyz.fs, template, run.parallel = TRUE, run.parallel.cores = 10)
 #'
 segmentWalking <- function(xyz,
                            xyz.fs,
