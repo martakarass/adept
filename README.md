@@ -1,8 +1,4 @@
 
-[![Travis build
-status](https://travis-ci.com/martakarass/adept.svg?branch=master)](https://travis-ci.com/martakarass/adept)
-[![AppVeyor build
-status](https://ci.appveyor.com/api/projects/status/github/martakarass/adept?branch=master&svg=true)](https://ci.appveyor.com/project/martakarass/adept)
 [![Coverage
 status](https://codecov.io/gh/martakarass/adept/branch/master/graph/badge.svg)](https://codecov.io/github/martakarass/adept?branch=master)
 [![CRAN
@@ -62,13 +58,6 @@ segmentPattern(
   pattern.dur.seq = c(0.9, 0.95, 1.03, 1.1),
   similarity.measure = "cor",
   compute.template.idx = TRUE)
-#> Warning: UNRELIABLE VALUE: Future ('<none>') unexpectedly generated random
-#> numbers without specifying argument '[future.]seed'. There is a risk that those
-#> random numbers are not statistically sound and the overall results might be
-#> invalid. To fix this, specify argument '[future.]seed', e.g. 'seed=TRUE'. This
-#> ensures that proper, parallel-safe random numbers are produced via the L'Ecuyer-
-#> CMRG method. To disable this check, use [future].seed=NULL, or set option
-#> 'future.rng.onMisuse' to "ignore".
 #>    tau_i T_i     sim_i template_i
 #> 1      4  95 0.9987941          1
 #> 2     98 103 0.9992482          1
