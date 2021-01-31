@@ -64,7 +64,7 @@
 #' Setting to \code{TRUE} may increase computation time. Default is \code{FALSE}.
 #'
 #' @details
-#'     Function implements Adaptive Empirical Pattern Transformation (ADEPT) method for pattern segmentation
+#' Function implements Adaptive Empirical Pattern Transformation (ADEPT) method for pattern segmentation
 #' from a time-series \code{x}.
 #' ADEPT is optimized to perform fast, accurate walking strides segmentation from
 #' high-density data collected with a wearable accelerometer during walking.

@@ -40,5 +40,6 @@ Imports:
     dplyr,
     magrittr,
     dvmisc,
-    parallel
+    parallel,
+    pracma
 Language: en-US
