@@ -3,12 +3,10 @@ citHeader("To cite adept in publications use:")
 citEntry(
   entry    = "Article",
   title    = "Adaptive empirical pattern transformation (ADEPT) with application to walking stride segmentation",
-  author   = "Karas, Marta and Straczkiewicz, Marcin and Fadel, William and Harezlak, Jaroslaw and Crainiceanu, Ciprian M and Urbanek, Jacek K",
+  author   = "Karas, Marta and Straczkiewicz, Marcin and Fadel, William and Harezlak, Jaroslaw and Crainiceanu, Ciprian and Urbanek, Jacek",
   journal  = "Biostatistics",
   year     = "2019",
   volume   = "09",
-  number   = ,
-  pages    = ,
   url      = "https://doi.org/10.1093/biostatistics/kxz033",
   textVersion = paste(
     "Karas, M., Straczkiewicz, M., Fadel, W., Harezlak, J., Crainiceanu, C.M., Urbanek J.K. (2019). Adaptive empirical pattern transformation (ADEPT) with application to walking stride segmentation. Biostatistics. kxz033"
