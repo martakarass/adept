@@ -558,6 +558,8 @@ test_that("Example 5(a). Setting: no noise in signal, all pattern occurences of 
           length, long signal. We check for the same behaviour with and without parallel
           computation with fixed number of 2 cores.", {
 
+  skip_on_os("windows")
+
   # Generate signal and template
   # approx 30 min for data collected at freq
   x0 <- cos(seq(0, 2 * pi * 10 * 20, length.out = 1000 * 20 + 1))

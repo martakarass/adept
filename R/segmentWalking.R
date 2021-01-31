@@ -83,9 +83,10 @@ RunningMean <- function(x, W, circular = FALSE){
 #' @param run.parallel A logical scalar. Whether or not to use parallel
 #' execution in the algorithm
 #' with \code{parallel} package. Default is \code{FALSE}.
+#' DOES NOT WORK ON WINDOWS.
 #' @param run.parallel.cores An integer scalar.
 #' The number of cores to use for parallel execution. Defaults to 1L
-#' (no parallel).
+#' (no parallel). DOES NOT WORK ON WINDOWS.
 #' @param compute.template.idx A logical scalar. Whether or not to compute
 #' and return information about
 #' which of the provided pattern templates yielded a similarity matrix value
@@ -192,7 +193,7 @@ segmentWalking <- function(xyz,
       median(xyzptr_stride1[,5]), # "med_t"
       diff(range(xyzptr_stride1[, 6])), # "ptp_r"
       mean(abs(xyzptr_stride1[, 6] - mean(xyzptr_stride1[, 6]))), # vmc_r
-      T_i / x.fs # dur
+      T_i / xyz.fs # dur
     )
   }
   out_desc <- as.data.frame(out_desc)

@@ -1,7 +1,7 @@
 Package: adept
 Type: Package
 Title: Adaptive Empirical Pattern Transformation 
-Version: 1.1.2
+Version: 1.2
 Authors@R: c(
   person("Marta", "Karas", email = "marta.karass@gmail.com", role = c("aut", "cre"), 
       comment = c(ORCID = "0000-0001-5889-3970")),

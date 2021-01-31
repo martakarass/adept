@@ -2,6 +2,7 @@
 
 export(scaleTemplate)
 export(segmentPattern)
+export(segmentWalking)
 export(similarityMatrix)
 export(windowSmooth)
 import(dvmisc)
@@ -12,4 +13,5 @@ importFrom(dplyr,mutate)
 importFrom(dplyr,select)
 importFrom(magrittr,'%>%')
 importFrom(parallel,mclapply)
+importFrom(pracma,cart2sph)
 importFrom(stats,approx)

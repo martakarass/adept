@@ -1,6 +1,6 @@
 
-[![Coverage
-status](https://codecov.io/gh/martakarass/adept/branch/master/graph/badge.svg)](https://codecov.io/github/martakarass/adept?branch=master)
+<!-- [![Coverage status](https://codecov.io/gh/martakarass/adept/branch/master/graph/badge.svg)](https://codecov.io/github/martakarass/adept?branch=master) -->
+
 [![CRAN
 status](https://www.r-pkg.org/badges/version/adept)](https://CRAN.R-project.org/package=adept)
 [![](https://cranlogs.r-pkg.org/badges/grand-total/adept)](https://cran.r-project.org/package=adept)
