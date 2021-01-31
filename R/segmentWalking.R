@@ -136,7 +136,7 @@ RunningMean <- function(x, W, circular = FALSE){
 #'
 #' # run walking segmentation
 #' segmentWalking(xyz, xyz.fs, template)
-#' segmentWalking(xyz, xyz.fs, template, run.parallel = TRUE, run.parallel.cores = 10)
+#' segmentWalking(xyz, xyz.fs, template, run.parallel = TRUE, run.parallel.cores = 2)
 #'
 segmentWalking <- function(xyz,
                            xyz.fs,
