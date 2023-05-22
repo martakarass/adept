@@ -3,6 +3,12 @@
 #' The covariance between two vectors can be written as a single convolution
 #' instead of two, as was being done by the dvmisc package.
 #'
+#' Chooses method of computation heuristically based on length of `short`.
+#' For longer vectors, the FFT outperforms a direct for loop.\
+#'
+#' The FFT is used in R's convolve() function, while a direct for loop is
+#' implemented in a custom Rcpp function convolveCpp()
+#'
 #' Behavior should be identical to dvmisc's version.
 #'
 #' @param short Shorter numeric vector to slide over `long`.
@@ -18,10 +24,12 @@
 #'
 slidingCovFast <- function(short, long) {
   n <- length(short)
-  len.diff <- length(long) - n
-  return(convolveCpp(long, rev(short / (n - 1) - sum(short) / n / (n - 1)))[n:(n + len.diff)])
+  len_diff <- length(long) - n
+  if (n < 400) {
+    return(convolveCpp(long, rev(short / (n - 1) - sum(short) / n / (n - 1)))[n:(n + len_diff)])
+  }
+  return(convolve(long, c(short / (n - 1)  - sum(short) / n / (n - 1), rep(0, len_diff)))[1:(len_diff + 1)])
 }
-
 
 #' Call optimized version of dvmisc::sliding_cor which stores sds.
 #'
