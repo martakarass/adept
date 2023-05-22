@@ -101,8 +101,7 @@ out <- segmentPattern(
   x.fs = 100,
   template = true.pattern,
   pattern.dur.seq = c(0.9, 0.95, 1.03, 1.1),
-  similarity.measure = "cor",
-  compute.template.idx = TRUE)
+  similarity.measure = "cor")
 out
 ```
 
@@ -127,8 +126,7 @@ out <- segmentPattern(
   x.fs = 100,
   template = true.pattern,
   pattern.dur.seq = c(0.9, 0.95, 1, 1.03, 1.1),
-  similarity.measure = "cor",
-  compute.template.idx = TRUE)
+  similarity.measure = "cor")
 out
 ```
 
@@ -142,8 +140,7 @@ out <- segmentPattern(
   x.fs = 10,   ## Assumed data frequency of 10 observations per second
   template = true.pattern,
   pattern.dur.seq = c(0.9, 0.95, 1, 1.03, 1.1) * 10, ## Adjusted accordingly
-  similarity.measure = "cor",
-  compute.template.idx = TRUE)
+  similarity.measure = "cor")
 out
 ```
 
@@ -226,8 +223,7 @@ out <- segmentPattern(
   x.fs = 100,
   template = true.pattern,
   pattern.dur.seq = 60:130 * 0.01,
-  similarity.measure = "cor",
-  compute.template.idx = TRUE)
+  similarity.measure = "cor")
 out
 
 out.plot1(x, out)
@@ -247,8 +243,7 @@ out <- segmentPattern(
   x.fs = 100,
   template = true.pattern,
   pattern.dur.seq = c(0.6, 0.9, 1.2),
-  similarity.measure = "cor",
-  compute.template.idx = TRUE)
+  similarity.measure = "cor")
 out
 
 out.plot1(x, out)
@@ -264,8 +259,7 @@ out <- segmentPattern(
   x.fs = 100,
   template = true.pattern,
   pattern.dur.seq = c(0.6, 0.9, 1.2),
-  similarity.measure = "cov",  ## Use covariance as a similarity statistic
-  compute.template.idx = TRUE)
+  similarity.measure = "cov")  ## Use covariance as a similarity statistic
 out
 
 out.plot1(x, out)
@@ -330,8 +324,7 @@ out <- segmentPattern(
   x.fs = 100,
   template = true.pattern.1, ## Template consisting of one out of two true patterns
   pattern.dur.seq = 60:130 * 0.01,
-  similarity.measure = "cor",
-  compute.template.idx = TRUE)
+  similarity.measure = "cor")
 out
 
 out.plot1(x, out)
@@ -349,8 +342,7 @@ out <- segmentPattern(
   template = true.pattern.1,
   pattern.dur.seq = 60:130 * 0.01,
   similarity.measure = "cor",
-  similarity.measure.thresh = 0.95, 
-  compute.template.idx = TRUE)
+  similarity.measure.thresh = 0.95)
 out
 
 out.plot1(x, out)
@@ -367,8 +359,7 @@ out <- segmentPattern(
   x.fs = 100,
   template = list(true.pattern.1, true.pattern.2),
   pattern.dur.seq = 60:130 * 0.01,
-  similarity.measure = "cor",
-  compute.template.idx = TRUE)
+  similarity.measure = "cor")
 out
 
 out.plot1(x, out)
@@ -408,8 +399,7 @@ out <- segmentPattern(
   x.fs = 100,
   template = list(true.pattern.1, true.pattern.2),
   pattern.dur.seq =  60:130 * 0.01,
-  similarity.measure = "cor",
-  compute.template.idx = TRUE)
+  similarity.measure = "cor")
 out
 
 out.plot1(x, out)
@@ -441,8 +431,7 @@ out <- segmentPattern(
   template = list(true.pattern.1, true.pattern.2),
   pattern.dur.seq =  60:130 * 0.01,
   similarity.measure = "cor",
-  x.adept.ma.W = 0.1,
-  compute.template.idx = TRUE)
+  x.adept.ma.W = 0.1)
 out
 
 out.plot1(x, out)
@@ -467,8 +456,7 @@ out <- segmentPattern(
   pattern.dur.seq =  60:130 * 0.01,
   x.adept.ma.W = 0.1,
   finetune = "maxima",
-  finetune.maxima.nbh.W = 0.3,
-  compute.template.idx = TRUE)
+  finetune.maxima.nbh.W = 0.3)
 out
 
 out.plot1(x, out)
@@ -500,8 +488,7 @@ out <- segmentPattern(
   x.adept.ma.W = 0.1,  ## smoothing parameter for similarity matrix computation
   finetune = "maxima",  ## use fine-tuning
   finetune.maxima.ma.W = 0.5, ## smoothing parameter for peak detection in fine-tuning
-  finetune.maxima.nbh.W = 0.3,  ## neighborhoods length in fine-tuning
-  compute.template.idx = TRUE)
+  finetune.maxima.nbh.W = 0.3)  ## neighborhoods length in fine-tuning
 out
 ```
 

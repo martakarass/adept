@@ -56,7 +56,7 @@
 #' template.scaled <- scaleTemplate(template, template.vl)
 #'
 #' ## Compute ADEPT similarity matrix
-#' out <- similarityMatrix(x, template.scaled, "cov")
+#' out <- similarityMatrix(x, template.scaled, "cov")$similarity
 #'
 #' ## Visualize
 #' par(mfrow = c(1,1))
