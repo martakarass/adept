@@ -19,7 +19,7 @@
 slidingCovFast <- function(short, long) {
   n <- length(short)
   len.diff <- length(long) - n
-  return(convolveCpp(long, rev(short / (n - 1) - sum(short) / n / (n - 1)))[n:(n + len.diff)])
+  return(convolveCpp(long, rev(short / (n - 1)))[n:(n + len.diff)])
 }
 
 
@@ -27,9 +27,10 @@ slidingCovFast <- function(short, long) {
 #'
 #' See Rcpp function for more documentation.
 #'
+#' Assumes mean and sd of `short` are 0 and 1, respectively.
+#'
 #' @param short Shorter numeric vector to slide over `long`.
 #' @param long Numeric vector.
-#'
 #'
 #' @return List of length 2, with $core being a Numeric vector of sliding
 #' correlations, the same as what dvmisc::sliding_cor() would output,
@@ -41,16 +42,17 @@ slidingCovFast <- function(short, long) {
 #' @noRd
 #'
 slidingCorStoreSd <- function(short, long) {
-  return(slidingCorStoreSdCpp(short, long, sd(short)))
+  return(slidingCorStoreSdCpp(short, long, 1))
 }
 
 #' Call optimized version of dvmisc::sliding_cor.
 #'
 #' See Rcpp function for more documentation.
 #'
+#' Assumes mean and sd of `short` are 0 and 1, respectively.
+#'
 #' @param short Shorter numeric vector to slide over `long`.
 #' @param long Numeric vector.
-#'
 #'
 #' @return Numeric vector of sliding correlations, the same as what
 #' dvmisc::sliding_cor() would output.
@@ -61,5 +63,5 @@ slidingCorStoreSd <- function(short, long) {
 #' @noRd
 #'
 slidingCor <- function(short, long, sds) {
-  return(slidingCorCpp(short, long, sd(short), sds))
+  return(slidingCorCpp(short, long, 1, sds))
 }
