@@ -59,10 +59,6 @@
 #' @param x.cut.vl An integer scalar.
 #' Defines a vector length of parts that \code{x} vector is cut into during the execution time optimization procedure.
 #' Default is \code{6000} (recommended).
-#' @param compute.template.idx A logical scalar. Whether or not to compute and return information about
-#' which of the provided pattern templates yielded a similarity matrix value
-#' that corresponds to an identified pattern occurrence.
-#' Setting to \code{TRUE} may increase computation time. Default is \code{FALSE}.
 #'
 #' @details
 #' Function implements Adaptive Empirical Pattern Transformation (ADEPT) method for pattern segmentation
@@ -84,9 +80,7 @@
 #'   note: if \code{"maxima"} fine-tune and/or \code{x} smoothing is employed,
 #'   the similarity value between the final segmented pattern and a template
 #'    may differ from the value in this table,
-#'   \item \code{template_i} - if \code{compute.template.idx} equals \code{TRUE}:
-#'   index of a template best matched to \code{x};
-#'  if \code{compute.template.idx} equals \code{FALSE}: \code{NA}.
+#'   \item \code{template_i} - index of a template best matched to \code{x}.
 #' }
 #'
 #' @export
@@ -115,8 +109,7 @@
 #'   x.fs = 100,
 #'   template = true.pattern,
 #'   pattern.dur.seq = c(0.9, 0.95, 1.03, 1.1),
-#'   similarity.measure = "cor",
-#'   compute.template.idx = TRUE)
+#'   similarity.measure = "cor")
 #' out
 #' ## Segment pattern from x. Now assume a grid of potential pattern duratios
 #' ## contains true pattern duration
@@ -125,8 +118,7 @@
 #'   x.fs = 100,
 #'   template = true.pattern,
 #'   pattern.dur.seq = c(0.9, 0.95, 1, 1.03, 1.1),
-#'   similarity.measure = "cor",
-#'   compute.template.idx = TRUE)
+#'   similarity.measure = "cor")
 #' out
 #'
 #' ## Example 2: Simulate a time-series `x`. Assume that
@@ -155,8 +147,7 @@
 #'   x.fs = 100,
 #'   template = list(true.pattern.1, true.pattern.2),
 #'   pattern.dur.seq = 60:130 * 0.01,
-#'   similarity.measure = "cor",
-#'   compute.template.idx = TRUE)
+#'   similarity.measure = "cor")
 #' out
 #'
 #' ## Example 3: Simulate a time-series `x`. Assume that
@@ -172,8 +163,7 @@
 #'   x.fs = 100,
 #'   template = list(true.pattern.1, true.pattern.2),
 #'   pattern.dur.seq =  60:130 * 0.01,
-#'   similarity.measure = "cor",
-#'   compute.template.idx = TRUE)
+#'   similarity.measure = "cor")
 #' out
 #' ## Segment pattern from x. Use `x.adept.ma.W` to define a length of a smoothing
 #' ## window to smooth `x` for similarity matrix computation.
@@ -183,8 +173,7 @@
 #'   template = list(true.pattern.1, true.pattern.2),
 #'   pattern.dur.seq =  60:130 * 0.01,
 #'   similarity.measure = "cor",
-#'   x.adept.ma.W = 0.1,
-#'   compute.template.idx = TRUE)
+#'   x.adept.ma.W = 0.1)
 #' out
 #' ## Segment pattern from x. Use `x.adept.ma.W` to define a length of a smoothing
 #' ## window to smooth `x` for similarity matrix computation. Employ a fine-tuning
@@ -197,8 +186,7 @@
 #'   similarity.measure = "cor",
 #'   x.adept.ma.W = 0.1,
 #'   finetune = "maxima",
-#'   finetune.maxima.nbh.W = 0.3,
-#'   compute.template.idx = TRUE)
+#'   finetune.maxima.nbh.W = 0.3)
 #' out
 #' ## Segment pattern from x. Employ a fine-tuning procedure for stride
 #' ## identification. Smooth `x` for both similarity matrix computation
@@ -212,8 +200,7 @@
 #'   similarity.measure = "cor",
 #'   x.adept.ma.W = 0.1,
 #'   finetune = "maxima",
-#'   finetune.maxima.nbh.W = 0.3,
-#'   compute.template.idx = TRUE)
+#'   finetune.maxima.nbh.W = 0.3)
 #' out
 #'
 segmentPattern <- function(x,
@@ -229,8 +216,7 @@ segmentPattern <- function(x,
                            run.parallel = FALSE,
                            run.parallel.cores = 1L,
                            x.cut = TRUE,
-                           x.cut.vl = 6000,
-                           compute.template.idx = FALSE){
+                           x.cut.vl = 6000){
 
 
   ## ---------------------------------------------------------------------------
@@ -252,7 +238,6 @@ segmentPattern <- function(x,
   if (!(is.null(run.parallel.cores) || (length(run.parallel.cores) == 1 & is.integer(run.parallel.cores) & run.parallel.cores > 0))) stop("run.parallel.cores must me NULL or a positive integer scalar")
   if (!(length(x.cut) == 1 & x.cut %in% c(TRUE, FALSE))) stop("x.cut must be a logical scalar.")
   if (!(is.null(x.cut.vl) || (length(x.cut.vl) == 1 & is.integer(x.cut.vl) & x.cut.vl > 0))) stop("x.cut.vl must me NULL or a positive integer scalar")
-  if (!(length(compute.template.idx) == 1 & compute.template.idx %in% c(TRUE, FALSE))) stop("compute.template.idx must be a logical scalar.")
 
 
   ## ---------------------------------------------------------------------------
@@ -331,19 +316,13 @@ segmentPattern <- function(x,
     ## If we cannot fit the longest pattern, return NULL
     if (length(idx.i) <= max(template.vl)) return(NULL)
     ## Compute similarity matrix
-    similarity.mat.i <- similarityMatrix(x = x.smoothed[idx.i],
-                                         template.scaled = template.scaled,
-                                         similarity.measure = similarity.measure)
-    ## Compute template index matrix
-    if (compute.template.idx){
-      template.idx.mat.i <- templateIdxMatrix(x = x.smoothed[idx.i],
-                                              template.scaled = template.scaled,
-                                              similarity.measure = similarity.measure)
-    }
-    else
-    {
-      template.idx.mat.i <- NULL
-    }
+    similarity.i <- similarityMatrix(x = x.smoothed[idx.i],
+                                     template.scaled = template.scaled,
+                                     similarity.measure = similarity.measure)
+
+    similarity.mat.i <- similarity.i$similarity
+    template.idx.mat.i <- similarity.i$idx
+
     ## Run max and tine procedure
     out.df.i <- maxAndTune(x = x[idx.i],
                            template.vl = template.vl,

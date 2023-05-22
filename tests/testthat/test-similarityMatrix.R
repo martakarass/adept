@@ -15,12 +15,12 @@ test_that("Testing nothing has change in similarityMatrix() output for a case wi
 
 
   ## Test for similarity.measure = "cov"
-  out <- similarityMatrix(x, template.scaled, "cov")
+  out <- similarityMatrix(x, template.scaled, "cov")$similarity
   expect_equal(mean(out, na.rm = TRUE),
                -0.000104255166378453)
 
   ## Test for similarity.measure = "cor"
-  out <- similarityMatrix(x, template.scaled, "cor")
+  out <- similarityMatrix(x, template.scaled, "cor")$similarity
   expect_equal(mean(out, na.rm = TRUE),
                -0.000610391199176645)
 
@@ -42,12 +42,12 @@ test_that("Testing nothing has change in similarityMatrix() output for a case wi
   template.scaled <- scaleTemplate(template, template.vl)
 
   ## Test for similarity.measure = "cov"
-  out <- similarityMatrix(x, template.scaled, "cov")
+  out <- similarityMatrix(x, template.scaled, "cov")$similarity
   expect_equal(mean(out, na.rm = TRUE),
                0.240442503501679)
 
   ## Test for similarity.measure = "cor"
-  out <- similarityMatrix(x, template.scaled, "cor")
+  out <- similarityMatrix(x, template.scaled, "cor")$similarity
   expect_equal(mean(out, na.rm = TRUE),
                0.422636316622436)
 })
@@ -67,19 +67,19 @@ test_that("Testing nothing has change in similarityMatrix() output for a case wi
   template.scaled <- scaleTemplate(template, template.vl)
 
   ## Test for similarity.measure = "cov"
-  out <- similarityMatrix(x, template.scaled, "cov")
+  out <- similarityMatrix(x, template.scaled, "cov")$similarity
   expect_equal(mean(out, na.rm = TRUE),
                0.240442503501679)
 
   ## Test for similarity.measure = "cor"
-  out <- similarityMatrix(x, template.scaled, "cor")
+  out <- similarityMatrix(x, template.scaled, "cor")$similarity
   expect_equal(mean(out, na.rm = TRUE),
                0.422636316622436)
 })
 
 
 
-test_that("Testing nothing has change in templateIdxMatrix() output", {
+test_that("Testing nothing has change in similarityMatrix() output for the template indices.", {
 
   ## Grid of different true pattern occurence durations
   set.seed(1)
@@ -106,7 +106,7 @@ test_that("Testing nothing has change in templateIdxMatrix() output", {
   template.vl <- sort(s.grid)
   template.scaled <- scaleTemplate(template, template.vl)
   similarity.measure <- "cor"
-  out <- templateIdxMatrix(x, template.scaled, similarity.measure)
+  out <- similarityMatrix(x, template.scaled, similarity.measure)$idx
 
   ## Test table of counts is the same
   res <- table(out)

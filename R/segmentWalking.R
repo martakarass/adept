@@ -87,12 +87,6 @@ RunningMean <- function(x, W, circular = FALSE){
 #' @param run.parallel.cores An integer scalar.
 #' The number of cores to use for parallel execution. Defaults to 1L
 #' (no parallel). DOES NOT WORK ON WINDOWS.
-#' @param compute.template.idx A logical scalar. Whether or not to compute
-#' and return information about
-#' which of the provided pattern templates yielded a similarity matrix value
-#' that corresponds to an identified pattern occurrence.
-#' Setting to \code{TRUE} may increase computation time.
-#' Default is \code{FALSE}.
 #'
 #' @return A \code{data.frame} with segmentation results. Each row
 #' describes one identified pattern occurrence:
@@ -101,10 +95,8 @@ RunningMean <- function(x, W, circular = FALSE){
 #'   \item \code{T_i} - pattern duration, expressed in \code{xyz} vector length,
 #'   \item \code{sim_i} -  similarity between a pattern and
 #'   best-fit template; see \code{segmentPattern} for details,
-#'   \item \code{template_i} - if \code{compute.template.idx} equals \code{TRUE}:
-#'   index of a template best matched to \code{x};
-#'  if \code{compute.template.idx} equals \code{FALSE}: \code{NA},
-#'  \item \code{is_walking_i} -- \code{1} if a pattern is identified as walking
+#'   \item \code{template_i} - index of a template best matched to \code{x},
+#'   \item \code{is_walking_i} -- \code{1} if a pattern is identified as walking
 #'  stride; \code{0} otherwise.
 #' }
 #'
@@ -151,7 +143,6 @@ segmentWalking <- function(xyz,
                            mean_abs_diff_med_p_MAX = 0.5,
                            mean_abs_diff_med_t_MAX = 0.2,
                            mean_abs_diff_dur_MAX   = 0.2,
-                           compute.template.idx = FALSE,
                            run.parallel = FALSE,
                            run.parallel.cores = 1){
 
@@ -175,8 +166,7 @@ segmentWalking <- function(xyz,
     run.parallel = run.parallel,
     run.parallel.cores = run.parallel.cores,
     x.cut = TRUE,
-    x.cut.vl = 6000,
-    compute.template.idx = compute.template.idx)
+    x.cut.vl = 6000)
 
   # generate detailed summary of ADEPT-identified patterns
   out_desc <- matrix(nrow = nrow(out), ncol = 5)

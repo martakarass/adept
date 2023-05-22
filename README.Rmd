@@ -56,8 +56,7 @@ segmentPattern(
   x.fs = 100,
   template = true.pattern,
   pattern.dur.seq = c(0.9, 0.95, 1.03, 1.1),
-  similarity.measure = "cor",
-  compute.template.idx = TRUE)
+  similarity.measure = "cor")
 ```
 
 The segmentation result is a data frame, where each row describes one identified pattern occurrence:
@@ -75,8 +74,7 @@ segmentPattern(
   x.fs = 100,
   template = true.pattern,
   pattern.dur.seq = c(0.9, 0.95, 1, 1.03, 1.1),
-  similarity.measure = "cor",
-  compute.template.idx = TRUE)
+  similarity.measure = "cor")
 ```
 
 ### Example 2
@@ -118,8 +116,7 @@ segmentPattern(
   x.fs = 100,
   template = list(true.pattern.1, true.pattern.2),
   pattern.dur.seq = seq(0.7, 1.3, by = 0.1),
-  similarity.measure = "cor",
-  compute.template.idx = TRUE)
+  similarity.measure = "cor")
 ```
 
 We segment `x2`.  
@@ -130,8 +127,7 @@ segmentPattern(
   x.fs = 100,
   template = list(true.pattern.1, true.pattern.2),
   pattern.dur.seq = seq(0.7, 1.3, by = 0.1),
-  similarity.measure = "cor",
-  compute.template.idx = TRUE)
+  similarity.measure = "cor")
 ```
 
 We now use `x.adept.ma.W` argument to smooth `x2` before similarity matrix computation in the segmentation procedure (see `?segmentPattern` for details). We also assume a more dense grid of potential pattern duration. We observe that `sim_i` values obtained are higher than in the previous segmentation case. 
@@ -146,8 +142,7 @@ segmentPattern(
   template = list(true.pattern.1, true.pattern.2),
   pattern.dur.seq = 70:130 * 0.01,
   similarity.measure = "cor",
-  x.adept.ma.W = 0.1,
-  compute.template.idx = TRUE)
+  x.adept.ma.W = 0.1)
 ```
 
 

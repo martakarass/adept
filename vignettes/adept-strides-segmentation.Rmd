@@ -266,7 +266,6 @@ Explanation of function arguments used:
 * `finetune` - Procedure employed to fine-tune preliminarily identified beginnings and ends of a pattern in a accelerometry time-series. 
 * `finetune.maxima.ma.W` -  Length of smoothing window used in `"maxima"` fine-tune procedure, expressed in seconds. 
 * `finetune.maxima.nbh.W` -  Length of a local maxima search grid used in `"maxima"` fine-tune procedure, expressed in seconds. 
-* `compute.template.idx`- Whether or not to compute which of the (possibly multiple) templates best-matched accelerometry time-series.   
 `run.parallel` - Whether or not to use parallel execution in the algorithm. 
 
 See `?segmentPattern` for a detailed explanation of all parameters. See [Introduction to adept package](https://martakarass.github.io/adept/articles/adept-intro.html) vignette for explanation of   `segmentPattern {adept}` parameters with simulated data examples. 
@@ -283,7 +282,6 @@ out1.la <- segmentPattern(
   finetune = "maxima",
   finetune.maxima.ma.W = 0.05,
   finetune.maxima.nbh.W = 0.2,
-  compute.template.idx = TRUE,
   run.parallel = TRUE)
 ```
 
@@ -338,7 +336,6 @@ out1.lh <- segmentPattern(x = x.lh,
                           finetune = "maxima",
                           finetune.maxima.ma.W = 0.15,
                           finetune.maxima.nbh.W = 0.2,
-                          compute.template.idx = TRUE,
                           run.parallel = TRUE)
 ```
 
@@ -707,7 +704,6 @@ out2.la <- segmentPattern(x = x.la,
                           finetune = "maxima",
                           finetune.maxima.ma.W = 0.05,
                           finetune.maxima.nbh.W = 0.2,
-                          compute.template.idx = TRUE,
                           run.parallel = TRUE)
 
 out2.lh <- segmentPattern(x = x.lh,
@@ -719,7 +715,6 @@ out2.lh <- segmentPattern(x = x.lh,
                           finetune = "maxima",
                           finetune.maxima.ma.W = 0.15,
                           finetune.maxima.nbh.W = 0.2,
-                          compute.template.idx = TRUE,
                           run.parallel = TRUE)
 ```
 

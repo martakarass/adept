@@ -13,8 +13,8 @@ coverage](https://codecov.io/gh/martakarass/adept/branch/master/graph/badge.svg)
 ### Overview
 
 The `adept` package implements ADaptive Empirical Pattern Transformation
-(ADEPT) method\[1\] for pattern segmentation from a time-series. ADEPT
-is optimized to perform fast, accurate walking strides segmentation from
+(ADEPT) method[^1] for pattern segmentation from a time-series. ADEPT is
+optimized to perform fast, accurate walking strides segmentation from
 high-density data collected with a wearable accelerometer during
 walking. The method was validated using data collected with sensors worn
 at left wrist, left hip and both ankles.
@@ -58,8 +58,7 @@ segmentPattern(
   x.fs = 100,
   template = true.pattern,
   pattern.dur.seq = c(0.9, 0.95, 1.03, 1.1),
-  similarity.measure = "cor",
-  compute.template.idx = TRUE)
+  similarity.measure = "cor")
 #>    tau_i T_i     sim_i template_i
 #> 1      4  95 0.9987941          1
 #> 2     98 103 0.9992482          1
@@ -76,11 +75,11 @@ segmentPattern(
 The segmentation result is a data frame, where each row describes one
 identified pattern occurrence:
 
-  - `tau_i` - index of `x` where pattern starts,
-  - `T_i` - pattern duration, expressed in `x` vector length,
-  - `sim_i` - similarity between a template and `x`,
-  - `template_i` - index of a template best matched to a time-series `x`
-    (here: one template was used, hence all `template_i`’s equal 1).
+- `tau_i` - index of `x` where pattern starts,
+- `T_i` - pattern duration, expressed in `x` vector length,
+- `sim_i` - similarity between a template and `x`,
+- `template_i` - index of a template best matched to a time-series `x`
+  (here: one template was used, hence all `template_i`’s equal 1).
 
 We then assume a grid of potential pattern durations which contains the
 duration of the true pattern used in data simulation. A perfect match
@@ -92,8 +91,7 @@ segmentPattern(
   x.fs = 100,
   template = true.pattern,
   pattern.dur.seq = c(0.9, 0.95, 1, 1.03, 1.1),
-  similarity.measure = "cor",
-  compute.template.idx = TRUE)
+  similarity.measure = "cor")
 #>    tau_i T_i sim_i template_i
 #> 1      1 100     1          1
 #> 2    100 100     1          1
@@ -162,8 +160,7 @@ segmentPattern(
   x.fs = 100,
   template = list(true.pattern.1, true.pattern.2),
   pattern.dur.seq = seq(0.7, 1.3, by = 0.1),
-  similarity.measure = "cor",
-  compute.template.idx = TRUE)
+  similarity.measure = "cor")
 #>    tau_i T_i sim_i template_i
 #> 1      1  70     1          1
 #> 2     70  70     1          2
@@ -189,8 +186,7 @@ segmentPattern(
   x.fs = 100,
   template = list(true.pattern.1, true.pattern.2),
   pattern.dur.seq = seq(0.7, 1.3, by = 0.1),
-  similarity.measure = "cor",
-  compute.template.idx = TRUE)
+  similarity.measure = "cor")
 #>    tau_i T_i     sim_i template_i
 #> 1      1  70 0.8585451          1
 #> 2    138  80 0.7624002          1
@@ -228,8 +224,7 @@ segmentPattern(
   template = list(true.pattern.1, true.pattern.2),
   pattern.dur.seq = 70:130 * 0.01,
   similarity.measure = "cor",
-  x.adept.ma.W = 0.1,
-  compute.template.idx = TRUE)
+  x.adept.ma.W = 0.1)
 #>    tau_i T_i     sim_i template_i
 #> 1      1  70 0.9865778          1
 #> 2     70  70 0.9533684          2
@@ -266,14 +261,14 @@ Vignettes are available to better demonstrate package methods usage.
     precise walking stride segmentation from data collected during a
     combination of running, walking and resting exercises. We introduce
     how to segment data:
-    
+
     1.  with the use of stride templates that were pre-computed based on
         data from an external study (attached to `adeptdata` package),
     2.  by deriving new stride templates in a semi-manual manner.
 
 ### References
 
-1.  Karas, M., Straczkiewicz, M., Fadel, W., Harezlak, J., Crainiceanu,
-    C., Urbanek, J.K. *Adaptive empirical pattern transformation (ADEPT)
-    with application to walking stride segmentation*, Submitted to
-    *Biostatistics*, 2018.
+[^1]: Karas, M., Straczkiewicz, M., Fadel, W., Harezlak, J.,
+    Crainiceanu, C., Urbanek, J.K. *Adaptive empirical pattern
+    transformation (ADEPT) with application to walking stride
+    segmentation*, Submitted to *Biostatistics*, 2018.

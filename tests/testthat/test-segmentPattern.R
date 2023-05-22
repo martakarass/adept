@@ -346,7 +346,6 @@ test_that("Example 3(b): add noise in signal generation,
   # run.parallel.cores = NULL
   # x.cut = TRUE
   # x.cut.vl = 6000
-  # compute.template.idx = FALSE
 
   out <- segmentPattern(x = x,
                         x.fs = 1,
@@ -574,8 +573,7 @@ test_that("Example 5(a). Setting: no noise in signal, all pattern occurences of 
                         pattern.dur.seq = pattern.dur.seq,
                         similarity.measure = "cor",
                         x.cut = TRUE,
-                        x.cut.vl = 6000,
-                        compute.template.idx = TRUE)
+                        x.cut.vl = 6000)
 
   out2 <- segmentPattern(x = x,
                          x.fs = 1,
@@ -585,8 +583,7 @@ test_that("Example 5(a). Setting: no noise in signal, all pattern occurences of 
                          x.cut = TRUE,
                          x.cut.vl = 6000,
                          run.parallel = TRUE,
-                         run.parallel.cores = 2,
-                         compute.template.idx = TRUE)
+                         run.parallel.cores = 2)
 
   expect_equal(out$tau_i, out2$tau_i)
   expect_equal(out$T_i,   out2$T_i)
@@ -640,8 +637,7 @@ test_that("Example 6(a): test returning template index matrix", {
                         x.fs = 1,
                         template = list(template1, template2),
                         pattern.dur.seq = sort(s.grid2),
-                        similarity.measure = "cor",
-                        compute.template.idx = TRUE)
+                        similarity.measure = "cor")
 
   expect_true(all(out$template_i == rep(c(1,2), 50)))
 })
@@ -682,7 +678,6 @@ test_that("Testing that errors are thrown if invalid objects are passed to the f
     expect_error(segmentPattern(x, 1, template, pattern.dur.seq, run.parallel.cores = 0))
     expect_error(segmentPattern(x, 1, template, pattern.dur.seq, x.cut = NA))
     expect_error(segmentPattern(x, 1, template, pattern.dur.seq, x.cut.vl = -1))
-    expect_error(segmentPattern(x, 1, template, pattern.dur.seq, compute.template.idx = 3))
   # })
 })
 
