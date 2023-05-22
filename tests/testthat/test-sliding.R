@@ -13,3 +13,10 @@ test_that("slidingCorFast agrees with dvmisc::sliding_cor.", {
   expect_equal(dvmisc::sliding_cor(short, long),
                slidingCorFast(short, long))
 })
+
+test_that("slidingCorFast returns NA for constant sections.", {
+  long <- c(1, 5, 2, 7, 7, 7)
+  short <- c(1.5, 1, 2.1)
+  expect_equal(c(dvmisc::sliding_cor(short, long)[1:3], NA),
+               slidingCorFast(short, long))
+})

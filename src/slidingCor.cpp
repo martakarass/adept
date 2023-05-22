@@ -8,6 +8,11 @@ using namespace Rcpp;
 // as a sliding sum, so instead of re-summing every window, just subtracts
 // the first entry and adds the next entry.
 //
+// Also checks if the standard deviation is close to 0, in which case
+// an NA value is returned. This fixes a bug in the original function where
+// it would attempt to divide 0/0 and floating point error would lead to
+// potentially spurious correlations.
+//
 // [[Rcpp::export]]
 NumericVector slidingCorCpp(const NumericVector shortvec,
                               const NumericVector longvec, double sd_shortvec) {
@@ -36,9 +41,12 @@ NumericVector slidingCorCpp(const NumericVector shortvec,
     ss_longvec_current += pow(longvec_current_b - mean_longvec_current, 2);
   }
   double sd_longvec_current = sqrt(ss_longvec_current / n_minus1);
-  out[0] = (sum_products / n_minus1 - sum_longvec_current * term2) /
-    sd_shortvec / sd_longvec_current;
-
+  if (sd_longvec_current < 1e-10) {
+    out[0] = NA_REAL;
+  } else {
+    out[0] = (sum_products / n_minus1 - sum_longvec_current * term2) /
+      sd_shortvec / sd_longvec_current;
+  }
   for (int a = 1; a < out_length; ++a) {
     sum_longvec_current -= longvec[a - 1];
     sum_longvec_current += longvec[a + n_minus1];
@@ -51,8 +59,12 @@ NumericVector slidingCorCpp(const NumericVector shortvec,
       ss_longvec_current += pow(longvec_current_b - mean_longvec_current, 2);
     }
     sd_longvec_current = sqrt(ss_longvec_current / n_minus1);
-    out[a] = (sum_products / n_minus1 - sum_longvec_current * term2) /
-      sd_shortvec / sd_longvec_current;
+    if (sd_longvec_current < 1e-10) {
+      out[a] = NA_REAL;
+    } else {
+      out[a] = (sum_products / n_minus1 - sum_longvec_current * term2) /
+        sd_shortvec / sd_longvec_current;
+    }
   }
   return out;
 }
