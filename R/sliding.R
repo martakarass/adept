@@ -22,25 +22,44 @@ slidingCovFast <- function(short, long) {
   return(convolveCpp(long, rev(short / (n - 1) - sum(short) / n / (n - 1)))[n:(n + len.diff)])
 }
 
-#' Call optimized version of dvmisc::sliding_cor.
+
+#' Call optimized version of dvmisc::sliding_cor which stores sds.
 #'
-#' The original version had one completely redundant sum, and was recomputing
-#' parts of sums redundantly as well. This calls a custom Rcpp version that
-#' does neither.
-#'
-#' Behavior should be identical to dvmisc's version.
+#' See Rcpp function for more documentation.
 #'
 #' @param short Shorter numeric vector to slide over `long`.
 #' @param long Numeric vector.
 #'
 #'
-#' @return Numeric vector of sliding correlations.
+#' @return List of length 2, with $core being a Numeric vector of sliding
+#' correlations, the same as what dvmisc::sliding_cor() would output,
+#' and $sds being the sliding standard deviations of `long`
 #'
 #' @useDynLib adept
 #' @importFrom Rcpp sourceCpp
 #'
 #' @noRd
 #'
-slidingCorFast <- function(short, long) {
-  return(slidingCorCpp(short, long, sd(short)))
+slidingCorStoreSd <- function(short, long) {
+  return(slidingCorStoreSdCpp(short, long, sd(short)))
+}
+
+#' Call optimized version of dvmisc::sliding_cor.
+#'
+#' See Rcpp function for more documentation.
+#'
+#' @param short Shorter numeric vector to slide over `long`.
+#' @param long Numeric vector.
+#'
+#'
+#' @return Numeric vector of sliding correlations, the same as what
+#' dvmisc::sliding_cor() would output.
+#'
+#' @useDynLib adept
+#' @importFrom Rcpp sourceCpp
+#'
+#' @noRd
+#'
+slidingCor <- function(short, long, sds) {
+  return(slidingCorCpp(short, long, sd(short), sds))
 }

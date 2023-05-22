@@ -9,7 +9,11 @@ pmaxIdxCpp <- function(args) {
     .Call('_adept_pmaxIdxCpp', PACKAGE = 'adept', args)
 }
 
-slidingCorCpp <- function(shortvec, longvec, sd_shortvec) {
-    .Call('_adept_slidingCorCpp', PACKAGE = 'adept', shortvec, longvec, sd_shortvec)
+slidingCorStoreSdCpp <- function(shortvec, longvec, sd_shortvec) {
+    .Call('_adept_slidingCorStoreSdCpp', PACKAGE = 'adept', shortvec, longvec, sd_shortvec)
+}
+
+slidingCorCpp <- function(shortvec, longvec, sd_shortvec, sd_longvec_current) {
+    .Call('_adept_slidingCorCpp', PACKAGE = 'adept', shortvec, longvec, sd_shortvec, sd_longvec_current)
 }
 

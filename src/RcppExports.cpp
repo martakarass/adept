@@ -33,16 +33,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// slidingCorCpp
-NumericVector slidingCorCpp(const NumericVector shortvec, const NumericVector longvec, double sd_shortvec);
-RcppExport SEXP _adept_slidingCorCpp(SEXP shortvecSEXP, SEXP longvecSEXP, SEXP sd_shortvecSEXP) {
+// slidingCorStoreSdCpp
+List slidingCorStoreSdCpp(const NumericVector shortvec, const NumericVector longvec, double sd_shortvec);
+RcppExport SEXP _adept_slidingCorStoreSdCpp(SEXP shortvecSEXP, SEXP longvecSEXP, SEXP sd_shortvecSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const NumericVector >::type shortvec(shortvecSEXP);
     Rcpp::traits::input_parameter< const NumericVector >::type longvec(longvecSEXP);
     Rcpp::traits::input_parameter< double >::type sd_shortvec(sd_shortvecSEXP);
-    rcpp_result_gen = Rcpp::wrap(slidingCorCpp(shortvec, longvec, sd_shortvec));
+    rcpp_result_gen = Rcpp::wrap(slidingCorStoreSdCpp(shortvec, longvec, sd_shortvec));
+    return rcpp_result_gen;
+END_RCPP
+}
+// slidingCorCpp
+NumericVector slidingCorCpp(const NumericVector shortvec, const NumericVector longvec, double sd_shortvec, const NumericVector sd_longvec_current);
+RcppExport SEXP _adept_slidingCorCpp(SEXP shortvecSEXP, SEXP longvecSEXP, SEXP sd_shortvecSEXP, SEXP sd_longvec_currentSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const NumericVector >::type shortvec(shortvecSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type longvec(longvecSEXP);
+    Rcpp::traits::input_parameter< double >::type sd_shortvec(sd_shortvecSEXP);
+    Rcpp::traits::input_parameter< const NumericVector >::type sd_longvec_current(sd_longvec_currentSEXP);
+    rcpp_result_gen = Rcpp::wrap(slidingCorCpp(shortvec, longvec, sd_shortvec, sd_longvec_current));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -50,7 +64,8 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_adept_convolveCpp", (DL_FUNC) &_adept_convolveCpp, 2},
     {"_adept_pmaxIdxCpp", (DL_FUNC) &_adept_pmaxIdxCpp, 1},
-    {"_adept_slidingCorCpp", (DL_FUNC) &_adept_slidingCorCpp, 3},
+    {"_adept_slidingCorStoreSdCpp", (DL_FUNC) &_adept_slidingCorStoreSdCpp, 3},
+    {"_adept_slidingCorCpp", (DL_FUNC) &_adept_slidingCorCpp, 4},
     {NULL, NULL, 0}
 };
 
