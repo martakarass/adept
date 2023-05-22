@@ -331,19 +331,13 @@ segmentPattern <- function(x,
     ## If we cannot fit the longest pattern, return NULL
     if (length(idx.i) <= max(template.vl)) return(NULL)
     ## Compute similarity matrix
-    similarity.mat.i <- similarityMatrix(x = x.smoothed[idx.i],
-                                         template.scaled = template.scaled,
-                                         similarity.measure = similarity.measure)
-    ## Compute template index matrix
-    if (compute.template.idx){
-      template.idx.mat.i <- templateIdxMatrix(x = x.smoothed[idx.i],
-                                              template.scaled = template.scaled,
-                                              similarity.measure = similarity.measure)
-    }
-    else
-    {
-      template.idx.mat.i <- NULL
-    }
+    similarity.i <- similarityMatrix(x = x.smoothed[idx.i],
+                                     template.scaled = template.scaled,
+                                     similarity.measure = similarity.measure)
+
+    similarity.mat.i <- similarity.i$similarity
+    template.idx.mat.i <- similarity.i$idx
+
     ## Run max and tine procedure
     out.df.i <- maxAndTune(x = x[idx.i],
                            template.vl = template.vl,

@@ -4,7 +4,9 @@
 #' ADEPT Similarity Matrix Computation
 #'
 #' Compute ADEPT similarity matrix between a time-series \code{x} and a collection
-#' of scaled templates.
+#' of scaled templates. Also compute matrix of pattern templates yielding the
+#' highest similarity between a time-series \code{x} and a collection
+#' of scaled pattern templates.
 #'
 #' @param x A numeric vector. A time-series \code{x}.
 #' @param template.scaled A list of lists of numeric vectors, as returned by
@@ -20,7 +22,9 @@
 #'   \item "cor" - for correlation.
 #' }
 #'
-#' @return A numeric matrix. Contains values of similarity between a time-series \code{x}
+#' @return A list of two numeric matrices.
+#'
+#' "similarity" contains values of similarity between a time-series \code{x}
 #' and scaled templates.
 #' \itemize{
 #'   \item Number of rows equals \code{template.scaled} length,
@@ -30,6 +34,11 @@
 #'   Precisely, each row's element is a maximum out of similarity values
 #'  computed for each distinct template used in segmentation.
 #' }
+#'
+#' "idx" represents number of pattern template yielding the highest similarity
+#' between a time-series \code{x} and a collection of scaled pattern templates.
+#' Precisely, the number is the order in which particular pattern template was
+#' provided in the \code{template} list in \code{segmentPattern}.
 #'
 #' @seealso \code{scaleTemplate {adept}}
 #'
@@ -81,81 +90,13 @@ similarityMatrix <- function(x,
     sliding.func.out0 <- lapply(template.scaled.i, function(template.scaled.ik){
       do.call(sliding.func, list(long = x, short = template.scaled.ik))
     })
-
-    c(do.call(pmax, sliding.func.out0), rep(NA, length(template.scaled.i[[1]]) - 1))
+    maxes <- pmaxIdxCpp(sliding.func.out0)
+    padding <- rep(NA, length(template.scaled.i[[1]]) - 1)
+    list(c(maxes$pmax, padding),
+         c(maxes$idx, padding))
   })
 
-  ## rbind list elements (which are vectors) into a matrix
-  similarity.mat <- do.call(rbind, similarity.list)
-  return(similarity.mat)
-
+  similarity <- do.call(rbind, lapply(similarity.list, function(i) i[[1]]))
+  similarity.idx <- do.call(rbind, lapply(similarity.list, function(i) i[[2]]))
+  return(list("similarity" = similarity, "idx" = similarity.idx))
 }
-
-
-
-
-
-
-#' Template Index Matrix Computation
-#'
-#' Compute matrix of pattern templates yielding the highest similarity
-#' between a time-series \code{x} and a collection
-#' of scaled pattern templates.
-#'
-#' @param x A numeric vector. A time-series \code{x}.
-#' @param template.scaled A list of lists of numeric vectors, as returned by
-#' \code{scaleTemplate}.  Each element of
-#' \code{template.scaled}
-#' is a list of pattern templates interpolated to a particular vector length.
-#'  Number of elements in the \code{template.scaled}  corresponds to the
-#'  number of unique template length values used in segmentation.
-#' @param similarity.measure A character scalar. Statistic
-#' used in similarity matrix computation; one of the following:
-#' \itemize{
-#'   \item "cov" - for covariance,
-#'   \item "cor" - for correlation.
-#' }
-#'
-#' @return A numerc matrix. Represents number of pattern template
-#' yielding the highest similarity
-#' between a time-series \code{x} and a collection
-#' of scaled pattern templates. Precisely, the number
-#' is the order in which particular pattern template was provided in
-#' the \code{template} list in \code{segmentPattern}.
-#'
-#' @noRd
-#'
-templateIdxMatrix <- function(x,
-                          template.scaled,
-                          similarity.measure){
-
-  sliding.func <- switch(similarity.measure,
-                         "cov" = slidingCovFast,
-                         "cor" = slidingCorFast)
-
-  ## Outer lapply: iterate over pattern scales considered;
-  ## each lapply iteration fills one row of the output similarity matrix.
-  templateIdx.list <- lapply(template.scaled, function(template.scaled.i){
-
-    ## Inner lapply: iterate over, possibly, multiple patterns;
-    ## each lapply iteration returns a vector whose each element corresponds
-    ## to the highest value of similarity between signal \code{x} and
-    ## a short pattern
-    ## at a time point corresponding to this vector's element.
-    sliding.func.out0 <- lapply(template.scaled.i, function(template.scaled.ik){
-      do.call(sliding.func, list(long = x, short = template.scaled.ik))
-    })
-    c(max.col(t(do.call(rbind, sliding.func.out0)), ties.method = "first"),
-      rep(NA, length(template.scaled.i[[1]]) - 1))
-  })
-
-  ## rbind list elements (which are vectors) into a matrix
-  templateIdx.mat <- do.call(rbind, templateIdx.list)
-  return(templateIdx.mat)
-
-}
-
-
-
-
-

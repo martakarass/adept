@@ -5,6 +5,10 @@ convolveCpp <- function(a, b) {
     .Call('_adept_convolveCpp', PACKAGE = 'adept', a, b)
 }
 
+pmaxIdxCpp <- function(args) {
+    .Call('_adept_pmaxIdxCpp', PACKAGE = 'adept', args)
+}
+
 slidingCorCpp <- function(shortvec, longvec, sd_shortvec) {
     .Call('_adept_slidingCorCpp', PACKAGE = 'adept', shortvec, longvec, sd_shortvec)
 }

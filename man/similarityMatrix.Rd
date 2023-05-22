@@ -24,7 +24,9 @@ used in similarity matrix computation; one of the following:
 }}
 }
 \value{
-A numeric matrix. Contains values of similarity between a time-series \code{x}
+A list of two numeric matrices.
+
+"similarity" contains values of similarity between a time-series \code{x}
 and scaled templates.
 \itemize{
   \item Number of rows equals \code{template.scaled} length,
@@ -34,10 +36,17 @@ and scaled templates.
   Precisely, each row's element is a maximum out of similarity values
  computed for each distinct template used in segmentation.
 }
+
+"idx" represents number of pattern template yielding the highest similarity
+between a time-series \code{x} and a collection of scaled pattern templates.
+Precisely, the number is the order in which particular pattern template was
+provided in the \code{template} list in \code{segmentPattern}.
 }
 \description{
 Compute ADEPT similarity matrix between a time-series \code{x} and a collection
-of scaled templates.
+of scaled templates. Also compute matrix of pattern templates yielding the
+highest similarity between a time-series \code{x} and a collection
+of scaled pattern templates.
 }
 \examples{
 ## Simulate data

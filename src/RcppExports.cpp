@@ -22,6 +22,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// pmaxIdxCpp
+List pmaxIdxCpp(List args);
+RcppExport SEXP _adept_pmaxIdxCpp(SEXP argsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type args(argsSEXP);
+    rcpp_result_gen = Rcpp::wrap(pmaxIdxCpp(args));
+    return rcpp_result_gen;
+END_RCPP
+}
 // slidingCorCpp
 NumericVector slidingCorCpp(const NumericVector shortvec, const NumericVector longvec, double sd_shortvec);
 RcppExport SEXP _adept_slidingCorCpp(SEXP shortvecSEXP, SEXP longvecSEXP, SEXP sd_shortvecSEXP) {
@@ -38,6 +49,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_adept_convolveCpp", (DL_FUNC) &_adept_convolveCpp, 2},
+    {"_adept_pmaxIdxCpp", (DL_FUNC) &_adept_pmaxIdxCpp, 1},
     {"_adept_slidingCorCpp", (DL_FUNC) &_adept_slidingCorCpp, 3},
     {NULL, NULL, 0}
 };
