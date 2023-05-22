@@ -182,9 +182,9 @@ segmentWalking <- function(xyz,
   out_desc <- matrix(nrow = nrow(out), ncol = 5)
   for (i in 1:nrow(out)){  # i <- 1
     # i-th identified pattern: ADEPT result
-    tau_i <- unlist(out[i, "tau_i"])
-    T_i   <- unlist(out[i, "T_i"])
-    sim_i <- unlist(out[i, "sim_i"])
+    tau_i <- out[i, "tau_i"]
+    T_i   <- out[i, "T_i"]
+    sim_i <- out[i, "sim_i"]
     idx_i <- tau_i : (tau_i + T_i - 1)
     # pull i-th identified pattern data current
     xyzptr_stride1 <- xyzptr[idx_i, ]
