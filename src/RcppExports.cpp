@@ -10,20 +10,20 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// median_cpp
-double median_cpp(NumericVector x);
-RcppExport SEXP _adept_median_cpp(SEXP xSEXP) {
+// medianCpp
+double medianCpp(NumericVector x);
+RcppExport SEXP _adept_medianCpp(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(median_cpp(x));
+    rcpp_result_gen = Rcpp::wrap(medianCpp(x));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_adept_median_cpp", (DL_FUNC) &_adept_median_cpp, 1},
+    {"_adept_medianCpp", (DL_FUNC) &_adept_medianCpp, 1},
     {NULL, NULL, 0}
 };
 

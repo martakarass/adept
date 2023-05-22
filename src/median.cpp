@@ -3,6 +3,6 @@ using namespace Rcpp;
 
 
 // [[Rcpp::export]]
-double median_cpp(NumericVector x){
+double medianCpp(NumericVector x){
   return(median(x));
 }

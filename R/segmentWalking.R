@@ -192,8 +192,8 @@ segmentWalking <- function(xyz,
     xyzptr_stride1 <- xyzptr[idx_i, ]
     # summarize i-th identified pattern data current
     out_desc[i, ] <- c(
-      median_cpp(xyzptr_stride1[,4]), # "med_p"
-      median_cpp(xyzptr_stride1[,5]), # "med_t"
+      medianCpp(xyzptr_stride1[,4]), # "med_p"
+      medianCpp(xyzptr_stride1[,5]), # "med_t"
       diff(range(xyzptr_stride1[, 6])), # "ptp_r"
       mean(abs(xyzptr_stride1[, 6] - mean(xyzptr_stride1[, 6]))), # vmc_r
       T_i / xyz.fs # dur
