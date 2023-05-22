@@ -324,3 +324,18 @@ test_that("Suite 1. Finetune_maxima unchanged", {
 
 })
 
+
+context("Testing idxToRowCol")
+
+test_that("idxToRowCol is correct for every index of a matrix.", {
+  test.rows <- 5
+  test.cols <- 7
+  for (i in 1:test.rows){
+    for (j in 1:test.cols){
+      x <- matrix(NA, test.rows, test.cols)
+      x[i,j] <- 1
+      wm <- which.max(x)
+      expect_equal(idxToRowCol(wm, test.rows), c(i,j))
+    }
+  }
+})

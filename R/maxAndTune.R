@@ -115,7 +115,9 @@ finetune_maxima <- function(s.TMP,
   tau2.nbh.x  <- finetune.maxima.x[tau2.nbh]
   x.mat       <- outer(tau2.nbh.x, tau1.nbh.x, FUN = "+")
   x.mat.VALID <- x.mat * tau12.mat.VALID
-  which.out   <- which(x.mat.VALID == max(x.mat.VALID), arr.ind = TRUE)[1,]
+
+  wm <- which.max(x.mat.VALID)
+  which.out <- idxToRowCol(wm, nrow(x.mat.VALID))
 
   ## Define "tuned" start and end index point of identified pattern occurence
   ## within a time-series \code{x}
@@ -235,12 +237,17 @@ maxAndTune <- function(x,
     # if (max.empty < template.vl.min){
     #   break
     # }
-    if (all(is.na(similarity.mat))){
+    ## Determine current maximum value in similarity matrix
+    wm <- which.max(similarity.mat)
+    if (!any(wm)) {
+      # equivalent to previous all(is.na(similarity.mat)) check
       break
     }
+    similarity.mat.MAX.IDX <-
+      idxToRowCol(wm, mat.nrow)
+    similarity.mat.MAX <-
+      similarity.mat[similarity.mat.MAX.IDX[1], similarity.mat.MAX.IDX[2]]
 
-    ## Determine current maximum value in similarity matrix
-    similarity.mat.MAX <- max(similarity.mat, na.rm = TRUE)
     if (similarity.mat.MAX < similarity.measure.thresh) {
       break
     }
@@ -250,7 +257,6 @@ maxAndTune <- function(x,
     ## tau: expressed as index of x vector
     ## Mar 5, 2019 @MK: fix the discrepancies caused by floating precision
     ## May 5, 2019 @MK: restore the previous code line here
-    similarity.mat.MAX.IDX <- which(similarity.mat == similarity.mat.MAX, arr.ind = TRUE)[1, ]
     # similarity.mat.MAX.IDX <- which(similarity.mat + tol > similarity.mat.MAX, arr.ind = TRUE)[1, ]
     tau.TMP     <- similarity.mat.MAX.IDX[2]
     s.TMP       <- template.vl[similarity.mat.MAX.IDX[1]]
@@ -306,3 +312,26 @@ maxAndTune <- function(x,
 
 }
 
+
+#' Convert single index output of which.max() to row and column of matrix.
+#'
+#' If passed a matrix, which.max() returns a single index as if the matrix
+#' was strung out into a vector by stacking all the columns. This function
+#' converts that single index to a row and column index. For example, an index
+#' of 12 on a 6x5 matrix would be the 6th row, 2nd column.
+#'
+#' @param idx Index returned by which.max()
+#' @param nrows Number of rows in the original matrix.
+#'
+#' @return A length 2 vector of (row, column) specifying the index of the
+#' maximum value.
+#'
+#' @noRd
+#'
+idxToRowCol <- function(idx, nrows) {
+  mat.row <- idx %% nrows
+  is.last.row <- mat.row == 0
+  mat.row <- ifelse(is.last.row, nrows, mat.row)
+  mat.col <- ifelse(is.last.row, idx %/% nrows, idx %/% nrows + 1)
+  return(c(mat.row, mat.col))
+}
