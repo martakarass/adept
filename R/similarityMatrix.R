@@ -34,7 +34,6 @@
 #' @seealso \code{scaleTemplate {adept}}
 #'
 #' @export
-#' @import dvmisc
 #'
 #' @examples
 #' ## Simulate data
@@ -67,8 +66,8 @@ similarityMatrix <- function(x,
                             similarity.measure){
 
   sliding.func <- switch(similarity.measure,
-                         "cov" = sliding_cov,
-                         "cor" = sliding_cor)
+                         "cov" = slidingCovFast,
+                         "cor" = slidingCorFast)
 
   ## Outer lapply: iterate over pattern scales considered;
   ## each lapply iteration fills one row of the output similarity matrix.
@@ -124,8 +123,6 @@ similarityMatrix <- function(x,
 #' is the order in which particular pattern template was provided in
 #' the \code{template} list in \code{segmentPattern}.
 #'
-#' @import dvmisc
-#'
 #' @noRd
 #'
 templateIdxMatrix <- function(x,
@@ -133,8 +130,8 @@ templateIdxMatrix <- function(x,
                           similarity.measure){
 
   sliding.func <- switch(similarity.measure,
-                         "cov" = sliding_cov,
-                         "cor" = sliding_cor)
+                         "cov" = slidingCovFast,
+                         "cor" = slidingCorFast)
 
   ## Outer lapply: iterate over pattern scales considered;
   ## each lapply iteration fills one row of the output similarity matrix.

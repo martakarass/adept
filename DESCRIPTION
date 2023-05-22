@@ -34,12 +34,14 @@ Suggests:
     spelling,
     cluster,
     adeptdata,
-    covr
+    covr,
+    dvmisc
 VignetteBuilder: knitr
 Imports: 
     dplyr,
     magrittr,
-    dvmisc,
     parallel,
-    pracma
+    pracma,
+    Rcpp
+LinkingTo: Rcpp
 Language: en-US

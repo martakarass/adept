@@ -12,3 +12,5 @@ vignettes/adept-intro.pdf
 vignettes/adept-strides-segmentation.html
 vignettes/static
 docs
+*/*.o
+*/*.so
