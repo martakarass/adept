@@ -19,7 +19,7 @@ Description: Designed for optimal use in performing fast,
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.3
 URL: https://github.com/martakarass/adept
 BugReports: https://github.com/martakarass/adept/issues
 Depends: R (>= 2.10)
@@ -41,5 +41,6 @@ Imports:
     magrittr,
     dvmisc,
     parallel,
-    pracma
+    pracma,
+    assertthat
 Language: en-US
