@@ -41,5 +41,7 @@ Imports:
     magrittr,
     dvmisc,
     parallel,
-    pracma
+    pracma,
+    Rcpp
+LinkingTo: Rcpp
 Language: en-US
