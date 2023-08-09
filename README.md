@@ -1,20 +1,21 @@
 
 <!-- [![Coverage status](https://codecov.io/gh/martakarass/adept/branch/master/graph/badge.svg)](https://codecov.io/github/martakarass/adept?branch=master) -->
+<!-- badges: start -->
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/adept)](https://CRAN.R-project.org/package=adept)
 [![](https://cranlogs.r-pkg.org/badges/grand-total/adept)](https://cran.r-project.org/package=adept)
 [![](https://cranlogs.r-pkg.org/badges/last-month/adept)](https://cran.r-project.org/package=adept)
-[![R build
-status](https://github.com/martakarass/adept/workflows/R-CMD-check/badge.svg)](https://github.com/martakarass/adept/actions)
+[![R-CMD-check](https://github.com/martakarass/adept/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/martakarass/adept/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/martakarass/adept/branch/master/graph/badge.svg)](https://codecov.io/gh/martakarass/adept?branch=master)
+<!-- badges: end -->
 
 ### Overview
 
 The `adept` package implements ADaptive Empirical Pattern Transformation
-(ADEPT) method\[1\] for pattern segmentation from a time-series. ADEPT
-is optimized to perform fast, accurate walking strides segmentation from
+(ADEPT) method[^1] for pattern segmentation from a time-series. ADEPT is
+optimized to perform fast, accurate walking strides segmentation from
 high-density data collected with a wearable accelerometer during
 walking. The method was validated using data collected with sensors worn
 at left wrist, left hip and both ankles.
@@ -76,11 +77,11 @@ segmentPattern(
 The segmentation result is a data frame, where each row describes one
 identified pattern occurrence:
 
-  - `tau_i` - index of `x` where pattern starts,
-  - `T_i` - pattern duration, expressed in `x` vector length,
-  - `sim_i` - similarity between a template and `x`,
-  - `template_i` - index of a template best matched to a time-series `x`
-    (here: one template was used, hence all `template_i`’s equal 1).
+- `tau_i` - index of `x` where pattern starts,
+- `T_i` - pattern duration, expressed in `x` vector length,
+- `sim_i` - similarity between a template and `x`,
+- `template_i` - index of a template best matched to a time-series `x`
+  (here: one template was used, hence all `template_i`’s equal 1).
 
 We then assume a grid of potential pattern durations which contains the
 duration of the true pattern used in data simulation. A perfect match
@@ -266,14 +267,14 @@ Vignettes are available to better demonstrate package methods usage.
     precise walking stride segmentation from data collected during a
     combination of running, walking and resting exercises. We introduce
     how to segment data:
-    
+
     1.  with the use of stride templates that were pre-computed based on
         data from an external study (attached to `adeptdata` package),
     2.  by deriving new stride templates in a semi-manual manner.
 
 ### References
 
-1.  Karas, M., Straczkiewicz, M., Fadel, W., Harezlak, J., Crainiceanu,
-    C., Urbanek, J.K. *Adaptive empirical pattern transformation (ADEPT)
-    with application to walking stride segmentation*, Submitted to
-    *Biostatistics*, 2018.
+[^1]: Karas, M., Straczkiewicz, M., Fadel, W., Harezlak, J.,
+    Crainiceanu, C., Urbanek, J.K. *Adaptive empirical pattern
+    transformation (ADEPT) with application to walking stride
+    segmentation*, Submitted to *Biostatistics*, 2018.
