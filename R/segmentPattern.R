@@ -220,7 +220,7 @@ segmentPattern <- function(x,
                            x.fs,
                            template,
                            pattern.dur.seq,
-                           similarity.measure = "cov",
+                           similarity.measure = c("cov", "cor"),
                            similarity.measure.thresh = 0.0,
                            x.adept.ma.W = NULL,
                            finetune = NULL,
@@ -235,24 +235,71 @@ segmentPattern <- function(x,
 
   ## ---------------------------------------------------------------------------
   ## Check if correct objects were passed to the function
-  x.cut.vl <- as.integer(x.cut.vl)
-  if(!is.null(run.parallel.cores)) run.parallel.cores <-  as.integer(run.parallel.cores)
-  if (!(all(is.numeric(x)) & is.atomic(x))) stop("x must be a numeric (atomic) vector.")
-  if (!(length(x.fs) == 1 & is.numeric(x.fs) & x.fs > 0 & is.atomic(x.fs))) stop("x.fs must be a positive numeric scalar.")
-  template.cond1 <- all(is.numeric(template)) & is.atomic(template)
-  template.cond2 <- is.list(template) & all(sapply(template, function(vec) all(is.numeric(vec)) & is.atomic(vec)))
-  if (!(template.cond1 || template.cond2)) stop("template must be a numeric (atomic) vector, or a list of numeric (atomic) vectors.")
-  if (!(all(is.numeric(pattern.dur.seq)) & is.atomic(pattern.dur.seq) & all(pattern.dur.seq > 0))) stop("pattern.dur.seq must be a numeric (atomic) vector of positive values.")
-  if (!(similarity.measure %in% c("cov", "cor"))) stop("similarity.measure must be one of: 'cov', 'cor'.")
-  if (!(is.null(x.adept.ma.W) || (length(x.adept.ma.W) == 1 & is.numeric(x.adept.ma.W) & x.adept.ma.W > 0))) stop("x.adept.ma.W must be NULL or a positive numeric scalar.")
-  if (!(is.null(finetune) || finetune == "maxima")) stop("finetune must be NULL or 'maxima'.")
-  if (!(is.null(finetune.maxima.ma.W) || (length(finetune.maxima.ma.W) == 1 & is.numeric(finetune.maxima.ma.W) & finetune.maxima.ma.W > 0))) stop("finetune.maxima.ma.W must be NULL or a positive numeric scalar.")
-  if (!(is.null(finetune.maxima.nbh.W) || (length(finetune.maxima.nbh.W) == 1 & is.numeric(finetune.maxima.nbh.W) & finetune.maxima.nbh.W > 0))) stop("finetune.maxima.nbh.W must be NULL or a positive numeric scalar.")
-  if (!(run.parallel %in% c(TRUE, FALSE))) stop("run.parallel must be a logical scalar.")
-  if (!(is.null(run.parallel.cores) || (length(run.parallel.cores) == 1 & is.integer(run.parallel.cores) & run.parallel.cores > 0))) stop("run.parallel.cores must me NULL or a positive integer scalar")
-  if (!(length(x.cut) == 1 & x.cut %in% c(TRUE, FALSE))) stop("x.cut must be a logical scalar.")
-  if (!(is.null(x.cut.vl) || (length(x.cut.vl) == 1 & is.integer(x.cut.vl) & x.cut.vl > 0))) stop("x.cut.vl must me NULL or a positive integer scalar")
-  if (!(length(compute.template.idx) == 1 & compute.template.idx %in% c(TRUE, FALSE))) stop("compute.template.idx must be a logical scalar.")
+  assertthat::assert_that(
+    is.numeric(x),
+    is.vector(x),
+    assertthat::is.number(x.fs),
+    x.fs > 0
+  )
+
+  assertthat::assert_that(
+    is.numeric(pattern.dur.seq),
+    is.vector(pattern.dur.seq)
+  )
+
+
+  assertthat::assert_that(
+    is.list(template) || is.vector(template)
+  )
+  check_template_vector = function(template_vector)  {
+    assertthat::assert_that(
+      is.vector(template_vector),
+      is.numeric(template_vector)
+    )
+  }
+  if (is.list(template)) {
+    lapply(template, check_template_vector)
+  } else {
+    check_template_vector(template)
+  }
+
+  similarity.measure = match.arg(similarity.measure)
+  assertthat::assert_that(
+    assertthat::is.number(similarity.measure.thresh)
+  )
+
+  assertthat::assert_that(
+    is.null(x.adept.ma.W) || assertthat::is.number(x.adept.ma.W)
+  )
+
+  assertthat::assert_that(
+    is.null(finetune) ||
+      (assertthat::is.string(finetune) &&
+         finetune == "maxima"),
+    is.null(finetune.maxima.ma.W) ||
+      (assertthat::is.number(finetune.maxima.ma.W) &&
+         finetune.maxima.ma.W > 0),
+    is.null(finetune.maxima.nbh.W) ||
+      (assertthat::is.number(finetune.maxima.nbh.W) &&
+         finetune.maxima.nbh.W > 0)
+  )
+
+
+  assertthat::assert_that(
+    assertthat::is.flag(run.parallel),
+    is.null(run.parallel.cores) || assertthat::is.count(run.parallel.cores)
+  )
+
+  assertthat::assert_that(
+    assertthat::is.count(x.cut.vl),
+    x.cut.vl > 0,
+    assertthat::is.flag(x.cut)
+  )
+
+
+  assertthat::assert_that(
+    assertthat::is.flag(compute.template.idx)
+  )
 
 
   ## ---------------------------------------------------------------------------

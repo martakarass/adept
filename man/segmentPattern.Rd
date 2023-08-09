@@ -9,7 +9,7 @@ segmentPattern(
   x.fs,
   template,
   pattern.dur.seq,
-  similarity.measure = "cov",
+  similarity.measure = c("cov", "cor"),
   similarity.measure.thresh = 0,
   x.adept.ma.W = NULL,
   finetune = NULL,
