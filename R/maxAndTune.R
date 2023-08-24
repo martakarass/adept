@@ -219,6 +219,8 @@ maxAndTune <- function(x,
   out.list <- list()
   x.Fitted <- rep(NA, x.vl)
 
+  run_template_idx = !(is.null(template.idx.mat))
+  finetune_is_maxima = !is.null(finetune) && finetune == "maxima"
   ## -------------------------------------------------------------------------
   ## Fine-tuning components
 
@@ -265,7 +267,7 @@ maxAndTune <- function(x,
 
 
     ## Identify
-    if (!(is.null(template.idx.mat))){
+    if (run_template_idx){
       template.idx.TMP <- template.idx.mat[similarity.mat.MAX.IDX[1], similarity.mat.MAX.IDX[2]]
     }
 
@@ -273,7 +275,7 @@ maxAndTune <- function(x,
     ## -------------------------------------------------------------------------
     ## Fine-tuning
 
-    if (!is.null(finetune) && finetune == "maxima"){
+    if (finetune_is_maxima){
       finetune.out <- finetune_maxima(s.TMP,
                                       tau.TMP,
                                       nbh.wing,
@@ -287,13 +289,14 @@ maxAndTune <- function(x,
     ## -------------------------------------------------------------------------
 
 
+    # get the max cols, outside loop because does not use i or s.i
+    NArepl.cols.max <- tau.TMP + s.TMP - 2
+    NArepl.cols.max <- min(max(1, NArepl.cols.max), x.vl)
     ## Fill similarity matrix with NA's at locations populated by an identified pattern
     for (i in 1:mat.nrow){
       s.i <-  template.vl[i]
       NArepl.cols.min <- tau.TMP - s.i + 2
       NArepl.cols.min <- min(max(1, NArepl.cols.min), x.vl)
-      NArepl.cols.max <- tau.TMP + s.TMP - 2
-      NArepl.cols.max <- min(max(1, NArepl.cols.max), x.vl)
       NArepl.cols     <- NArepl.cols.min:NArepl.cols.max
       # print(NArepl.cols)
       similarity.mat[i, NArepl.cols] <- NA
