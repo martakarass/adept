@@ -157,8 +157,11 @@ segmentWalking <- function(xyz,
 
   # compute all spherical
   xyz <- as.matrix(xyz)
-  xyzptr <- as.data.frame(cbind(xyz, cart2sph(xyz)))
-  vm <- xyzptr[, 6]
+  stopifnot(ncol(xyz) == 3)
+  xyzptr <- as.data.frame(cart2sph(xyz))
+  colnames(xyzptr) = c("theta", "phi", "r")
+  vm <- xyzptr[, "r"]
+  rm(xyz)
 
   # run adept pattern identification
   out <- segmentPattern(
@@ -177,6 +180,7 @@ segmentWalking <- function(xyz,
     x.cut = TRUE,
     x.cut.vl = 6000,
     compute.template.idx = compute.template.idx)
+  rm(vm)
 
   # generate detailed summary of ADEPT-identified patterns
   out_desc <- matrix(nrow = nrow(out), ncol = 5)
@@ -190,10 +194,10 @@ segmentWalking <- function(xyz,
     xyzptr_stride1 <- xyzptr[idx_i, ]
     # summarize i-th identified pattern data current
     out_desc[i, ] <- c(
-      median(xyzptr_stride1[,4]), # "med_p"
-      median(xyzptr_stride1[,5]), # "med_t"
-      diff(range(xyzptr_stride1[, 6])), # "ptp_r"
-      mean(abs(xyzptr_stride1[, 6] - mean(xyzptr_stride1[, 6]))), # vmc_r
+      median(xyzptr_stride1[,"theta"]), # "med_p"
+      median(xyzptr_stride1[,"phi"]), # "med_t"
+      diff(range(xyzptr_stride1[, "r"])), # "ptp_r"
+      mean(abs(xyzptr_stride1[, "r"] - mean(xyzptr_stride1[, "r"]))), # vmc_r
       T_i / xyz.fs # dur
     )
   }
