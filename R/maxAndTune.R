@@ -235,25 +235,34 @@ maxAndTune <- function(x,
     # if (max.empty < template.vl.min){
     #   break
     # }
-    if (all(is.na(similarity.mat))){
-      break
-    }
+    # if (all(is.na(similarity.mat))){
+    #   break
+    # }
 
-    ## Determine current maximum value in similarity matrix
-    similarity.mat.MAX <- max(similarity.mat, na.rm = TRUE)
-    if (similarity.mat.MAX < similarity.measure.thresh) {
-      break
-    }
 
     ## Identify parameters s and tau corresponding to maximum of covariance matrix
     ## s:   expressed as vector length
     ## tau: expressed as index of x vector
     ## Mar 5, 2019 @MK: fix the discrepancies caused by floating precision
     ## May 5, 2019 @MK: restore the previous code line here
-    similarity.mat.MAX.IDX <- which(similarity.mat == similarity.mat.MAX, arr.ind = TRUE)[1, ]
+    # get the index first, then check
+    similarity.mat.MAX.IDX <- which.max(similarity.mat)
+    similarity.mat.MAX = similarity.mat[similarity.mat.MAX.IDX]
+    ## Determine current maximum value in similarity matrix
+    # similarity.mat.MAX <- max(similarity.mat, na.rm = TRUE)
+    if (length(similarity.mat.MAX) == 0 ||
+        length(similarity.mat.MAX.IDX) == 0 ||
+        similarity.mat.MAX < similarity.measure.thresh) {
+      break
+    }
+
+    # turn into row/column
+    similarity.mat.MAX.IDX = arrayInd(similarity.mat.MAX.IDX,
+                                      .dim = dim(similarity.mat))
     # similarity.mat.MAX.IDX <- which(similarity.mat + tol > similarity.mat.MAX, arr.ind = TRUE)[1, ]
     tau.TMP     <- similarity.mat.MAX.IDX[2]
     s.TMP       <- template.vl[similarity.mat.MAX.IDX[1]]
+
 
     ## Identify
     if (!(is.null(template.idx.mat))){
