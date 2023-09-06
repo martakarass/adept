@@ -102,6 +102,8 @@ if (run) {
   }
 
   template_list = template.scaled[[1]]
+  # cl <- parallel::makeCluster(4L)
+  # future::plan(cluster, workers=cl)
   result = pbapply::pblapply(template.scaled, function(template_list) {
     lengths = sapply(template_list, length)
     stopifnot(all(lengths == lengths[1]))
@@ -162,10 +164,11 @@ if (run) {
       measure = sum_xy / denominator
       measure
     })
-    # res$na.rm = TRUE
-    # do.call(pmax, res)
+    res$na.rm = TRUE
+    res = do.call(pmax, res)
     res
   })
+  # }, cl = "future")
 
 
   # out.list <- pbapply::pblapply(x.cut.seq, function(i){
