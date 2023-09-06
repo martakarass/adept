@@ -62,8 +62,10 @@ if (FALSE) {
   template.idx.mat.i <- NULL
 
   data = x.smoothed
+  data = round(data, 5)
   # cut_x = function(data, x.cut.seq, x.cut.vl) {
   # x.cut.vl = unique(diff(x.cut.seq))
+
 
   make_index_mat = function(data, x.cut.vl, x.cut.seq, x.cut.margin) {
     n = length(data)
@@ -71,7 +73,8 @@ if (FALSE) {
     ind_mat = matrix(1:(nr * x.cut.vl), ncol = x.cut.vl, nrow = nr,
                      byrow = TRUE)
     addon_mat = matrix(rep(1:(x.cut.margin + 1), times = nr),
-                       nrow = nr, ncol = x.cut.margin + 1,
+                       nrow = nr,
+                       ncol = x.cut.margin + 1,
                        byrow = TRUE)
     addon_mat = addon_mat + ind_mat[, ncol(ind_mat)]
     ind_mat = cbind(ind_mat, addon_mat)
@@ -81,10 +84,8 @@ if (FALSE) {
   ind_mat = make_index_mat(data, x.cut.vl, x.cut.seq, x.cut.margin)
   x_mat = array(data[ind_mat], dim = dim(ind_mat))
   nc = ncol(x_mat)
-  template_list = template.scaled[[1]]
-  lengths = sapply(template_list, length)
-  stopifnot(all(lengths == lengths[1]))
-  template_length = lengths[1]
+  not_na_x = !is.na(x_mat)
+  x_mat[!not_na_x] = 0
 
   make_shift_ones = function(template_length, nc) {
     temp = rep(1, template_length)
@@ -96,66 +97,77 @@ if (FALSE) {
     shift_mat = shift_mat[, 1:(nc - template_length + 1)]
     shift_mat = Matrix::Matrix(shift_mat, sparse = TRUE)
   }
-  na_x = is.na(x_mat)
-  x_mat[na_x] = 0
-  one_mat = make_shift_ones(template_length, nc)
-  n_mat = (!na_x) %*% one_mat
-  n_mat[n_mat <= 1] = NA_integer_
 
-  denominator = n_mat - 1
-  if (similarity.measure == "cor") {
-    sum_x2 = (x_mat ^ 2) %*% one_mat
-    sum_x = x_mat %*% one_mat
-    # 1/(n-1) (Σ(x - 𝑥̄)^2
-    # 1/(n-1) (Σx^2 - n𝑥̄^2)
-    # 1/(n-1) (Σx^2 - n (Σx/n)^2)
-    # 1/(n-1) (Σx^2 - (Σx)^2/n)
-    denominator = sqrt(1/(n_mat - 1) * (sum_x2 - (sum_x ^ 2)/n_mat))
-    denominator = denominator * (n_mat - 1)
-  }
-  # xbar = xbar / n
+  template_list = template.scaled[[1]]
+  result = pbapply::pblapply(template.scaled, function(template_list) {
+    lengths = sapply(template_list, length)
+    stopifnot(all(lengths == lengths[1]))
+    template_length = lengths[1]
 
-  # for (itemp in seq_along(template.scaled[[1]])) {
-  itemp = 1
-  temp = template_list[[itemp]]
-  make_shift_matrix = function(temp, nc) {
-    stopifnot(abs(mean(temp)) <= 1e-5,
-              abs(sd(temp) - 1) <= 1e-5)
-    template_length = length(temp)
-    temp = c(temp, rep(0, nc - template_length))
-    # system.time({
-    # tt = c(temp[1], rep(0, nc - 1))
-    #   x = toeplitz(temp)
-    #   x[upper.tri(x)] = 0
-    #   x
-    # })
-    system.time({
-      tt = c(temp[1], rep(0, nc - 1))
-      shift_mat = pracma::Toeplitz(a = temp, b = tt)
+    one_mat = make_shift_ones(template_length, nc)
+    n_mat = (not_na_x) %*% one_mat
+    n_mat[n_mat <= 1] = NA_integer_
+    rm(not_na_x)
+
+    denominator = n_mat - 1
+    if (similarity.measure == "cor") {
+      sum_x2 = (x_mat ^ 2) %*% one_mat
+      sum_x = x_mat %*% one_mat
+      # 1/(n-1) (Σ(x - 𝑥̄)^2
+      # 1/(n-1) (Σx^2 - n𝑥̄^2)
+      # 1/(n-1) (Σx^2 - n (Σx/n)^2)
+      # 1/(n-1) (Σx^2 - (Σx)^2/n)
+      # denominator = sqrt(1/(n_mat - 1) * (sum_x2 - (sum_x ^ 2)/n_mat))
+      denominator = sqrt(sum_x2 - (sum_x ^ 2)/n_mat)
+      # { 1/(n-1) Σ(x_i y_i) } / √{(1/n-1) SS_x}
+      # {  Σ(x_i y_i) } / √(n-1) √{SS_x}
+      rm(sum_x)
+      rm(sum_x2)
+      denominator = denominator * sqrt(n_mat - 1)
+    }
+    rm(one_mat)
+    # xbar = xbar / n
+
+    make_shift_matrix = function(temp, nc) {
+      stopifnot(abs(mean(temp)) <= 1e-5,
+                abs(sd(temp) - 1) <= 1e-5)
+      template_length = length(temp)
+      temp = c(temp, rep(0, nc - template_length))
+      # system.time({
+      # tt = c(temp[1], rep(0, nc - 1))
+      #   x = toeplitz(temp)
+      #   x[upper.tri(x)] = 0
+      #   x
+      # })
+      system.time({
+        tt = c(temp[1], rep(0, nc - 1))
+        shift_mat = pracma::Toeplitz(a = temp, b = tt)
+      })
+      shift_mat = shift_mat[, 1:(nc - template_length + 1)]
+      shift_mat = Matrix::Matrix(shift_mat, sparse = TRUE)
+    }
+
+    itemp = 1
+    # result = pbapply::pblapply(template_list, function(temp) {
+    result = lapply(template_list, function(temp) {
+      shift_mat = make_shift_matrix(temp, nc)
+      sum_xy = x_mat %*% shift_mat
+
+      measure = sum_xy / denominator
+      measure
     })
-    shift_mat = shift_mat[, 1:(nc - template_length + 1)]
-    shift_mat = Matrix::Matrix(shift_mat, sparse = TRUE)
-  }
-  shift_mat = make_shift_matrix(temp, nc)
-  xy = x_mat %*% shift_mat
+    result
+  })
 
 
-  # ## If we cannot fit the longest pattern, return NULL
-  # if (length(idx.i) <= max(template.vl)) return(NULL)
-  # ## Compute similarity matrix
-  # similarity.mat.i <- similarityMatrix(x = x.smoothed[idx.i],
-  #                                      template.scaled = template.scaled,
-  #                                      similarity.measure = similarity.measure)
-  #
-  #   for (i in )
-  #     vec_result = adept:::similarityMatrix_vectorized(
-  #       x.cut.seq = x.cut.seq,
-  #       x.smoothed = x.smoothed,
-  #       template.scaled = template.scaled,
-  #       similarity.measure = similarity.measure,
-  #       x.cut.vl = x.cut.vl,
-  #       template.vl = template.vl,
-  #       x.cut.margin = x.cut.margin)
-  # })
-
+  out.list <- pbapply::pblapply(x.cut.seq, function(i){
+    ## Define current x part indices
+    idx.i <- i : min((i + x.cut.vl + x.cut.margin), length(x))
+    ## If we cannot fit the longest pattern, return NULL
+    if (length(idx.i) <= max(template.vl)) return(NULL)
+    ## Compute similarity matrix
+    similarity.mat.i <- similarityMatrix(x = x.smoothed[idx.i],
+                                         template.scaled = template.scaled,
+                                         similarity.measure = similarity.measure)
+  })
 }
