@@ -1,5 +1,6 @@
 
-if (FALSE) {
+run = FALSE
+if (run) {
   library(dplyr)
   library(adept)
   # muschellij2/adept@nhanes
@@ -8,7 +9,7 @@ if (FALSE) {
   template_list = do.call(rbind, all_wrist_templates)
   template_list = apply(template_list, 1, identity, simplify = FALSE)
 
-  template = template_list[1:2]
+  template = template_list
   # devtools::load_all()
   options(digits.secs = 3)
   sample_rate = 10L
@@ -17,9 +18,9 @@ if (FALSE) {
   data = readr::read_csv(
     "~/Dropbox/Projects/nhanes_80hz/data/csv/pax_h/73557.csv.gz",
     # "https://github.com/martakarass/adept/files/12423699/test_data.csv.gz",
-    # n_max = 1e6)
+    n_max = 1e6
   )
-  xyz = data %>% select(X, Y, Z) %>% as.matrix()
+  xyz = data %>% select(all_of(c("X", "Y", "Z"))) %>% as.matrix()
   x.fs = 80L
   xyz <- as.matrix(xyz)
   # walk_out = segmentWalking(xyz,
@@ -90,10 +91,10 @@ if (FALSE) {
   x_mat = Matrix::Matrix(x_mat, sparse = TRUE)
 
   make_shift_ones = function(template_length, nc) {
-    temp = rep(1, template_length)
-    temp = c(temp, rep(0, nc - length(temp)))
+    temp = rep(TRUE, template_length)
+    temp = c(temp, rep(FALSE, nc - length(temp)))
     system.time({
-      tt = c(temp[1], rep(0, nc - template_length))
+      tt = c(temp[1], rep(FALSE, nc - template_length))
       shift_mat = pracma::Toeplitz(a = temp, b = tt)
     })
     # shift_mat = shift_mat[, 1:(nc - template_length + 1)]
@@ -108,10 +109,9 @@ if (FALSE) {
 
     one_mat = make_shift_ones(template_length, nc)
     n_mat = (not_na_x) %*% one_mat
-    n_mat[n_mat <= 1] = NA_integer_
+    n_mat[n_mat <= 1L] = NA_integer_
     # rm(not_na_x)
 
-    denominator = n_mat - 1
     if (similarity.measure == "cor") {
       sum_x2 = (x_mat ^ 2) %*% one_mat
       sum_x = x_mat %*% one_mat
@@ -125,7 +125,9 @@ if (FALSE) {
       # {  Σ(x_i y_i) } / √(n-1) √{SS_x}
       rm(sum_x)
       rm(sum_x2)
-      denominator = denominator * sqrt(n_mat - 1)
+      denominator = denominator * sqrt(n_mat - 1L)
+    } else {
+      denominator = n_mat - 1L
     }
     rm(one_mat)
     # xbar = xbar / n
@@ -153,14 +155,16 @@ if (FALSE) {
 
     itemp = 1
     # result = pbapply::pblapply(template_list, function(temp) {
-    result = lapply(template_list, function(temp) {
+    res = lapply(template_list, function(temp) {
       shift_mat = make_shift_matrix(temp, nc)
       sum_xy = x_mat %*% shift_mat
 
       measure = sum_xy / denominator
       measure
     })
-    result
+    # res$na.rm = TRUE
+    # do.call(pmax, res)
+    res
   })
 
 
