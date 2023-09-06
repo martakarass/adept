@@ -86,15 +86,17 @@ if (FALSE) {
   nc = ncol(x_mat)
   not_na_x = !is.na(x_mat)
   x_mat[!not_na_x] = 0
+  not_na_x = Matrix::Matrix(not_na_x, sparse = TRUE)
+  x_mat = Matrix::Matrix(x_mat, sparse = TRUE)
 
   make_shift_ones = function(template_length, nc) {
     temp = rep(1, template_length)
     temp = c(temp, rep(0, nc - length(temp)))
     system.time({
-      tt = c(temp[1], rep(0, nc - 1))
+      tt = c(temp[1], rep(0, nc - template_length))
       shift_mat = pracma::Toeplitz(a = temp, b = tt)
     })
-    shift_mat = shift_mat[, 1:(nc - template_length + 1)]
+    # shift_mat = shift_mat[, 1:(nc - template_length + 1)]
     shift_mat = Matrix::Matrix(shift_mat, sparse = TRUE)
   }
 
@@ -107,7 +109,7 @@ if (FALSE) {
     one_mat = make_shift_ones(template_length, nc)
     n_mat = (not_na_x) %*% one_mat
     n_mat[n_mat <= 1] = NA_integer_
-    rm(not_na_x)
+    # rm(not_na_x)
 
     denominator = n_mat - 1
     if (similarity.measure == "cor") {
@@ -132,6 +134,7 @@ if (FALSE) {
       stopifnot(abs(mean(temp)) <= 1e-5,
                 abs(sd(temp) - 1) <= 1e-5)
       template_length = length(temp)
+      last_value = temp[length(temp)]
       temp = c(temp, rep(0, nc - template_length))
       # system.time({
       # tt = c(temp[1], rep(0, nc - 1))
@@ -140,10 +143,11 @@ if (FALSE) {
       #   x
       # })
       system.time({
-        tt = c(temp[1], rep(0, nc - 1))
+        tt = c(temp[1], rep(0, nc - template_length))
         shift_mat = pracma::Toeplitz(a = temp, b = tt)
       })
-      shift_mat = shift_mat[, 1:(nc - template_length + 1)]
+      stopifnot(shift_mat[nrow(shift_mat), ncol(shift_mat)] == last_value)
+      # shift_mat = shift_mat[, 1:(nc - template_length + 1)]
       shift_mat = Matrix::Matrix(shift_mat, sparse = TRUE)
     }
 
@@ -160,14 +164,14 @@ if (FALSE) {
   })
 
 
-  out.list <- pbapply::pblapply(x.cut.seq, function(i){
-    ## Define current x part indices
-    idx.i <- i : min((i + x.cut.vl + x.cut.margin), length(x))
-    ## If we cannot fit the longest pattern, return NULL
-    if (length(idx.i) <= max(template.vl)) return(NULL)
-    ## Compute similarity matrix
-    similarity.mat.i <- similarityMatrix(x = x.smoothed[idx.i],
-                                         template.scaled = template.scaled,
-                                         similarity.measure = similarity.measure)
-  })
+  # out.list <- pbapply::pblapply(x.cut.seq, function(i){
+  #   ## Define current x part indices
+  #   idx.i <- i : min((i + x.cut.vl + x.cut.margin), length(x))
+  #   ## If we cannot fit the longest pattern, return NULL
+  #   if (length(idx.i) <= max(template.vl)) return(NULL)
+  #   ## Compute similarity matrix
+  #   similarity.mat.i <- similarityMatrix(x = x.smoothed[idx.i],
+  #                                        template.scaled = template.scaled,
+  #                                        similarity.measure = similarity.measure)
+  # })
 }
