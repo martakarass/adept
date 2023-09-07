@@ -1,3 +1,4 @@
+# code taken from segmentPattern (old code/gold standard)
 run_segmentation = function(x,
                             x.smoothed,
                             finetune.maxima.x,
