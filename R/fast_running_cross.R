@@ -1,6 +1,7 @@
 
 run = FALSE
 if (run) {
+  options("adept_debug" = TRUE)
   library(dplyr)
   library(adept)
   # muschellij2/adept@nhanes
@@ -12,7 +13,7 @@ if (run) {
   template = template_list[1:5]
   # devtools::load_all()
   options(digits.secs = 3)
-  sample_rate = 10L
+  sample_rate = 80L
 
   # read in some test data
   data = readr::read_csv(
@@ -79,7 +80,7 @@ if (run) {
                        byrow = TRUE)
     addon_mat = addon_mat + ind_mat[, ncol(ind_mat)]
     ind_mat = cbind(ind_mat, addon_mat)
-    ind_mat[ind_mat > n] = NA_integer_
+    ind_mat[ind_mat > n] = -Inf
     ind_mat
   }
   ind_mat = make_index_mat(data, x.cut.vl, x.cut.seq, x.cut.margin)
@@ -97,7 +98,8 @@ if (run) {
     system.time({
       # tt = c(temp[1], rep(FALSE, nc - template_length))
       # shift_mat = pracma::Toeplitz(a = temp, b = tt)
-      shift_mat = pracma::Toeplitz(a = temp)
+      tt = c(temp[1], rep(FALSE, nc - 1))
+      shift_mat = pracma::Toeplitz(a = temp, b = tt)
       shift_mat[, (nc - template_length + 2):ncol(shift_mat)] = 0
     })
     # shift_mat = shift_mat[, 1:(nc - template_length + 1)]
@@ -107,6 +109,14 @@ if (run) {
   template_list = template.scaled[[1]]
   # cl <- parallel::makeCluster(4L)
   # future::plan(cluster, workers=cl)
+
+  # this replaces this:
+  # if (length(idx.i) <= max(template.vl)) return(NULL)
+  one_mat = make_shift_ones(max(template.vl), nc)
+  max_na_mat = (not_na_x) %*% one_mat
+  max_na_mat[max_na_mat < max(template.vl)] = NA_integer_
+  max_na_mat = is.na(max_na_mat)
+
   result = pbapply::pblapply(template.scaled, function(template_list) {
     lengths = sapply(template_list, length)
     stopifnot(all(lengths == lengths[1]))
@@ -125,7 +135,8 @@ if (run) {
       # 1/(n-1) (Σx^2 - n (Σx/n)^2)
       # 1/(n-1) (Σx^2 - (Σx)^2/n)
       # denominator = sqrt(1/(n_mat - 1) * (sum_x2 - (sum_x ^ 2)/n_mat))
-      denominator = sqrt(sum_x2 - (sum_x ^ 2)/n_mat)
+      denominator = round(sum_x2 - (sum_x ^ 2)/n_mat, 8)
+      denominator = sqrt(denominator)
       # { 1/(n-1) Σ(x_i y_i) } / √{(1/n-1) SS_x}
       # {  Σ(x_i y_i) } / √(n-1) √{SS_x}
       rm(sum_x)
@@ -152,7 +163,8 @@ if (run) {
       system.time({
         # tt = c(temp[1], rep(0, nc - template_length))
         # shift_mat = pracma::Toeplitz(a = temp, b = tt)
-        shift_mat = pracma::Toeplitz(a = temp)
+        tt = c(temp[1], rep(0, nc - 1))
+        shift_mat = pracma::Toeplitz(a = temp, b = tt)
         shift_mat[, (nc - template_length + 2):ncol(shift_mat)] = 0
       })
       stopifnot(
@@ -171,6 +183,7 @@ if (run) {
 
       measure = sum_xy / denominator
       measure[!is.finite(measure)] = NA
+      measure[max_na_mat] = NA
       measure
     })
     res$na.rm = TRUE
@@ -195,16 +208,38 @@ if (run) {
   finetune_x_mat = array(round(finetune.maxima.x, 5)[ind_mat], dim = dim(ind_mat))
   rm(ind_mat)
 
+  final_results = vector(mode = "list", length = length(reshaped))
   for (i in seq_along(reshaped)) {
     print(i)
-    out.df.i <- adept:::maxAndTune(x = x_mat[i, ],
-                           template.vl = template.vl,
-                           similarity.mat = reshaped[[i]],
-                           similarity.measure.thresh = similarity.measure.thresh,
-                           template.idx.mat = template.idx.mat.i,
-                           finetune = finetune,
-                           finetune.maxima.x = finetune_x_mat[i, ],
-                           finetune.maxima.nbh.vl = finetune.maxima.nbh.vl)
+    xvals = x_mat[i, ]
+    ft_vals = finetune_x_mat[i, ]
+    if (i == length(reshaped)) {
+      na_x = is.na(xvals)
+      xvals = xvals[!na_x]
+      ft_vals = ft_vals[!na_x]
+    }
+    similarity.mat = reshaped[[i]]
+    similarity.mat[is.na(similarity.mat)] = 0
+    out.df.i <- adept:::maxAndTune(
+      x = xvals,
+      template.vl = template.vl,
+      similarity.mat = similarity.mat,
+      similarity.measure.thresh = similarity.measure.thresh,
+      template.idx.mat = template.idx.mat.i,
+      finetune = finetune,
+      finetune.maxima.x = ft_vals,
+      finetune.maxima.nbh.vl = finetune.maxima.nbh.vl)
+    ## Shift \tau parameter according to which part of signal x we are currently working with
+    if (nrow(out.df.i) > 0){
+      out.df.i$tau_i <- out.df.i$tau_i + i - 1
+    } else {
+      ## Return empty data frame
+      out.df.i = data.frame(tau_i = numeric(),
+                            T_i = numeric(),
+                            sim_i = numeric(),
+                            template_i = numeric())
+    }
+    final_results[[i]] = out.df.i
   }
   # }, cl = "future")
   # need to reshape

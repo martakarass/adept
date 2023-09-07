@@ -109,13 +109,20 @@ finetune_maxima <- function(s.TMP,
   tau12.mat       <- outer(tau2.nbh, tau1.nbh, FUN = "-") + 1
   tau12.mat.VALID <- (1 * (tau12.mat <= template.vl.max) + 1 * (tau12.mat >= template.vl.min) - 1)
 
-  ## Identify a pair of points in the two neighbourhods
-  ## which corresponds to maxima of `finetune.maxima.x` within egligible indices
+  ## Identify a pair of points in the two neighbourhoods
+  ## which corresponds to maxima of `finetune.maxima.x` within eligible indices
   tau1.nbh.x  <- finetune.maxima.x[tau1.nbh]
   tau2.nbh.x  <- finetune.maxima.x[tau2.nbh]
   x.mat       <- outer(tau2.nbh.x, tau1.nbh.x, FUN = "+")
   x.mat.VALID <- x.mat * tau12.mat.VALID
-  which.out   <- which(x.mat.VALID == max(x.mat.VALID), arr.ind = TRUE)[1,]
+  if (getOption("adept_debug", FALSE)) {
+    print(paste0("tau1.nbh.x: ", tau1.nbh.x))
+    print(paste0("dim(x.mat): ", dim(x.mat)))
+    print(paste0("dim(x.mat.VALID): ", dim(x.mat.VALID)))
+    print(paste0("max(x.mat.VALID, na.rm = TRUE): ",
+                 max(x.mat.VALID, na.rm = TRUE)))
+  }
+  which.out   <- which(x.mat.VALID == max(x.mat.VALID, na.rm = TRUE), arr.ind = TRUE)[1,]
 
   ## Define "tuned" start and end index point of identified pattern occurence
   ## within a time-series \code{x}
