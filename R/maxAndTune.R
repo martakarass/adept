@@ -82,9 +82,9 @@ finetune_maxima <- function(s.TMP,
                             template.vl.min,
                             template.vl.max){
 
-  ## Define tau1: pattern occurence start index within a time-series \code{x}
+  ## Define tau1: pattern occurrence start index within a time-series \code{x}
   ## (as preliminarily identified)
-  ## Define tau2: pattern occurence end index within a time-series \code{x}
+  ## Define tau2: pattern occurrence end index within a time-series \code{x}
   ## (as preliminarily identified)
   tau1.TMP <- tau.TMP
   tau2.TMP <- tau.TMP + s.TMP - 1
@@ -105,7 +105,7 @@ finetune_maxima <- function(s.TMP,
   }
 
   ## Compute matrix of distances between tau2 and tau1 indices
-  ## and define if these are egligible given assumed template vector length range
+  ## and define if these are eligible given assumed template vector length range
   tau12.mat       <- outer(tau2.nbh, tau1.nbh, FUN = "-") + 1
   tau12.mat.VALID <- (1 * (tau12.mat <= template.vl.max) + 1 * (tau12.mat >= template.vl.min) - 1)
 
@@ -115,13 +115,6 @@ finetune_maxima <- function(s.TMP,
   tau2.nbh.x  <- finetune.maxima.x[tau2.nbh]
   x.mat       <- outer(tau2.nbh.x, tau1.nbh.x, FUN = "+")
   x.mat.VALID <- x.mat * tau12.mat.VALID
-  if (getOption("adept_debug", FALSE)) {
-    print(paste0("tau1.nbh.x: ", tau1.nbh.x))
-    print(paste0("dim(x.mat): ", dim(x.mat)))
-    print(paste0("dim(x.mat.VALID): ", dim(x.mat.VALID)))
-    print(paste0("max(x.mat.VALID, na.rm = TRUE): ",
-                 max(x.mat.VALID, na.rm = TRUE)))
-  }
   which.out   <- which(x.mat.VALID == max(x.mat.VALID, na.rm = TRUE), arr.ind = TRUE)[1,]
 
   ## Define "tuned" start and end index point of identified pattern occurence
@@ -231,7 +224,7 @@ maxAndTune <- function(x,
   ## -------------------------------------------------------------------------
   ## Fine-tuning components
 
-  if (!is.null(finetune) && finetune == "maxima"){
+  if (finetune_is_maxima){
     nbh.wing <- floor((finetune.maxima.nbh.vl + (finetune.maxima.nbh.vl %% 2) - 1)/2)
   }
   ## -------------------------------------------------------------------------

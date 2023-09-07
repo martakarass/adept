@@ -1,7 +1,7 @@
 
 run = FALSE
 if (run) {
-  options("adept_debug" = TRUE)
+  options("adept_debug" = FALSE)
   library(dplyr)
   library(adept)
   # muschellij2/adept@nhanes
@@ -20,6 +20,7 @@ if (run) {
     "~/Dropbox/Projects/nhanes_80hz/data/csv/pax_h/73557.csv.gz",
     # "https://github.com/martakarass/adept/files/12423699/test_data.csv.gz",
     n_max = 1e6
+    # n_max = 12002
   )
   xyz = data %>% select(all_of(c("X", "Y", "Z"))) %>% as.matrix()
   x.fs = 80L
@@ -80,15 +81,16 @@ if (run) {
                        byrow = TRUE)
     addon_mat = addon_mat + ind_mat[, ncol(ind_mat)]
     ind_mat = cbind(ind_mat, addon_mat)
-    ind_mat[ind_mat > n] = -Inf
+    ind_mat[ind_mat > n] = NA_integer_
     ind_mat
   }
   ind_mat = make_index_mat(data, x.cut.vl, x.cut.seq, x.cut.margin)
   x_mat = array(data[ind_mat], dim = dim(ind_mat))
+  x_sm_mat = x_mat
   rm(ind_mat)
   nc = ncol(x_mat)
   not_na_x = !is.na(x_mat)
-  x_mat[!not_na_x] = 0
+  # x_mat[!not_na_x] = -Inf
   not_na_x = Matrix::Matrix(not_na_x, sparse = TRUE)
   x_mat = Matrix::Matrix(x_mat, sparse = TRUE)
 
@@ -112,10 +114,10 @@ if (run) {
 
   # this replaces this:
   # if (length(idx.i) <= max(template.vl)) return(NULL)
-  one_mat = make_shift_ones(max(template.vl), nc)
-  max_na_mat = (not_na_x) %*% one_mat
-  max_na_mat[max_na_mat < max(template.vl)] = NA_integer_
-  max_na_mat = is.na(max_na_mat)
+  # one_mat = make_shift_ones(max(template.vl), nc)
+  # max_na_mat = (not_na_x) %*% one_mat
+  # max_na_mat[max_na_mat < max(template.vl)] = NA_integer_
+  # max_na_mat = is.na(max_na_mat)
 
   result = pbapply::pblapply(template.scaled, function(template_list) {
     lengths = sapply(template_list, length)
@@ -183,7 +185,7 @@ if (run) {
 
       measure = sum_xy / denominator
       measure[!is.finite(measure)] = NA
-      measure[max_na_mat] = NA
+      # measure[max_na_mat] = NA
       measure
     })
     res$na.rm = TRUE
@@ -211,15 +213,17 @@ if (run) {
   final_results = vector(mode = "list", length = length(reshaped))
   for (i in seq_along(reshaped)) {
     print(i)
+    ii = x.cut.seq[i]
     xvals = x_mat[i, ]
     ft_vals = finetune_x_mat[i, ]
+    similarity.mat = reshaped[[i]]
     if (i == length(reshaped)) {
       na_x = is.na(xvals)
       xvals = xvals[!na_x]
       ft_vals = ft_vals[!na_x]
+      similarity.mat = similarity.mat[,!na_x]
     }
-    similarity.mat = reshaped[[i]]
-    similarity.mat[is.na(similarity.mat)] = 0
+    similarity.mat = round(similarity.mat, 8)
     out.df.i <- adept:::maxAndTune(
       x = xvals,
       template.vl = template.vl,
@@ -230,8 +234,37 @@ if (run) {
       finetune.maxima.x = ft_vals,
       finetune.maxima.nbh.vl = finetune.maxima.nbh.vl)
     ## Shift \tau parameter according to which part of signal x we are currently working with
+
+    if (i == 1 || i == length(reshaped)) {
+      ## Define current x part indices
+      idx.i <- ii : min((ii + x.cut.vl + x.cut.margin), length(x.smoothed))
+      ## If we cannot fit the longest pattern, return NULL
+      if (length(idx.i) <= max(template.vl)) stop("FAIL")
+      ## Compute similarity matrix
+      similarity.mat.i <- similarityMatrix(
+        x = round(x.smoothed[idx.i], 5),
+        template.scaled = template.scaled,
+        similarity.measure = similarity.measure)
+      similarity.mat.i = round(similarity.mat.i, 8)
+      stopifnot(isTRUE(
+        all.equal(similarity.mat, similarity.mat.i, tolerance = 1e-5))
+        )
+      template.idx.mat.i <- NULL
+      ## Run max and tine procedure
+      out.df.i.check <- adept:::maxAndTune(
+        x = round(x[idx.i], 5),
+        template.vl = template.vl,
+        similarity.mat = similarity.mat.i,
+        similarity.measure.thresh = similarity.measure.thresh,
+        template.idx.mat = template.idx.mat.i,
+        finetune = finetune,
+        finetune.maxima.x = round(finetune.maxima.x[idx.i], 5),
+        finetune.maxima.nbh.vl = finetune.maxima.nbh.vl)
+      stopifnot(isTRUE(all.equal(out.df.i, out.df.i.check, tolerance = 1e-5)))
+    }
+
     if (nrow(out.df.i) > 0){
-      out.df.i$tau_i <- out.df.i$tau_i + i - 1
+      out.df.i$tau_i <- out.df.i$tau_i + ii - 1
     } else {
       ## Return empty data frame
       out.df.i = data.frame(tau_i = numeric(),
@@ -239,6 +272,7 @@ if (run) {
                             sim_i = numeric(),
                             template_i = numeric())
     }
+
     final_results[[i]] = out.df.i
   }
   # }, cl = "future")
