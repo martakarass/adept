@@ -17,6 +17,16 @@ make_index_mat = function(data, x.cut.vl, x.cut.seq, x.cut.margin) {
   ind_mat
 }
 
+make_shift_index_matrix = function(nc) {
+  suppressWarnings({
+    res = matrix(nrow = nc, ncol = nc)
+    res[1:(nc-1), 1:(nc-1)] = matrix(1:(nc), nc-1, nc-1)
+    res[, nc] = c(2:nc, 1)
+    res[nc, ] = nc:1
+  })
+  res
+}
+
 # create the rolling shift matrix
 # should be
 # x1 0 0 ...
@@ -31,13 +41,8 @@ make_shift_matrix = function(temp, nc, check_values = TRUE ) {
   last_value = temp[template_length]
   # zero pad it
   temp = c(temp, rep(0, nc - template_length))
-  system.time({
-    # quicker way for Toeplitz
-    tt = c(temp[1], rep(0, nc - 1))
-    shift_mat = pracma::Toeplitz(a = temp, b = tt)
-    # make the upper right triangular 0 so that it's now a shifted matrix
-    shift_mat[, (nc - template_length + 2):ncol(shift_mat)] = 0
-  })
+  ind_mat = make_shift_index_matrix(nc = nc)
+  shift_mat = array(temp[ind_mat], dim = dim(ind_mat))
   # quick check
   stopifnot(
     shift_mat[nrow(shift_mat), (nc - template_length + 1)] == last_value
@@ -45,13 +50,13 @@ make_shift_matrix = function(temp, nc, check_values = TRUE ) {
   shift_mat = Matrix::Matrix(shift_mat, sparse = TRUE)
 }
 
+
 # creates the same thing shifted, but just TRUE (1s) and FALSE (0)
 # this is to get rolling sums for X and X^2
 make_shift_ones = function(template_length, nc) {
   temp = rep(TRUE, template_length)
   make_shift_matrix(temp, nc, check_values = FALSE)
 }
-
 
 
 run_fast_segmentation = function(
@@ -100,7 +105,11 @@ run_fast_segmentation = function(
     template_length = lengths[1]
 
     # get n for the cov/cor calculation
-    one_mat = make_shift_ones(template_length, nc)
+    index_mat = make_shift_index_matrix(nc)
+    one_mat = c(rep(TRUE, template_length),
+                rep(FALSE, nc - template_length))
+    one_mat = array(one_mat[index_mat], dim = dim(index_mat))
+    # one_mat = make_shift_ones(template_length, nc)
     n_mat = (not_na_x) %*% one_mat
     n_mat[n_mat <= 1L] = NA_integer_
 
@@ -132,7 +141,12 @@ run_fast_segmentation = function(
     res = lapply(template_list, function(temp) {
 
       # here is the rolling cross product
-      shift_mat = make_shift_matrix(temp, nc)
+      # shift_mat = make_shift_matrix(temp, nc)
+      temp_pad = c(temp, rep(0, nc - length(temp)))
+      shift_mat = array(temp_pad[index_mat], dim = dim(index_mat))
+
+      # shift_mat = array(temp, dim = dim(index_mat))
+      # shift_mat[is.na(shift_mat)] = 0
       sum_xy = x_mat %*% shift_mat
 
       measure = sum_xy / denominator
