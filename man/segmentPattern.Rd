@@ -96,7 +96,8 @@ which of the provided pattern templates yielded a similarity matrix value
 that corresponds to an identified pattern occurrence.
 Setting to \code{TRUE} may increase computation time. Default is \code{FALSE}.}
 
-\item{fast}{run fast computation of pattern segmentation.}
+\item{fast}{run fast computation of pattern segmentation.  May increase
+memory requirements substantially.}
 }
 \value{
 A \code{data.frame} with segmentation results. Each row

@@ -63,7 +63,8 @@
 #' which of the provided pattern templates yielded a similarity matrix value
 #' that corresponds to an identified pattern occurrence.
 #' Setting to \code{TRUE} may increase computation time. Default is \code{FALSE}.
-#' @param fast run fast computation of pattern segmentation.
+#' @param fast run fast computation of pattern segmentation.  May increase
+#' memory requirements substantially.
 #' @details
 #' Function implements Adaptive Empirical Pattern Transformation (ADEPT) method for pattern segmentation
 #' from a time-series \code{x}.
