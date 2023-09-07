@@ -333,11 +333,11 @@ segmentPattern <- function(x,
   # define number of cores to use in parallel
   mc.cores.val <- ifelse (run.parallel & (!(is.null(run.parallel.cores))), run.parallel.cores, 1L)
 
-  fun = run_segmentation
+  func = run_segmentation
   if (fast) {
     func = run_fast_segmentation
   }
-  out.list <- fun(
+  out.list <- func(
     x = x,
     x.smoothed = x.smoothed,
     finetune.maxima.x = finetune.maxima.x,
