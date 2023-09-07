@@ -153,7 +153,8 @@ segmentWalking <- function(xyz,
                            mean_abs_diff_dur_MAX   = 0.2,
                            compute.template.idx = FALSE,
                            run.parallel = FALSE,
-                           run.parallel.cores = 1){
+                           run.parallel.cores = 1,
+                           fast = FALSE){
 
   # compute all spherical
   xyz <- as.matrix(xyz)
@@ -178,8 +179,9 @@ segmentWalking <- function(xyz,
     run.parallel = run.parallel,
     run.parallel.cores = run.parallel.cores,
     x.cut = TRUE,
-    x.cut.vl = 6000,
-    compute.template.idx = compute.template.idx)
+    x.cut.vl = 6000L,
+    compute.template.idx = compute.template.idx,
+    fast = fast)
   rm(vm)
 
   # generate detailed summary of ADEPT-identified patterns

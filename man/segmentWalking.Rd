@@ -20,7 +20,8 @@ segmentWalking(
   mean_abs_diff_dur_MAX = 0.2,
   compute.template.idx = FALSE,
   run.parallel = FALSE,
-  run.parallel.cores = 1
+  run.parallel.cores = 1,
+  fast = FALSE
 )
 }
 \arguments{

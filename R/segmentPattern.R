@@ -63,7 +63,7 @@
 #' which of the provided pattern templates yielded a similarity matrix value
 #' that corresponds to an identified pattern occurrence.
 #' Setting to \code{TRUE} may increase computation time. Default is \code{FALSE}.
-#'
+#' @param fast run fast computation of pattern segmentation.
 #' @details
 #' Function implements Adaptive Empirical Pattern Transformation (ADEPT) method for pattern segmentation
 #' from a time-series \code{x}.
@@ -230,7 +230,8 @@ segmentPattern <- function(x,
                            run.parallel.cores = 1L,
                            x.cut = TRUE,
                            x.cut.vl = 6000L,
-                           compute.template.idx = FALSE){
+                           compute.template.idx = FALSE,
+                           fast = FALSE){
 
 
   ## ---------------------------------------------------------------------------
@@ -253,7 +254,11 @@ segmentPattern <- function(x,
   if (!(length(x.cut) == 1 & x.cut %in% c(TRUE, FALSE))) stop("x.cut must be a logical scalar.")
   if (!(is.null(x.cut.vl) || (length(x.cut.vl) == 1 & is.integer(x.cut.vl) & x.cut.vl > 0))) stop("x.cut.vl must me NULL or a positive integer scalar")
   if (!(length(compute.template.idx) == 1 & compute.template.idx %in% c(TRUE, FALSE))) stop("compute.template.idx must be a logical scalar.")
-
+  stopifnot(length(fast) == 1,
+            is.logical(fast))
+  if (fast & compute.template.idx) {
+    stop("fast option cannot be used if compute.template.idx = TRUE")
+  }
 
   ## ---------------------------------------------------------------------------
   ## Compute a list of rescaled template(s)
@@ -324,6 +329,27 @@ segmentPattern <- function(x,
 
   # define number of cores to use in parallel
   mc.cores.val <- ifelse (run.parallel & (!(is.null(run.parallel.cores))), run.parallel.cores, 1L)
+
+  fun = run_segmentation
+  if (fast) {
+    func = run_fast_segmentation
+  }
+  out.list <- fun(
+    x = x,
+    x.smoothed = x.smoothed,
+    finetune.maxima.x = finetune.maxima.x,
+    x.cut.seq = x.cut.seq,
+    x.cut.vl = x.cut.vl,
+    x.cut.margin = x.cut.margin,
+    template.vl = template.vl,
+    template.scaled = template.scaled,
+    similarity.measure = similarity.measure,
+    similarity.measure.thresh = similarity.measure.thresh,
+    compute.template.idx = compute.template.idx,
+    finetune = finetune,
+    finetune.maxima.nbh.vl = finetune.maxima.nbh.vl,
+    mc.cores.val = mc.cores.val
+  )
 
   out.list <- parallel::mclapply(x.cut.seq, function(i){
     ## Define current x part indices

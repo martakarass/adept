@@ -41,5 +41,6 @@ Imports:
     magrittr,
     dvmisc,
     parallel,
-    pracma
+    pracma,
+    pbmcapply
 Language: en-US
