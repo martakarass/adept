@@ -95,8 +95,10 @@ if (run) {
     temp = rep(TRUE, template_length)
     temp = c(temp, rep(FALSE, nc - length(temp)))
     system.time({
-      tt = c(temp[1], rep(FALSE, nc - template_length))
-      shift_mat = pracma::Toeplitz(a = temp, b = tt)
+      # tt = c(temp[1], rep(FALSE, nc - template_length))
+      # shift_mat = pracma::Toeplitz(a = temp, b = tt)
+      shift_mat = pracma::Toeplitz(a = temp)
+      shift_mat[, (nc - template_length + 2):ncol(shift_mat)] = 0
     })
     # shift_mat = shift_mat[, 1:(nc - template_length + 1)]
     shift_mat = Matrix::Matrix(shift_mat, sparse = TRUE)
@@ -148,15 +150,20 @@ if (run) {
       #   x
       # })
       system.time({
-        tt = c(temp[1], rep(0, nc - template_length))
-        shift_mat = pracma::Toeplitz(a = temp, b = tt)
+        # tt = c(temp[1], rep(0, nc - template_length))
+        # shift_mat = pracma::Toeplitz(a = temp, b = tt)
+        shift_mat = pracma::Toeplitz(a = temp)
+        shift_mat[, (nc - template_length + 2):ncol(shift_mat)] = 0
       })
-      stopifnot(shift_mat[nrow(shift_mat), ncol(shift_mat)] == last_value)
+      stopifnot(
+        shift_mat[nrow(shift_mat), (nc - template_length + 1)] == last_value
+      )
       # shift_mat = shift_mat[, 1:(nc - template_length + 1)]
       shift_mat = Matrix::Matrix(shift_mat, sparse = TRUE)
     }
 
     itemp = 1
+    temp = template_list[[1]]
     # result = pbapply::pblapply(template_list, function(temp) {
     res = lapply(template_list, function(temp) {
       shift_mat = make_shift_matrix(temp, nc)
@@ -169,6 +176,34 @@ if (run) {
     res = do.call(pmax, res)
     res
   })
+
+  reshaped = vector(mode = "list", length = nrow(x_mat))
+  for (ireshaped in seq_along(reshaped)) {
+    mat = matrix(nrow = length(result), ncol = nc)
+    for (i in seq_along(result)) {
+      mat[i, ] = result[[i]][ireshaped, ]
+    }
+    reshaped[[ireshaped]] = mat
+  }
+
+  # back to x, not x.smoothed
+  data = xyzptr[, 6]
+  data = round(data, 5)
+  ind_mat = make_index_mat(data, x.cut.vl, x.cut.seq, x.cut.margin)
+  x_mat = array(data[ind_mat], dim = dim(ind_mat))
+  finetune_x_mat = array(round(finetune.maxima.x, 5)[ind_mat], dim = dim(ind_mat))
+  rm(ind_mat)
+
+  for (i in seq_along(reshaped)) {
+  out.df.i <- maxAndTune(x = x[idx.i],
+                         template.vl = template.vl,
+                         similarity.mat = similarity.mat.i,
+                         similarity.measure.thresh = similarity.measure.thresh,
+                         template.idx.mat = template.idx.mat.i,
+                         finetune = finetune,
+                         finetune.maxima.x = finetune.maxima.x[idx.i],
+                         finetune.maxima.nbh.vl = finetune.maxima.nbh.vl)
+  }
   # }, cl = "future")
   # need to reshape
   # currently it's in length tn (n template) with K x T matrices
