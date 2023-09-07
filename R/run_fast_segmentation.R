@@ -47,7 +47,8 @@ make_shift_matrix = function(temp, nc, check_values = TRUE ) {
   stopifnot(
     shift_mat[nrow(shift_mat), (nc - template_length + 1)] == last_value
   )
-  shift_mat = Matrix::Matrix(shift_mat, sparse = TRUE)
+  shift_mat
+  # shift_mat = Matrix::Matrix(shift_mat, sparse = TRUE)
 }
 
 
@@ -86,12 +87,13 @@ run_fast_segmentation = function(
   nc = ncol(x_mat)
   # will use this to get n for the cov(x,y)/n and cor(x, y)
   not_na_x = !is.na(x_mat)
-  not_na_x = Matrix::Matrix(not_na_x, sparse = TRUE)
-  x_mat = Matrix::Matrix(x_mat, sparse = TRUE)
+  # not_na_x = Matrix::Matrix(not_na_x, sparse = TRUE)
+  # x_mat = Matrix::Matrix(x_mat, sparse = TRUE)
 
 
 
   template_list = template.scaled[[1]]
+  index_mat = make_shift_index_matrix(nc)
 
   # using pbmclapply for a progress bar
   result = pbmcapply::pbmclapply(template.scaled, function(template_list) {
@@ -105,7 +107,6 @@ run_fast_segmentation = function(
     template_length = lengths[1]
 
     # get n for the cov/cor calculation
-    index_mat = make_shift_index_matrix(nc)
     one_mat = c(rep(TRUE, template_length),
                 rep(FALSE, nc - template_length))
     one_mat = array(one_mat[index_mat], dim = dim(index_mat))
