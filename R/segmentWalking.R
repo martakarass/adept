@@ -93,6 +93,9 @@ RunningMean <- function(x, W, circular = FALSE){
 #' that corresponds to an identified pattern occurrence.
 #' Setting to \code{TRUE} may increase computation time.
 #' Default is \code{FALSE}.
+#' @param fast run fast computation of pattern segmentation.  May increase
+#' memory requirements substantially. Cannot currently
+#' use `compute.template.idx = TRUE` with this option.
 #'
 #' @return A \code{data.frame} with segmentation results. Each row
 #' describes one identified pattern occurrence:

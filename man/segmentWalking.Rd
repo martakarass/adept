@@ -93,6 +93,10 @@ DOES NOT WORK ON WINDOWS.}
 \item{run.parallel.cores}{An integer scalar.
 The number of cores to use for parallel execution. Defaults to 1L
 (no parallel). DOES NOT WORK ON WINDOWS.}
+
+\item{fast}{run fast computation of pattern segmentation.  May increase
+memory requirements substantially. Cannot currently
+use `compute.template.idx = TRUE` with this option.}
 }
 \value{
 A \code{data.frame} with segmentation results. Each row

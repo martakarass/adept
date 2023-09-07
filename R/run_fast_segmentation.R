@@ -1,3 +1,5 @@
+
+# Make an index matrix for the window
 make_index_mat = function(data, x.cut.vl, x.cut.seq, x.cut.margin) {
   n = length(data)
   nr = length(x.cut.seq)
@@ -9,13 +11,20 @@ make_index_mat = function(data, x.cut.vl, x.cut.seq, x.cut.margin) {
                      byrow = TRUE)
   addon_mat = addon_mat + ind_mat[, ncol(ind_mat)]
   ind_mat = cbind(ind_mat, addon_mat)
+
+  # make NA indices that are longer than the vecor
   ind_mat[ind_mat > n] = NA_integer_
   ind_mat
 }
 
+# create the rolling shift matrix
+# should be
+# x1 0 0 ...
+# x2 x1 0 ...
+# x3 x2 x1 0 ...
 make_shift_matrix = function(temp, nc) {
   stopifnot(abs(mean(temp)) <= 1e-5,
-            abs(sd(temp) - 1) <= 1e-5)
+            abs(stats::sd(temp) - 1) <= 1e-5)
   template_length = length(temp)
   last_value = temp[template_length]
   # zero pad it
@@ -24,16 +33,18 @@ make_shift_matrix = function(temp, nc) {
     # quicker way for Toeplitz
     tt = c(temp[1], rep(0, nc - 1))
     shift_mat = pracma::Toeplitz(a = temp, b = tt)
+    # make the upper right triangular 0 so that it's now a shifted matrix
     shift_mat[, (nc - template_length + 2):ncol(shift_mat)] = 0
   })
+  # quick check
   stopifnot(
     shift_mat[nrow(shift_mat), (nc - template_length + 1)] == last_value
   )
-  # shift_mat = shift_mat[, 1:(nc - template_length + 1)]
   shift_mat = Matrix::Matrix(shift_mat, sparse = TRUE)
 }
 
-
+# creates the same thing shifted, but just TRUE (1s) and FALSE (0)
+# this is to get rolling sums for X and X^2
 make_shift_ones = function(template_length, nc) {
   temp = rep(TRUE, template_length)
   make_shift_matrix(temp, nc)
@@ -58,12 +69,15 @@ run_fast_segmentation = function(
     mc.cores.val
 ) {
 
+  # round the data for numerical stability
   x.smoothed = round(x.smoothed, 6)
 
   ind_mat = make_index_mat(x.smoothed, x.cut.vl, x.cut.seq, x.cut.margin)
+  # get all the sequences out
   x_mat = array(x.smoothed[ind_mat], dim = dim(ind_mat))
   rm(ind_mat)
   nc = ncol(x_mat)
+  # will use this to get n for the cov(x,y)/n and cor(x, y)
   not_na_x = !is.na(x_mat)
   not_na_x = Matrix::Matrix(not_na_x, sparse = TRUE)
   x_mat = Matrix::Matrix(x_mat, sparse = TRUE)
@@ -72,17 +86,26 @@ run_fast_segmentation = function(
 
   template_list = template.scaled[[1]]
 
+  # using pbmclapply for a progress bar
   result = pbmcapply::pbmclapply(template.scaled, function(template_list) {
     # result = pbapply::pblapply(template.scaled, function(template_list) {
+
+    # quick template checks.  These are crucial because one speedup
+    # is that we only need to calculate the values for x once
+    # per template stretch list
     lengths = sapply(template_list, length)
     stopifnot(all(lengths == lengths[1]))
     template_length = lengths[1]
 
+    # get n for the cov/cor calculation
     one_mat = make_shift_ones(template_length, nc)
     n_mat = (not_na_x) %*% one_mat
     n_mat[n_mat <= 1L] = NA_integer_
 
     if (similarity.measure == "cor") {
+      # matrix version of correlation, but rolling
+      # has BIG assumption of E[y] = 0 and sd(y) = 1
+
       sum_x2 = (x_mat ^ 2) %*% one_mat
       sum_x = x_mat %*% one_mat
       # 1/(n-1) (Σ(x - 𝑥̄)^2
@@ -104,8 +127,9 @@ run_fast_segmentation = function(
 
     # itemp = 1
     # temp = template_list[[1]]
-    # result = pbapply::pblapply(template_list, function(temp) {
     res = lapply(template_list, function(temp) {
+
+      # here is the rolling cross product
       shift_mat = make_shift_matrix(temp, nc)
       sum_xy = x_mat %*% shift_mat
 
@@ -114,10 +138,13 @@ run_fast_segmentation = function(
       measure
     })
     res$na.rm = TRUE
+    # running pmax here.  We would need to do a workup on `res`
+    # to get template.idx
     res = do.call(pmax, res)
     res
   }, mc.cores = getOption("mc.cores", mc.cores.val))
 
+  # need to reshape it because maxAndTune requires a different list
   reshaped = vector(mode = "list", length = nrow(x_mat))
   for (ireshaped in seq_along(reshaped)) {
     mat = matrix(nrow = length(result), ncol = nc)
@@ -126,16 +153,22 @@ run_fast_segmentation = function(
     }
     reshaped[[ireshaped]] = mat
   }
+  # remove the old result
   rm(result)
 
 
   # back to x, not x.smoothed
+  # rounding for stability
   x = round(x, 6)
   finetune.maxima.x = round(finetune.maxima.x, 6)
+
+  # again making an index matrix
   ind_mat = make_index_mat(x, x.cut.vl, x.cut.seq, x.cut.margin)
   x_mat = array(x[ind_mat], dim = dim(ind_mat))
   finetune_x_mat = array(finetune.maxima.x[ind_mat],
                          dim = dim(ind_mat))
+
+  # we could rm(x.smoothed) here but we use it for checking
   rm(ind_mat)
 
   final_results = pbmcapply::pbmclapply(
@@ -147,14 +180,20 @@ run_fast_segmentation = function(
       xvals = x_mat[i, ]
       ft_vals = finetune_x_mat[i, ]
       similarity.mat = reshaped[[i]]
+
+      # need workup for the last row because not always fit nicely
+      # (e.g. end of vector)
       if (i == length(reshaped)) {
         # end needs to be truncated
         na_x = is.na(xvals)
         xvals = xvals[!na_x]
         ft_vals = ft_vals[!na_x]
-        similarity.mat = similarity.mat[,!na_x]
+        similarity.mat = similarity.mat[, !na_x]
       }
+      # round this to something reasonable
       similarity.mat = round(similarity.mat, 8)
+
+      # again, would need workup to make template.idx to work
       template.idx.mat.i = NULL
       out.df.i <- maxAndTune(
         x = xvals,
@@ -165,8 +204,8 @@ run_fast_segmentation = function(
         finetune = finetune,
         finetune.maxima.x = ft_vals,
         finetune.maxima.nbh.vl = finetune.maxima.nbh.vl)
-      ## Shift \tau parameter according to which part of signal x we are currently working with
 
+      # for first and last record, check against old version/gold standard
       if (i == 1 || i == length(reshaped)) {
         ## Define current x part indices
         idx.i <- ii : min((ii + x.cut.vl + x.cut.margin), length(x.smoothed))
@@ -174,27 +213,29 @@ run_fast_segmentation = function(
         if (length(idx.i) <= max(template.vl)) stop("FAIL")
         ## Compute similarity matrix
         similarity.mat.i <- similarityMatrix(
-          x = round(x.smoothed[idx.i], 5),
+          x = x.smoothed[idx.i],
           template.scaled = template.scaled,
           similarity.measure = similarity.measure)
         similarity.mat.i = round(similarity.mat.i, 8)
+        # need some reasonable tolerance here
         stopifnot(isTRUE(
           all.equal(similarity.mat, similarity.mat.i, tolerance = 1e-5))
         )
         template.idx.mat.i <- NULL
         ## Run max and tine procedure
-        out.df.i.check <- adept:::maxAndTune(
-          x = round(x[idx.i], 5),
+        out.df.i.check <- maxAndTune(
+          x = x[idx.i],
           template.vl = template.vl,
           similarity.mat = similarity.mat.i,
           similarity.measure.thresh = similarity.measure.thresh,
           template.idx.mat = template.idx.mat.i,
           finetune = finetune,
-          finetune.maxima.x = round(finetune.maxima.x[idx.i], 5),
+          finetune.maxima.x = finetune.maxima.x[idx.i],
           finetune.maxima.nbh.vl = finetune.maxima.nbh.vl)
         stopifnot(isTRUE(all.equal(out.df.i, out.df.i.check, tolerance = 1e-5)))
       }
 
+      # shift the tau based on ii - the cut index
       if (nrow(out.df.i) > 0){
         out.df.i$tau_i <- out.df.i$tau_i + ii - 1
       } else {

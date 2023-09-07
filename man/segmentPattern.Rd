@@ -97,7 +97,8 @@ that corresponds to an identified pattern occurrence.
 Setting to \code{TRUE} may increase computation time. Default is \code{FALSE}.}
 
 \item{fast}{run fast computation of pattern segmentation.  May increase
-memory requirements substantially.}
+memory requirements substantially. Cannot currently
+use `compute.template.idx = TRUE` with this option.}
 }
 \value{
 A \code{data.frame} with segmentation results. Each row
