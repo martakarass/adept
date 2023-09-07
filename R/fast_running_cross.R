@@ -170,6 +170,7 @@ if (run) {
       sum_xy = x_mat %*% shift_mat
 
       measure = sum_xy / denominator
+      measure[!is.finite(measure)] = NA
       measure
     })
     res$na.rm = TRUE
@@ -195,14 +196,15 @@ if (run) {
   rm(ind_mat)
 
   for (i in seq_along(reshaped)) {
-  out.df.i <- maxAndTune(x = x[idx.i],
-                         template.vl = template.vl,
-                         similarity.mat = similarity.mat.i,
-                         similarity.measure.thresh = similarity.measure.thresh,
-                         template.idx.mat = template.idx.mat.i,
-                         finetune = finetune,
-                         finetune.maxima.x = finetune.maxima.x[idx.i],
-                         finetune.maxima.nbh.vl = finetune.maxima.nbh.vl)
+    print(i)
+    out.df.i <- adept:::maxAndTune(x = x_mat[i, ],
+                           template.vl = template.vl,
+                           similarity.mat = reshaped[[i]],
+                           similarity.measure.thresh = similarity.measure.thresh,
+                           template.idx.mat = template.idx.mat.i,
+                           finetune = finetune,
+                           finetune.maxima.x = finetune_x_mat[i, ],
+                           finetune.maxima.nbh.vl = finetune.maxima.nbh.vl)
   }
   # }, cl = "future")
   # need to reshape
