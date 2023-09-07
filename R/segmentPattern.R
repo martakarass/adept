@@ -292,6 +292,7 @@ segmentPattern <- function(x,
   ## Smooth x signal for fine tuning
 
   ## Fine-tuning type-specific procedures
+  finetune.maxima.x = finetune.maxima.nbh.vl = NULL
   if (!is.null(finetune) && finetune == "maxima"){
 
     ## Signal smoothing for fine tunning

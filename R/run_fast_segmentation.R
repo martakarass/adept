@@ -22,9 +22,11 @@ make_index_mat = function(data, x.cut.vl, x.cut.seq, x.cut.margin) {
 # x1 0 0 ...
 # x2 x1 0 ...
 # x3 x2 x1 0 ...
-make_shift_matrix = function(temp, nc) {
-  stopifnot(abs(mean(temp)) <= 1e-5,
-            abs(stats::sd(temp) - 1) <= 1e-5)
+make_shift_matrix = function(temp, nc, check_values = TRUE ) {
+  if (check_values) {
+    stopifnot(abs(mean(temp)) <= 1e-5,
+              abs(stats::sd(temp) - 1) <= 1e-5)
+  }
   template_length = length(temp)
   last_value = temp[template_length]
   # zero pad it
@@ -47,7 +49,7 @@ make_shift_matrix = function(temp, nc) {
 # this is to get rolling sums for X and X^2
 make_shift_ones = function(template_length, nc) {
   temp = rep(TRUE, template_length)
-  make_shift_matrix(temp, nc)
+  make_shift_matrix(temp, nc, check_values = FALSE)
 }
 
 
@@ -160,13 +162,20 @@ run_fast_segmentation = function(
   # back to x, not x.smoothed
   # rounding for stability
   x = round(x, 6)
-  finetune.maxima.x = round(finetune.maxima.x, 6)
+
 
   # again making an index matrix
   ind_mat = make_index_mat(x, x.cut.vl, x.cut.seq, x.cut.margin)
   x_mat = array(x[ind_mat], dim = dim(ind_mat))
-  finetune_x_mat = array(finetune.maxima.x[ind_mat],
-                         dim = dim(ind_mat))
+  run_finetune = !is.null(finetune) && finetune == "maxima"
+  if (run_finetune) {
+    finetune.maxima.x = round(finetune.maxima.x, 6)
+    finetune_x_mat = array(finetune.maxima.x[ind_mat],
+                           dim = dim(ind_mat))
+  } else {
+    finetune.maxima.x = NULL
+    finetune_x_mat = NULL
+  }
 
   # we could rm(x.smoothed) here but we use it for checking
   rm(ind_mat)
@@ -178,7 +187,11 @@ run_fast_segmentation = function(
       # print(i)
       ii = x.cut.seq[i]
       xvals = x_mat[i, ]
-      ft_vals = finetune_x_mat[i, ]
+      if (run_finetune) {
+        ft_vals = finetune_x_mat[i, ]
+      } else {
+        ft_vals = NULL
+      }
       similarity.mat = reshaped[[i]]
 
       # need workup for the last row because not always fit nicely
@@ -187,7 +200,9 @@ run_fast_segmentation = function(
         # end needs to be truncated
         na_x = is.na(xvals)
         xvals = xvals[!na_x]
-        ft_vals = ft_vals[!na_x]
+        if (run_finetune) {
+          ft_vals = ft_vals[!na_x]
+        }
         similarity.mat = similarity.mat[, !na_x]
       }
       # round this to something reasonable
