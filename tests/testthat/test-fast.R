@@ -36,6 +36,8 @@ testthat::test_that("fast segmentPattern gives same results", {
     similarity.measure = "cor"
   )
   res = test_both(args = args)
+  args$similarity.measure = "cov"
+  res = test_both(args = args)
 
   ## Segment pattern from x. Now assume a grid of potential pattern duratios
   ## contains true pattern duration
@@ -46,6 +48,8 @@ testthat::test_that("fast segmentPattern gives same results", {
     pattern.dur.seq = c(0.9, 0.95, 1, 1.03, 1.1),
     similarity.measure = "cor",
     compute.template.idx = FALSE)
+  res = test_both(args = args)
+  args$similarity.measure = "cov"
   res = test_both(args = args)
 
   ## Example 2: Simulate a time-series `x`. Assume that
@@ -77,7 +81,8 @@ testthat::test_that("fast segmentPattern gives same results", {
     similarity.measure = "cor",
     compute.template.idx = FALSE)
   res = test_both(args = args)
-
+  args$similarity.measure = "cov"
+  res = test_both(args = args)
 
   ## Example 3: Simulate a time-series `x`. Assume that
   ## - `x` is collected at a frequency of 100 Hz,
@@ -95,6 +100,8 @@ testthat::test_that("fast segmentPattern gives same results", {
     similarity.measure = "cor",
     compute.template.idx = FALSE)
   res = test_both(args = args)
+  args$similarity.measure = "cov"
+  res = test_both(args = args)
 
   ## Segment pattern from x. Use `x.adept.ma.W` to define a length of a smoothing
   ## window to smooth `x` for similarity matrix computation.
@@ -106,6 +113,8 @@ testthat::test_that("fast segmentPattern gives same results", {
     similarity.measure = "cor",
     x.adept.ma.W = 0.1,
     compute.template.idx = FALSE)
+  res = test_both(args = args)
+  args$similarity.measure = "cov"
   res = test_both(args = args)
 
   ## Segment pattern from x. Use `x.adept.ma.W` to define a length of a smoothing
@@ -122,6 +131,9 @@ testthat::test_that("fast segmentPattern gives same results", {
     finetune.maxima.nbh.W = 0.3,
     compute.template.idx = FALSE)
   res = test_both(args = args)
+  args$similarity.measure = "cov"
+  res = test_both(args = args)
+
   ## Segment pattern from x. Employ a fine-tuning procedure for stride
   ## identification. Smooth `x` for both similarity matrix computation
   ## (set `x.adept.ma.W = 0.1`) and for  fine-tune peak detection procedure
@@ -136,6 +148,8 @@ testthat::test_that("fast segmentPattern gives same results", {
     finetune = "maxima",
     finetune.maxima.nbh.W = 0.3,
     compute.template.idx = FALSE)
+  res = test_both(args = args)
+  args$similarity.measure = "cov"
   res = test_both(args = args)
 
 })
