@@ -63,8 +63,8 @@
 #' axis(2, at = (yaxis - min(yaxis))/(max(yaxis) - min(yaxis)), labels = yaxis)
 #'
 similarityMatrix <- function(x,
-                            template.scaled,
-                            similarity.measure){
+                             template.scaled,
+                             similarity.measure){
 
   sliding.func <- switch(similarity.measure,
                          "cov" = sliding_cov,
@@ -129,8 +129,8 @@ similarityMatrix <- function(x,
 #' @noRd
 #'
 templateIdxMatrix <- function(x,
-                          template.scaled,
-                          similarity.measure){
+                              template.scaled,
+                              similarity.measure){
 
   sliding.func <- switch(similarity.measure,
                          "cov" = sliding_cov,

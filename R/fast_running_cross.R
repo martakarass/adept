@@ -9,7 +9,7 @@ if (run) {
   template_list = do.call(rbind, all_wrist_templates)
   template_list = apply(template_list, 1, identity, simplify = FALSE)
 
-  template = template_list
+  template = template_list[1:5]
   # devtools::load_all()
   options(digits.secs = 3)
   sample_rate = 10L
@@ -84,6 +84,7 @@ if (run) {
   }
   ind_mat = make_index_mat(data, x.cut.vl, x.cut.seq, x.cut.margin)
   x_mat = array(data[ind_mat], dim = dim(ind_mat))
+  rm(ind_mat)
   nc = ncol(x_mat)
   not_na_x = !is.na(x_mat)
   x_mat[!not_na_x] = 0
@@ -169,6 +170,11 @@ if (run) {
     res
   })
   # }, cl = "future")
+  # need to reshape
+  # currently it's in length tn (n template) with K x T matrices
+  # need to harmonize T to keep it at 6320 or whatever
+  # Then it should be tn x T and K of them.
+  # for (i )
 
 
   # out.list <- pbapply::pblapply(x.cut.seq, function(i){

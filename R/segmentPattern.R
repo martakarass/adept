@@ -229,7 +229,7 @@ segmentPattern <- function(x,
                            run.parallel = FALSE,
                            run.parallel.cores = 1L,
                            x.cut = TRUE,
-                           x.cut.vl = 6000,
+                           x.cut.vl = 6000L,
                            compute.template.idx = FALSE){
 
 
