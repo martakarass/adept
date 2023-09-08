@@ -224,7 +224,7 @@ maxAndTune <- function(x,
   ## -------------------------------------------------------------------------
   ## Fine-tuning components
 
-  if (!is.null(finetune) && finetune == "maxima"){
+  if (finetune_is_maxima) {
     nbh.wing <- floor((finetune.maxima.nbh.vl + (finetune.maxima.nbh.vl %% 2) - 1)/2)
   }
   ## -------------------------------------------------------------------------
@@ -306,13 +306,17 @@ maxAndTune <- function(x,
     x.Fitted[(tau.TMP + 1):(tau.TMP + s.TMP - 2)] <- 1
 
     ## Store current iteration-specific results
-    out.list[[length(out.list) + 1]] <- c(tau.TMP, s.TMP, similarity.mat.MAX, template.idx.TMP)
+    out.list[[length(out.list) + 1]] <- data.frame(
+      tau_i = tau.TMP, T_i = s.TMP,
+      sim_i = similarity.mat.MAX,
+      template_i = template.idx.TMP)
 
   }
 
   ## List to data frame
-  out.df <- as.data.frame(do.call(rbind, out.list))
-  if (nrow(out.df) > 0) names(out.df) <- c("tau_i", "T_i", "sim_i", "template_i")
+  # out.df <- as.data.frame(do.call(rbind, out.list))
+  out.df <- dplyr::bind_rows(out.list)
+  # if (nrow(out.df) > 0) names(out.df) <- c("tau_i", "T_i", "sim_i", "template_i")
 
   return(out.df)
 
