@@ -115,7 +115,9 @@ finetune_maxima <- function(s.TMP,
   tau2.nbh.x  <- finetune.maxima.x[tau2.nbh]
   x.mat       <- outer(tau2.nbh.x, tau1.nbh.x, FUN = "+")
   x.mat.VALID <- x.mat * tau12.mat.VALID
-  which.out   <- which(x.mat.VALID == max(x.mat.VALID), arr.ind = TRUE)[1,]
+  which.out   <- which.max(x.mat.VALID)
+  which.out = arrayInd(which.out,
+                       .dim = dim(x.mat.VALID))
 
   ## Define "tuned" start and end index point of identified pattern occurence
   ## within a time-series \code{x}
