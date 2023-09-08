@@ -115,7 +115,9 @@ finetune_maxima <- function(s.TMP,
   tau2.nbh.x  <- finetune.maxima.x[tau2.nbh]
   x.mat       <- outer(tau2.nbh.x, tau1.nbh.x, FUN = "+")
   x.mat.VALID <- x.mat * tau12.mat.VALID
-  which.out   <- which(x.mat.VALID == max(x.mat.VALID), arr.ind = TRUE)[1,]
+  which.out   <- which.max(x.mat.VALID)
+  which.out = arrayInd(which.out,
+                       .dim = dim(x.mat.VALID))
 
   ## Define "tuned" start and end index point of identified pattern occurence
   ## within a time-series \code{x}
@@ -219,10 +221,12 @@ maxAndTune <- function(x,
   out.list <- list()
   x.Fitted <- rep(NA, x.vl)
 
+  run_template_idx = !(is.null(template.idx.mat))
+  finetune_is_maxima = !is.null(finetune) && finetune == "maxima"
   ## -------------------------------------------------------------------------
   ## Fine-tuning components
 
-  if (!is.null(finetune) && finetune == "maxima"){
+  if (finetune_is_maxima) {
     nbh.wing <- floor((finetune.maxima.nbh.vl + (finetune.maxima.nbh.vl %% 2) - 1)/2)
   }
   ## -------------------------------------------------------------------------
@@ -235,28 +239,37 @@ maxAndTune <- function(x,
     # if (max.empty < template.vl.min){
     #   break
     # }
-    if (all(is.na(similarity.mat))){
-      break
-    }
+    # if (all(is.na(similarity.mat))){
+    #   break
+    # }
 
-    ## Determine current maximum value in similarity matrix
-    similarity.mat.MAX <- max(similarity.mat, na.rm = TRUE)
-    if (similarity.mat.MAX < similarity.measure.thresh) {
-      break
-    }
 
     ## Identify parameters s and tau corresponding to maximum of covariance matrix
     ## s:   expressed as vector length
     ## tau: expressed as index of x vector
     ## Mar 5, 2019 @MK: fix the discrepancies caused by floating precision
     ## May 5, 2019 @MK: restore the previous code line here
-    similarity.mat.MAX.IDX <- which(similarity.mat == similarity.mat.MAX, arr.ind = TRUE)[1, ]
+    # get the index first, then check
+    similarity.mat.MAX.IDX <- which.max(similarity.mat)
+    similarity.mat.MAX = similarity.mat[similarity.mat.MAX.IDX]
+    ## Determine current maximum value in similarity matrix
+    # similarity.mat.MAX <- max(similarity.mat, na.rm = TRUE)
+    if (length(similarity.mat.MAX) == 0 ||
+        length(similarity.mat.MAX.IDX) == 0 ||
+        similarity.mat.MAX < similarity.measure.thresh) {
+      break
+    }
+
+    # turn into row/column
+    similarity.mat.MAX.IDX = arrayInd(similarity.mat.MAX.IDX,
+                                      .dim = dim(similarity.mat))
     # similarity.mat.MAX.IDX <- which(similarity.mat + tol > similarity.mat.MAX, arr.ind = TRUE)[1, ]
     tau.TMP     <- similarity.mat.MAX.IDX[2]
     s.TMP       <- template.vl[similarity.mat.MAX.IDX[1]]
 
+
     ## Identify
-    if (!(is.null(template.idx.mat))){
+    if (run_template_idx){
       template.idx.TMP <- template.idx.mat[similarity.mat.MAX.IDX[1], similarity.mat.MAX.IDX[2]]
     }
 
@@ -264,7 +277,7 @@ maxAndTune <- function(x,
     ## -------------------------------------------------------------------------
     ## Fine-tuning
 
-    if (!is.null(finetune) && finetune == "maxima"){
+    if (finetune_is_maxima){
       finetune.out <- finetune_maxima(s.TMP,
                                       tau.TMP,
                                       nbh.wing,
@@ -278,13 +291,14 @@ maxAndTune <- function(x,
     ## -------------------------------------------------------------------------
 
 
+    # get the max cols, outside loop because does not use i or s.i
+    NArepl.cols.max <- tau.TMP + s.TMP - 2
+    NArepl.cols.max <- min(max(1, NArepl.cols.max), x.vl)
     ## Fill similarity matrix with NA's at locations populated by an identified pattern
     for (i in 1:mat.nrow){
       s.i <-  template.vl[i]
       NArepl.cols.min <- tau.TMP - s.i + 2
       NArepl.cols.min <- min(max(1, NArepl.cols.min), x.vl)
-      NArepl.cols.max <- tau.TMP + s.TMP - 2
-      NArepl.cols.max <- min(max(1, NArepl.cols.max), x.vl)
       NArepl.cols     <- NArepl.cols.min:NArepl.cols.max
       # print(NArepl.cols)
       similarity.mat[i, NArepl.cols] <- NA
@@ -294,13 +308,17 @@ maxAndTune <- function(x,
     x.Fitted[(tau.TMP + 1):(tau.TMP + s.TMP - 2)] <- 1
 
     ## Store current iteration-specific results
-    out.list[[length(out.list) + 1]] <- c(tau.TMP, s.TMP, similarity.mat.MAX, template.idx.TMP)
+    out.list[[length(out.list) + 1]] <- data.frame(
+      tau_i = tau.TMP, T_i = s.TMP,
+      sim_i = similarity.mat.MAX,
+      template_i = template.idx.TMP)
 
   }
 
   ## List to data frame
-  out.df <- as.data.frame(do.call(rbind, out.list))
-  if (nrow(out.df) > 0) names(out.df) <- c("tau_i", "T_i", "sim_i", "template_i")
+  # out.df <- as.data.frame(do.call(rbind, out.list))
+  out.df <- dplyr::bind_rows(out.list)
+  # if (nrow(out.df) > 0) names(out.df) <- c("tau_i", "T_i", "sim_i", "template_i")
 
   return(out.df)
 
