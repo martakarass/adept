@@ -117,7 +117,7 @@ finetune_maxima <- function(s.TMP,
   x.mat.VALID <- x.mat * tau12.mat.VALID
 
   wm <- which.max(x.mat.VALID)
-  which.out <- idxToRowCol(wm, nrow(x.mat.VALID))
+  which.out <- arrayInd(wm, dim(x.mat.VALID))
 
   ## Define "tuned" start and end index point of identified pattern occurence
   ## within a time-series \code{x}
@@ -243,8 +243,7 @@ maxAndTune <- function(x,
       # equivalent to previous all(is.na(similarity.mat)) check
       break
     }
-    similarity.mat.MAX.IDX <-
-      idxToRowCol(wm, mat.nrow)
+    similarity.mat.MAX.IDX <- arrayInd(wm, dim(similarity.mat))
     similarity.mat.MAX <-
       similarity.mat[similarity.mat.MAX.IDX[1], similarity.mat.MAX.IDX[2]]
 
@@ -312,26 +311,3 @@ maxAndTune <- function(x,
 
 }
 
-
-#' Convert single index output of which.max() to row and column of matrix.
-#'
-#' If passed a matrix, which.max() returns a single index as if the matrix
-#' was strung out into a vector by stacking all the columns. This function
-#' converts that single index to a row and column index. For example, an index
-#' of 12 on a 6x5 matrix would be the 6th row, 2nd column.
-#'
-#' @param idx Index returned by which.max()
-#' @param nrows Number of rows in the original matrix.
-#'
-#' @return A length 2 vector of (row, column) specifying the index of the
-#' maximum value.
-#'
-#' @noRd
-#'
-idxToRowCol <- function(idx, nrows) {
-  mat.row <- idx %% nrows
-  is.last.row <- mat.row == 0
-  mat.row <- ifelse(is.last.row, nrows, mat.row)
-  mat.col <- ifelse(is.last.row, idx %/% nrows, idx %/% nrows + 1)
-  return(c(mat.row, mat.col))
-}
