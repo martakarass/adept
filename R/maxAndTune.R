@@ -115,7 +115,9 @@ finetune_maxima <- function(s.TMP,
   tau2.nbh.x  <- finetune.maxima.x[tau2.nbh]
   x.mat       <- outer(tau2.nbh.x, tau1.nbh.x, FUN = "+")
   x.mat.VALID <- x.mat * tau12.mat.VALID
-  which.out   <- which(x.mat.VALID == max(x.mat.VALID), arr.ind = TRUE)[1,]
+
+  wm <- which.max(x.mat.VALID)
+  which.out <- arrayInd(wm, dim(x.mat.VALID))
 
   ## Define "tuned" start and end index point of identified pattern occurence
   ## within a time-series \code{x}
@@ -235,12 +237,16 @@ maxAndTune <- function(x,
     # if (max.empty < template.vl.min){
     #   break
     # }
-    if (all(is.na(similarity.mat))){
+    ## Determine current maximum value in similarity matrix
+    wm <- which.max(similarity.mat)
+    if (!any(wm)) {
+      # equivalent to previous all(is.na(similarity.mat)) check
       break
     }
+    similarity.mat.MAX.IDX <- arrayInd(wm, dim(similarity.mat))
+    similarity.mat.MAX <-
+      similarity.mat[similarity.mat.MAX.IDX[1], similarity.mat.MAX.IDX[2]]
 
-    ## Determine current maximum value in similarity matrix
-    similarity.mat.MAX <- max(similarity.mat, na.rm = TRUE)
     if (similarity.mat.MAX < similarity.measure.thresh) {
       break
     }
@@ -250,7 +256,6 @@ maxAndTune <- function(x,
     ## tau: expressed as index of x vector
     ## Mar 5, 2019 @MK: fix the discrepancies caused by floating precision
     ## May 5, 2019 @MK: restore the previous code line here
-    similarity.mat.MAX.IDX <- which(similarity.mat == similarity.mat.MAX, arr.ind = TRUE)[1, ]
     # similarity.mat.MAX.IDX <- which(similarity.mat + tol > similarity.mat.MAX, arr.ind = TRUE)[1, ]
     tau.TMP     <- similarity.mat.MAX.IDX[2]
     s.TMP       <- template.vl[similarity.mat.MAX.IDX[1]]
