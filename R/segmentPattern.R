@@ -304,6 +304,7 @@ segmentPattern <- function(x,
   )
 
 
+
   ## ---------------------------------------------------------------------------
   ## Compute a list of rescaled template(s)
 
