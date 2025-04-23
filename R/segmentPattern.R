@@ -406,19 +406,35 @@ segmentPattern <- function(x,
   if (mc.cores > 0) {
     future::plan(future::multisession, workers = mc.cores)
   }
-  # out.list <- parallel::mclapply(x.cut.seq, function(i){
-  out.list <- furrr::future_map(x.cut.seq, function(i){
-      ## Define current x part indices
+  out.list <- purrr::map(x.cut.seq, function(i){
+    ## Define current x part indices
     idx.i <- i : min((i + x.cut.vl + x.cut.margin), length(x))
-    ## If we cannot fit the longest pattern, return NULL
     if (length(idx.i) <= max(template.vl)) return(NULL)
+
+    list(
+      index_first = i,
+      x = x[idx.i],
+      x.smoothed = x.smoothed[idx.i],
+      finetune.maxima.x = finetune.maxima.x[idx.i]
+    )
+  }, .progress = TRUE)
+
+  # out.list <- parallel::mclapply(x.cut.seq, function(i){
+  out.list <- furrr::future_map(out.list, function(val_list){
+    i = val_list$index_first
+    id_x <- val_list$x
+    id_x.smoothed = val_list$x.smoothed
+    x_finetune.maxima.x = val_list$finetune.maxima.x
+    rm(val_list)
+    if (is.null(x)) return(NULL)
+
     ## Compute similarity matrix
-    similarity.mat.i <- similarityMatrix(x = x.smoothed[idx.i],
+    similarity.mat.i <- similarityMatrix(x = id_x.smoothed,
                                          template.scaled = template.scaled,
                                          similarity.measure = similarity.measure)
     ## Compute template index matrix
     if (compute.template.idx){
-      template.idx.mat.i <- templateIdxMatrix(x = x.smoothed[idx.i],
+      template.idx.mat.i <- templateIdxMatrix(x = id_x.smoothed,
                                               template.scaled = template.scaled,
                                               similarity.measure = similarity.measure)
     }
@@ -427,13 +443,13 @@ segmentPattern <- function(x,
       template.idx.mat.i <- NULL
     }
     ## Run max and tine procedure
-    out.df.i <- maxAndTune(x = x[idx.i],
+    out.df.i <- maxAndTune(x = id_x,
                            template.vl = template.vl,
                            similarity.mat = similarity.mat.i,
                            similarity.measure.thresh = similarity.measure.thresh,
                            template.idx.mat = template.idx.mat.i,
                            finetune = finetune,
-                           finetune.maxima.x = finetune.maxima.x[idx.i],
+                           finetune.maxima.x = x_finetune.maxima.x,
                            finetune.maxima.nbh.vl = finetune.maxima.nbh.vl)
 
     ## Shift \tau parameter according to which part of signal x we are currently working with
