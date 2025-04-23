@@ -434,7 +434,7 @@ segmentPattern <- function(x,
     id_x.smoothed = val_list$x.smoothed
     x_finetune.maxima.x = val_list$finetune.maxima.x
     rm(val_list)
-    if (is.null(x)) return(NULL)
+    if (is.null(id_x)) return(NULL)
 
     ## Compute similarity matrix
     similarity.mat.i <- similarityMatrix(x = id_x.smoothed,
