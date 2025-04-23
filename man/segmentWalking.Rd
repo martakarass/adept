@@ -20,7 +20,8 @@ segmentWalking(
   mean_abs_diff_dur_MAX = 0.2,
   compute.template.idx = FALSE,
   run.parallel = FALSE,
-  run.parallel.cores = 1
+  run.parallel.cores = 1,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -92,6 +93,8 @@ DOES NOT WORK ON WINDOWS.}
 \item{run.parallel.cores}{An integer scalar.
 The number of cores to use for parallel execution. Defaults to 1L
 (no parallel). DOES NOT WORK ON WINDOWS.}
+
+\item{verbose}{print diagnostic messages.}
 }
 \value{
 A \code{data.frame} with segmentation results. Each row

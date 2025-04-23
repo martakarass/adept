@@ -19,7 +19,8 @@ segmentPattern(
   run.parallel.cores = 1L,
   x.cut = TRUE,
   x.cut.vl = 6000,
-  compute.template.idx = FALSE
+  compute.template.idx = FALSE,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -94,6 +95,8 @@ Default is \code{6000} (recommended).}
 which of the provided pattern templates yielded a similarity matrix value
 that corresponds to an identified pattern occurrence.
 Setting to \code{TRUE} may increase computation time. Default is \code{FALSE}.}
+
+\item{verbose}{print diagnostic messages.}
 }
 \value{
 A \code{data.frame} with segmentation results. Each row

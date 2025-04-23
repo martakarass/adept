@@ -63,6 +63,7 @@
 #' which of the provided pattern templates yielded a similarity matrix value
 #' that corresponds to an identified pattern occurrence.
 #' Setting to \code{TRUE} may increase computation time. Default is \code{FALSE}.
+#' @param verbose print diagnostic messages.
 #'
 #' @details
 #' Function implements Adaptive Empirical Pattern Transformation (ADEPT) method for pattern segmentation
@@ -230,7 +231,8 @@ segmentPattern <- function(x,
                            run.parallel.cores = 1L,
                            x.cut = TRUE,
                            x.cut.vl = 6000,
-                           compute.template.idx = FALSE){
+                           compute.template.idx = FALSE,
+                           verbose = TRUE){
 
 
   ## ---------------------------------------------------------------------------
@@ -276,6 +278,13 @@ segmentPattern <- function(x,
     x.smoothed <- get.x.smoothed(x = x,
                                  W = x.adept.ma.W,
                                  x.fs = x.fs)
+    if (verbose) {
+      message(
+        paste0("Smoothing x signal for similarity matrix computation with ",
+               "moving average window of length: ",
+               round(x.adept.ma.W * x.fs))
+      )
+    }
   } else {
     x.smoothed <- x
   }
@@ -292,6 +301,13 @@ segmentPattern <- function(x,
       finetune.maxima.x <- get.x.smoothed(x = x,
                                           W = finetune.maxima.ma.W,
                                           x.fs = x.fs)
+      if (verbose) {
+        message(
+          paste0("Smoothing x signal for similarity matrix computation with ",
+                 "moving average window of length: ",
+                 round(x.adept.ma.W * x.fs))
+        )
+      }
     } else {
       finetune.maxima.x <- x
     }

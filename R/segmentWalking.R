@@ -93,6 +93,7 @@ RunningMean <- function(x, W, circular = FALSE){
 #' that corresponds to an identified pattern occurrence.
 #' Setting to \code{TRUE} may increase computation time.
 #' Default is \code{FALSE}.
+#' @param verbose print diagnostic messages.
 #'
 #' @return A \code{data.frame} with segmentation results. Each row
 #' describes one identified pattern occurrence:
@@ -153,7 +154,8 @@ segmentWalking <- function(xyz,
                            mean_abs_diff_dur_MAX   = 0.2,
                            compute.template.idx = FALSE,
                            run.parallel = FALSE,
-                           run.parallel.cores = 1){
+                           run.parallel.cores = 1,
+                           verbose = TRUE){
 
   # compute all spherical
   xyz <- as.matrix(xyz)
@@ -176,7 +178,8 @@ segmentWalking <- function(xyz,
     run.parallel.cores = run.parallel.cores,
     x.cut = TRUE,
     x.cut.vl = 6000,
-    compute.template.idx = compute.template.idx)
+    compute.template.idx = compute.template.idx,
+    verbose = verbose)
 
   # generate detailed summary of ADEPT-identified patterns
   out_desc <- matrix(nrow = nrow(out), ncol = 5)
