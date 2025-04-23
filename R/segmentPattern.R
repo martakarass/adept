@@ -420,7 +420,11 @@ segmentPattern <- function(x,
     )
   }, .progress = verbose)
   if (verbose) {
-    message("Data subset made for parallel processing")
+    message(
+      paste0(
+        "Data subset made for parallel processing, ",
+        length(out.list), " subsets")
+    )
   }
 
   # out.list <- parallel::mclapply(x.cut.seq, function(i){
