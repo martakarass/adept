@@ -402,8 +402,13 @@ segmentPattern <- function(x,
   if (verbose) {
     message("Calculating similarityMatrix")
   }
-  out.list <- parallel::mclapply(x.cut.seq, function(i){
-    ## Define current x part indices
+  mc.cores = getOption("mc.cores", mc.cores.val)
+  if (mc.cores > 0) {
+    future::plan(future::multisession, workers = mc.cores)
+  }
+  # out.list <- parallel::mclapply(x.cut.seq, function(i){
+  out.list <- furrr::future_map(x.cut.seq, function(i){
+      ## Define current x part indices
     idx.i <- i : min((i + x.cut.vl + x.cut.margin), length(x))
     ## If we cannot fit the longest pattern, return NULL
     if (length(idx.i) <= max(template.vl)) return(NULL)
@@ -443,7 +448,7 @@ segmentPattern <- function(x,
                         sim_i = numeric(),
                         template_i = numeric()))
     }
-  }, mc.cores = getOption("mc.cores", mc.cores.val))
+  }, .progress = verbose)
 
   ## ---------------------------------------------------------------------------
   ## Clear up after possibly multiple stride occurrences
