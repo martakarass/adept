@@ -65,7 +65,7 @@ of a stride. Default used is 0.05.}
 of a stride. Default used is 0.5.}
 
 \item{mean_abs_diff_med_p_MAX}{A numeric scalar. Maximum value of MAD* of
-Azimuth (az_)_t median for 3 subsequent valid strides.
+Azimuth (`az_`)`_t` median for 3 subsequent valid strides.
 Here, MAD* stands for mean
 of 2 absolute differences between 3 subsequent values. Default used is 0.5.}
 

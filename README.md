@@ -1,5 +1,4 @@
 
-<!-- [![Coverage status](https://codecov.io/gh/martakarass/adept/branch/master/graph/badge.svg)](https://codecov.io/github/martakarass/adept?branch=master) -->
 <!-- badges: start -->
 
 [![CRAN
@@ -231,6 +230,7 @@ segmentPattern(
   similarity.measure = "cor",
   x.adept.ma.W = 0.1,
   compute.template.idx = TRUE)
+#> Smoothing x signal for similarity matrix computation with moving average window of length: 10
 #>    tau_i T_i     sim_i template_i
 #> 1      1  70 0.9865778          1
 #> 2     70  70 0.9533684          2

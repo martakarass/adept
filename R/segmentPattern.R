@@ -100,7 +100,7 @@
 #' Karas, M., Straczkiewicz, M., Fadel, W., Harezlak, J., Crainiceanu, C.M.,
 #' Urbanek, J.K. (2019). Adaptive empirical pattern
 #' transformation (ADEPT) with application to walking stride segmentation.
-#' Biostatistics. https://doi.org/10.1093/biostatistics/kxz033
+#' Biostatistics. \doi{10.1093/biostatistics/kxz033}
 #'
 #' @examples
 #' ## Example 1: Simulate a time-series `x`. Assume that

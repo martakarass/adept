@@ -70,7 +70,7 @@ RunningMean <- function(x, W, circular = FALSE){
 #' (r_t)_t vector magnitude data
 #' of a stride. Default used is 0.5.
 #' @param mean_abs_diff_med_p_MAX A numeric scalar. Maximum value of MAD* of
-#' Azimuth (az_)_t median for 3 subsequent valid strides.
+#' Azimuth (`az_`)`_t` median for 3 subsequent valid strides.
 #' Here, MAD* stands for mean
 #' of 2 absolute differences between 3 subsequent values. Default used is 0.5.
 #' @param mean_abs_diff_med_t_MAX A numeric scalar. Maximum value of MAD* of
