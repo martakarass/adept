@@ -399,6 +399,9 @@ segmentPattern <- function(x,
   # define number of cores to use in parallel
   mc.cores.val <- ifelse (run.parallel & (!(is.null(run.parallel.cores))), run.parallel.cores, 1L)
 
+  if (verbose) {
+    message("Calculating similarityMatrix")
+  }
   out.list <- parallel::mclapply(x.cut.seq, function(i){
     ## Define current x part indices
     idx.i <- i : min((i + x.cut.vl + x.cut.margin), length(x))
