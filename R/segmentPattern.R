@@ -323,12 +323,17 @@ segmentPattern <- function(x,
 
   if (!is.null(x.adept.ma.W)){
     # W.vl       <- x.adept.ma.W * x.fs
+    if (verbose) {
+      message(
+        "Smoothing x signal"
+      )
+    }
     x.smoothed <- get.x.smoothed(x = x,
                                  W = x.adept.ma.W,
                                  x.fs = x.fs)
     if (verbose) {
       message(
-        paste0("Smoothing x signal for similarity matrix computation with ",
+        paste0("Smoothed x signal for similarity matrix computation with ",
                "moving average window of length: ",
                round(x.adept.ma.W * x.fs))
       )
@@ -346,12 +351,17 @@ segmentPattern <- function(x,
     ## Signal smoothing for fine tunning
     if (!is.null(finetune.maxima.ma.W) && finetune.maxima.ma.W > 0){
       # W.vl              <- finetune.maxima.ma.W * x.fs
+      if (verbose) {
+        message(
+          "Smoothing finetune signal"
+        )
+      }
       finetune.maxima.x <- get.x.smoothed(x = x,
                                           W = finetune.maxima.ma.W,
                                           x.fs = x.fs)
       if (verbose) {
         message(
-          paste0("Smoothing x signal for similarity matrix computation with ",
+          paste0("Smoothed x signal for similarity matrix computation with ",
                  "moving average window of length: ",
                  round(x.adept.ma.W * x.fs))
         )
