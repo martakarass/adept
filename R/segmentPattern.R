@@ -406,6 +406,7 @@ segmentPattern <- function(x,
   if (mc.cores > 0) {
     future::plan(future::multisession, workers = mc.cores)
   }
+
   out.list <- purrr::map(x.cut.seq, function(i){
     ## Define current x part indices
     idx.i <- i : min((i + x.cut.vl + x.cut.margin), length(x))
@@ -417,7 +418,10 @@ segmentPattern <- function(x,
       x.smoothed = x.smoothed[idx.i],
       finetune.maxima.x = finetune.maxima.x[idx.i]
     )
-  }, .progress = TRUE)
+  }, .progress = verbose)
+  if (verbose) {
+    message("Data subset made for parallel processing")
+  }
 
   # out.list <- parallel::mclapply(x.cut.seq, function(i){
   out.list <- furrr::future_map(out.list, function(val_list){
