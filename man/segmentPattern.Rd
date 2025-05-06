@@ -9,7 +9,7 @@ segmentPattern(
   x.fs,
   template,
   pattern.dur.seq,
-  similarity.measure = "cov",
+  similarity.measure = c("cov", "cor"),
   similarity.measure.thresh = 0,
   x.adept.ma.W = NULL,
   finetune = NULL,
@@ -19,7 +19,8 @@ segmentPattern(
   run.parallel.cores = 1L,
   x.cut = TRUE,
   x.cut.vl = 6000,
-  compute.template.idx = FALSE
+  compute.template.idx = FALSE,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -94,6 +95,8 @@ Default is \code{6000} (recommended).}
 which of the provided pattern templates yielded a similarity matrix value
 that corresponds to an identified pattern occurrence.
 Setting to \code{TRUE} may increase computation time. Default is \code{FALSE}.}
+
+\item{verbose}{print diagnostic messages.}
 }
 \value{
 A \code{data.frame} with segmentation results. Each row
@@ -245,5 +248,5 @@ out
 Karas, M., Straczkiewicz, M., Fadel, W., Harezlak, J., Crainiceanu, C.M.,
 Urbanek, J.K. (2019). Adaptive empirical pattern
 transformation (ADEPT) with application to walking stride segmentation.
-Biostatistics. https://doi.org/10.1093/biostatistics/kxz033
+Biostatistics. \doi{10.1093/biostatistics/kxz033}
 }

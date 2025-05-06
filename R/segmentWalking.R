@@ -70,11 +70,11 @@ RunningMean <- function(x, W, circular = FALSE){
 #' (r_t)_t vector magnitude data
 #' of a stride. Default used is 0.5.
 #' @param mean_abs_diff_med_p_MAX A numeric scalar. Maximum value of MAD* of
-#' Azimuth (az_)_t median for 3 subsequent valid strides.
+#' Azimuth (`az_`)`_t` median for 3 subsequent valid strides.
 #' Here, MAD* stands for mean
 #' of 2 absolute differences between 3 subsequent values. Default used is 0.5.
 #' @param mean_abs_diff_med_t_MAX A numeric scalar. Maximum value of MAD* of
-#' Elevation (el_)_t median for 3 subsequent valid strides.
+#' Elevation (`el_`)`_t` median for 3 subsequent valid strides.
 #' Here, MAD* stands for mean
 #' of 2 absolute differences between 3 subsequent values. Default used is 0.2.
 #' @param mean_abs_diff_dur_MAX  A numeric scalar. Maximum value of MAD* of
@@ -93,6 +93,7 @@ RunningMean <- function(x, W, circular = FALSE){
 #' that corresponds to an identified pattern occurrence.
 #' Setting to \code{TRUE} may increase computation time.
 #' Default is \code{FALSE}.
+#' @param verbose print diagnostic messages.
 #'
 #' @return A \code{data.frame} with segmentation results. Each row
 #' describes one identified pattern occurrence:
@@ -153,12 +154,16 @@ segmentWalking <- function(xyz,
                            mean_abs_diff_dur_MAX   = 0.2,
                            compute.template.idx = FALSE,
                            run.parallel = FALSE,
-                           run.parallel.cores = 1){
+                           run.parallel.cores = 1,
+                           verbose = TRUE){
 
   # compute all spherical
   xyz <- as.matrix(xyz)
-  xyzptr <- as.data.frame(cbind(xyz, cart2sph(xyz)))
-  vm <- xyzptr[, 6]
+  stopifnot(ncol(xyz) == 3)
+  xyzptr <- as.data.frame(cart2sph(xyz))
+  colnames(xyzptr) = c("theta", "phi", "r")
+  vm <- xyzptr[, "r"]
+  rm(xyz)
 
   # run adept pattern identification
   out <- segmentPattern(
@@ -176,7 +181,10 @@ segmentWalking <- function(xyz,
     run.parallel.cores = run.parallel.cores,
     x.cut = TRUE,
     x.cut.vl = 6000,
-    compute.template.idx = compute.template.idx)
+    compute.template.idx = compute.template.idx,
+    verbose = verbose)
+  rm(vm)
+
 
   # generate detailed summary of ADEPT-identified patterns
   out_desc <- matrix(nrow = nrow(out), ncol = 5)
@@ -190,10 +198,10 @@ segmentWalking <- function(xyz,
     xyzptr_stride1 <- xyzptr[idx_i, ]
     # summarize i-th identified pattern data current
     out_desc[i, ] <- c(
-      median(xyzptr_stride1[,4]), # "med_p"
-      median(xyzptr_stride1[,5]), # "med_t"
-      diff(range(xyzptr_stride1[, 6])), # "ptp_r"
-      mean(abs(xyzptr_stride1[, 6] - mean(xyzptr_stride1[, 6]))), # vmc_r
+      median(xyzptr_stride1[,"theta"]), # "med_p"
+      median(xyzptr_stride1[,"phi"]), # "med_t"
+      diff(range(xyzptr_stride1[, "r"])), # "ptp_r"
+      mean(abs(xyzptr_stride1[, "r"] - mean(xyzptr_stride1[, "r"]))), # vmc_r
       T_i / xyz.fs # dur
     )
   }
