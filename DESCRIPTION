@@ -42,5 +42,7 @@ Imports:
     dvmisc,
     parallel,
     pracma,
-    assertthat
+    assertthat,
+    future,
+    furrr
 Language: en-US
