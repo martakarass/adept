@@ -110,7 +110,7 @@ test_that("Testing nothing has change in templateIdxMatrix() output", {
 
   ## Test table of counts is the same
   res <- table(out)
-  res.exp <- structure(c(`1` = 1849L, `2` = 2017L), .Dim = 2L, .Dimnames = list(
+  res.exp <- structure(c(`1` = 1849L, `2` = 2017L), dim = 2L, dimnames = list(
     out = c("1", "2")), class = "table")
   expect_equal(res, res.exp)
 

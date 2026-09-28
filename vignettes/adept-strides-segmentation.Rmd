@@ -54,7 +54,7 @@ Screenshot taken from a personal profile of *mapmyrun* tracking application, acc
 
 ### Sensor and accelerometry data
 
-Data were collected with two [ActiGraph GT9X Link](https://www.actigraphcorp.com/actigraph-link/) physical activity monitors at the sampling frequency of 100 Hz. ActiGraph GT9X Link has 3-axis accelerometer collecting accelerometry data along three orthogonal axes. At a sampling frequency of 100 Hz, we collected 100 observations per second per axis (total of 300 observations per second).  
+Data were collected with two [ActiGraph GT9X Link](https://blog.ametris.com/blog/gt9x-link) physical activity monitors at the sampling frequency of 100 Hz. ActiGraph GT9X Link has 3-axis accelerometer collecting accelerometry data along three orthogonal axes. At a sampling frequency of 100 Hz, we collected 100 observations per second per axis (total of 300 observations per second).  
 
 ### Sensor location
 
@@ -142,7 +142,7 @@ acc_running_sub %>%
 
 ##### Note on sensors desynchronization 
 
-* The two sensors used in the experiment were set up to initialize data collection at the same time. However, as discussed in^[Karas, M., Bai, J., Straczkiewicz, M., Harezlak, J., Glynn, N W., Harris, T., Zipunnikov, V., Crainiceanu, C., Urbanek, J.K. *Accelerometry data in health research: challenges and opportunities. Review and examples*, Statistics in Biosciences, 2018. ([link](https://pubmed.ncbi.nlm.nih.gov/31762829/)).], perfect synchronization on most of modern operating systems is impossible. Additionally, measurements might still get desynchronized across devices even after a few minutes of data collection. Because of that, sub-second level alignment of data cross devices cannot be expected.
+* The two sensors used in the experiment were set up to initialize data collection at the same time. However, as discussed in^[Karas, M., Bai, J., Straczkiewicz, M., Harezlak, J., Glynn, N W., Harris, T., Zipunnikov, V., Crainiceanu, C., Urbanek, J.K. *Accelerometry data in health research: challenges and opportunities. Review and examples*, Statistics in Biosciences, 2018. ([link](https://doi.org/10.1007/s12561-018-9227-2)).], perfect synchronization on most of modern operating systems is impossible. Additionally, measurements might still get desynchronized across devices even after a few minutes of data collection. Because of that, sub-second level alignment of data cross devices cannot be expected.
 
 ### Vector magnitude 
 

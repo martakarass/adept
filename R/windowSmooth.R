@@ -27,7 +27,6 @@
 #' output vector where the moving window is undefined are filled with \code{NA}.
 #'
 #' @export
-#' @import dvmisc
 #'
 #' @examples
 #' ## Time-series defined as a function f(x) = x

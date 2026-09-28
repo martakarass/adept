@@ -65,12 +65,12 @@ of a stride. Default used is 0.05.}
 of a stride. Default used is 0.5.}
 
 \item{mean_abs_diff_med_p_MAX}{A numeric scalar. Maximum value of MAD* of
-Azimuth (`az_`)`_t` median for 3 subsequent valid strides.
+Azimuth (\code{az_})\verb{_t} median for 3 subsequent valid strides.
 Here, MAD* stands for mean
 of 2 absolute differences between 3 subsequent values. Default used is 0.5.}
 
 \item{mean_abs_diff_med_t_MAX}{A numeric scalar. Maximum value of MAD* of
-Elevation (el_)_t median for 3 subsequent valid strides.
+Elevation (\code{el_})\verb{_t} median for 3 subsequent valid strides.
 Here, MAD* stands for mean
 of 2 absolute differences between 3 subsequent values. Default used is 0.2.}
 
@@ -100,15 +100,15 @@ The number of cores to use for parallel execution. Defaults to 1L
 A \code{data.frame} with segmentation results. Each row
 describes one identified pattern occurrence:
 \itemize{
-  \item \code{tau_i} - row index of \code{xyz} where pattern starts,
-  \item \code{T_i} - pattern duration, expressed in \code{xyz} vector length,
-  \item \code{sim_i} -  similarity between a pattern and
-  best-fit template; see \code{segmentPattern} for details,
-  \item \code{template_i} - if \code{compute.template.idx} equals \code{TRUE}:
-  index of a template best matched to \code{x};
- if \code{compute.template.idx} equals \code{FALSE}: \code{NA},
- \item \code{is_walking_i} -- \code{1} if a pattern is identified as walking
- stride; \code{0} otherwise.
+\item \code{tau_i} - row index of \code{xyz} where pattern starts,
+\item \code{T_i} - pattern duration, expressed in \code{xyz} vector length,
+\item \code{sim_i} -  similarity between a pattern and
+best-fit template; see \code{segmentPattern} for details,
+\item \code{template_i} - if \code{compute.template.idx} equals \code{TRUE}:
+index of a template best matched to \code{x};
+if \code{compute.template.idx} equals \code{FALSE}: \code{NA},
+\item \code{is_walking_i} -- \code{1} if a pattern is identified as walking
+stride; \code{0} otherwise.
 }
 }
 \description{

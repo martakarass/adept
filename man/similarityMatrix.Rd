@@ -13,26 +13,26 @@ similarityMatrix(x, template.scaled, similarity.measure)
 \code{scaleTemplate}.  Each element of
 \code{template.scaled}
 is a list of templates interpolated to a particular vector length.
- Number of elements in the \code{template.scaled}  corresponds to the
- number of unique template length values used in segmentation.}
+Number of elements in the \code{template.scaled}  corresponds to the
+number of unique template length values used in segmentation.}
 
 \item{similarity.measure}{A character scalar. Statistic
 used in similarity matrix computation; one of the following:
 \itemize{
-  \item "cov" - for covariance,
-  \item "cor" - for correlation.
+\item "cov" - for covariance,
+\item "cor" - for correlation.
 }}
 }
 \value{
 A numeric matrix. Contains values of similarity between a time-series \code{x}
 and scaled templates.
 \itemize{
-  \item Number of rows equals \code{template.scaled} length,
-  number of columns equals \code{x}  length.
-  \item A particular matrix row consists of similarity statistic
-  between \code{x} and a template rescaled to a particular vector length.
-  Precisely, each row's element is a maximum out of similarity values
- computed for each distinct template used in segmentation.
+\item Number of rows equals \code{template.scaled} length,
+number of columns equals \code{x}  length.
+\item A particular matrix row consists of similarity statistic
+between \code{x} and a template rescaled to a particular vector length.
+Precisely, each row's element is a maximum out of similarity values
+computed for each distinct template used in segmentation.
 }
 }
 \description{

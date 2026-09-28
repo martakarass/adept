@@ -7,7 +7,7 @@ status](https://www.r-pkg.org/badges/version/adept)](https://CRAN.R-project.org/
 [![](https://cranlogs.r-pkg.org/badges/last-month/adept)](https://cran.r-project.org/package=adept)
 [![R-CMD-check](https://github.com/martakarass/adept/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/martakarass/adept/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
-coverage](https://codecov.io/gh/martakarass/adept/branch/master/graph/badge.svg)](https://codecov.io/gh/martakarass/adept?branch=master)
+coverage](https://codecov.io/gh/martakarass/adept/branch/master/graph/badge.svg)](https://app.codecov.io/gh/martakarass/adept?branch=master)
 <!-- badges: end -->
 
 ### Overview
@@ -43,7 +43,7 @@ plot(true.pattern, type = "l", xlab = "", ylab = "", main = "Pattern")
 plot(x, type = "l", xlab = "", ylab = "", main = "Time-series x")
 ```
 
-<img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-2-1.png" alt="" width="100%" />
 
 We segment pattern from data. We assume that a perfect template is
 available. We use a grid of potential pattern durations of {0.9, 0.95,
@@ -138,20 +138,20 @@ plot(true.pattern.1, type = "l", xlab = "", ylab = "", main = "Pattern 1")
 plot(true.pattern.2, type = "l", xlab = "", ylab = "", main = "Pattern 2")
 ```
 
-<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-5-1.png" alt="" width="100%" />
 
 ``` r
 par(mfrow = c(1,1), cex = 1)
 plot(x, type = "l", xlab = "", ylab = "", main = "Time-series x")
 ```
 
-<img src="man/figures/README-unnamed-chunk-5-2.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-5-2.png" alt="" width="100%" />
 
 ``` r
 plot(x2, type = "l", xlab = "", ylab = "", main = "Time-series x2")
 ```
 
-<img src="man/figures/README-unnamed-chunk-5-3.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-5-3.png" alt="" width="100%" />
 
 We segment `x`. We assume a perfect grid of potential pattern duration,
 {0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3} seconds.
@@ -219,7 +219,7 @@ plot(windowSmooth(x = x2, x.fs = 100, W = 0.1),
      type = "l", xlab = "", ylab = "", main = "Time-series x2 smoothed")
 ```
 
-<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-8-1.png" alt="" width="100%" />
 
 ``` r
 segmentPattern(
@@ -230,7 +230,6 @@ segmentPattern(
   similarity.measure = "cor",
   x.adept.ma.W = 0.1,
   compute.template.idx = TRUE)
-#> Smoothing x signal for similarity matrix computation with moving average window of length: 10
 #>    tau_i T_i     sim_i template_i
 #> 1      1  70 0.9865778          1
 #> 2     70  70 0.9533684          2

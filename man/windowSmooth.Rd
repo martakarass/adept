@@ -29,9 +29,9 @@ together determine
 \code{x} vector object.
 Note: \code{W.vl} must be equal or greater than \code{3}.
 \itemize{
-  \item If \code{W.vl < 3} then an error is thrown.
-  \item If \code{W.vl} is an even number then \code{(W.vl-1)} value is silently
-  used instead as a length of a moving window expressed in \code{x} vector length.
+\item If \code{W.vl < 3} then an error is thrown.
+\item If \code{W.vl} is an even number then \code{(W.vl-1)} value is silently
+used instead as a length of a moving window expressed in \code{x} vector length.
 }
 }
 \examples{

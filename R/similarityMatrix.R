@@ -34,7 +34,6 @@
 #' @seealso \code{scaleTemplate {adept}}
 #'
 #' @export
-#' @import dvmisc
 #'
 #' @examples
 #' ## Simulate data
@@ -124,7 +123,6 @@ similarityMatrix <- function(x,
 #' is the order in which particular pattern template was provided in
 #' the \code{template} list in \code{segmentPattern}.
 #'
-#' @import dvmisc
 #'
 #' @noRd
 #'
@@ -157,7 +155,6 @@ templateIdxMatrix <- function(x,
   return(templateIdx.mat)
 
 }
-
 
 
 

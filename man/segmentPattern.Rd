@@ -38,8 +38,8 @@ used in segmentation. Expressed in seconds. See: Details.}
 \item{similarity.measure}{A character scalar. Statistic used to compute similarity
 between a time-series \code{x}  and pattern templates. Currently supported values:
 \itemize{
-  \item \code{"cov"} - covariance,
-  \item \code{"cor"} - correlation,
+\item \code{"cov"} - covariance,
+\item \code{"cor"} - correlation,
 }
 Default is \code{"cov"}.}
 
@@ -50,22 +50,22 @@ Default is \code{0}.}
 
 \item{x.adept.ma.W}{A numeric scalar.
 A length of a window used in moving average smoothing of a time-series \code{x} for
-  similarity matrix computation. Expressed in seconds.
- Default is \code{NULL} (no smoothing applied).}
+similarity matrix computation. Expressed in seconds.
+Default is \code{NULL} (no smoothing applied).}
 
 \item{finetune}{A character scalar. A type of fine-tuning procedure employed in
- segmentation. Defaults to \code{NULL} (no fine-tuning procedure employed). Currently supported values:
+segmentation. Defaults to \code{NULL} (no fine-tuning procedure employed). Currently supported values:
 \itemize{
-  \item \code{"maxima"} - tunes preliminarily identified
-  beginning and end of a pattern so
-  as they correspond to local maxima of time-series \code{x} (or smoothed version of \code{x})
-  found within neighbourhoods of preliminary locations.
+\item \code{"maxima"} - tunes preliminarily identified
+beginning and end of a pattern so
+as they correspond to local maxima of time-series \code{x} (or smoothed version of \code{x})
+found within neighbourhoods of preliminary locations.
 }}
 
 \item{finetune.maxima.ma.W}{A numeric scalar.
 A length of a window used in moving average smoothing of a time-series \code{x} in
- \code{"maxima"} fine-tuning procedure. Expressed in seconds.
- Default is \code{NULL} (no smoothing applied).}
+\code{"maxima"} fine-tuning procedure. Expressed in seconds.
+Default is \code{NULL} (no smoothing applied).}
 
 \item{finetune.maxima.nbh.W}{A numeric scalar.
 A length of the two neighborhoods centered at preliminarily identified
@@ -85,7 +85,7 @@ DOES NOT WORK ON WINDOWS.}
 \item{x.cut}{A logical scalar. Whether or not to use time optimization procedure in
 which a time-series \code{x} is cut into parts and segmentation is performed for
 each part of \code{x} separately. Recommended for a time-series \code{x} of vector length
- above 30,000. Default is \code{TRUE}.}
+above 30,000. Default is \code{TRUE}.}
 
 \item{x.cut.vl}{An integer scalar.
 Defines a vector length of parts that \code{x} vector is cut into during the execution time optimization procedure.
@@ -102,15 +102,15 @@ Setting to \code{TRUE} may increase computation time. Default is \code{FALSE}.}
 A \code{data.frame} with segmentation results. Each row
 describes one identified pattern occurrence:
 \itemize{
-  \item \code{tau_i} - index of  \code{x} where pattern starts,
-  \item \code{T_i} - pattern duration, expressed in \code{x} vector length,
-  \item \code{sim_i} -  similarity between a pattern and \code{x};
-  note: if \code{"maxima"} fine-tune and/or \code{x} smoothing is employed,
-  the similarity value between the final segmented pattern and a template
-   may differ from the value in this table,
-  \item \code{template_i} - if \code{compute.template.idx} equals \code{TRUE}:
-  index of a template best matched to \code{x};
- if \code{compute.template.idx} equals \code{FALSE}: \code{NA}.
+\item \code{tau_i} - index of  \code{x} where pattern starts,
+\item \code{T_i} - pattern duration, expressed in \code{x} vector length,
+\item \code{sim_i} -  similarity between a pattern and \code{x};
+note: if \code{"maxima"} fine-tune and/or \code{x} smoothing is employed,
+the similarity value between the final segmented pattern and a template
+may differ from the value in this table,
+\item \code{template_i} - if \code{compute.template.idx} equals \code{TRUE}:
+index of a template best matched to \code{x};
+if \code{compute.template.idx} equals \code{FALSE}: \code{NA}.
 }
 }
 \description{
@@ -123,10 +123,10 @@ from a time-series \code{x}.
 ADEPT is optimized to perform fast, accurate walking strides segmentation from
 high-density data collected with a wearable accelerometer during walking.
 
- ADEPT identifies patterns in a time-series \code{x} via maximization of chosen
- similarity statistic (correlation, covariance, etc.) between a time-series \code{x}
- and a pattern template(s). It accounts for variability in both
- (1) pattern duration and (2) pattern shape.
+ADEPT identifies patterns in a time-series \code{x} via maximization of chosen
+similarity statistic (correlation, covariance, etc.) between a time-series \code{x}
+and a pattern template(s). It accounts for variability in both
+(1) pattern duration and (2) pattern shape.
 }
 \examples{
 ## Example 1: Simulate a time-series `x`. Assume that

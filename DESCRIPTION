@@ -1,16 +1,16 @@
 Package: adept
 Type: Package
 Title: Adaptive Empirical Pattern Transformation 
-Version: 1.3.0
+Version: 1.4.0
 Authors@R: c(
-  person("Marta", "Karas", email = "marta.karass@gmail.com", role = c("aut", "cre"), 
-      comment = c(ORCID = "0000-0001-5889-3970")),
-  person("Jacek", "Urbanek", role = c("aut"), 
-      comment = c(ORCID = "0000-0002-1890-8899")),
-  person("Ciprian", "Crainiceanu", role = c("aut")),
-  person("John", "Muschelli", role = c("ctb"), 
-      comment = c(ORCID = "0000-0001-6469-1750")),
-  person("Adi", "Gherman", role = c("ctb"))
+    person("Marta", "Karas", , "marta.karass@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0001-5889-3970")),
+    person("Jacek", "Urbanek", role = "aut",
+           comment = c(ORCID = "0000-0002-1890-8899")),
+    person("Ciprian", "Crainiceanu", role = "aut"),
+    person("John", "Muschelli", role = "ctb",
+           comment = c(ORCID = "0000-0001-6469-1750")),
+    person("Adi", "Gherman", role = "ctb")
   )
 Description: Designed for optimal use in performing fast, 
     accurate walking strides segmentation from high-density 
@@ -18,8 +18,7 @@ Description: Designed for optimal use in performing fast,
     during continuous walking activity.
 License: GPL-3
 Encoding: UTF-8
-LazyData: true
-RoxygenNote: 7.3.2
+Roxygen: list(markdown = TRUE)
 URL: https://github.com/martakarass/adept
 BugReports: https://github.com/martakarass/adept/issues
 Depends: R (>= 2.10)
@@ -35,12 +34,13 @@ Suggests:
     cluster,
     adeptdata,
     covr
+NeedsCompilation: yes
 VignetteBuilder: knitr
 Imports: 
     dplyr,
     magrittr,
-    dvmisc,
     parallel,
     pracma,
     assertthat
 Language: en-US
+Config/roxygen2/version: 8.0.0
